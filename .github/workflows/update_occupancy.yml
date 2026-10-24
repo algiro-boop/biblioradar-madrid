@@ -1,0 +1,76 @@
+name: BiblioRadar occupancy
+
+on:
+  push:
+    paths: ['src/**', 'tests/**', 'supabase/**', 'pyproject.toml', 'uv.lock', '.github/workflows/update_occupancy.yml']
+  pull_request:
+  schedule:
+    - cron: '*/20 6-21 * * *'
+    - cron: '0 22 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Calcular sin escribir en Supabase
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: occupancy-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: test-only
+          POSTGRES_DB: biblioradar_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgresql://postgres:test-only@localhost:5432/biblioradar_test
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          enable-cache: true
+          python-version: '3.11'
+      - run: uv sync --locked
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+      - run: command -v psql
+      - run: uv run pytest -q
+
+  update:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 19
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          enable-cache: true
+          python-version: '3.11'
+      - run: uv sync --locked --no-dev
+      - name: Update or preview
+        env:
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+        run: |
+          if [ "$DRY_RUN" = "true" ]; then
+            uv run --no-dev python -m biblioradar.update_job --dry-run
+          else
+            uv run --no-dev python -m biblioradar.update_job
+          fi

@@ -1,0 +1,153 @@
+// Contrato exacto con el esquema de Supabase (Fases 1 y 2). No añadir columnas inventadas.
+
+export type InstitutionType = "ayuntamiento" | "comunidad" | "ucm" | "otra";
+
+export type OccupancyLabel = "free" | "moderate" | "high" | "full";
+
+/** Nivel visual: las cuatro etiquetas SQL más "unknown" cuando el porcentaje es NULL. */
+export type OccupancyLevel = OccupancyLabel | "unknown";
+
+/** Únicos valores que acepta `submit_report`. */
+export type ReportValue = 30 | 75 | 100;
+
+export type OpeningHours = {
+  timezone: "Europe/Madrid" | string;
+  raw_text: string;
+  normalized_text: string;
+  weekly: Record<string, unknown> | null;
+  requires_review: boolean;
+};
+
+// `type` (no `interface`): supabase-js exige que Row sea asignable a Record<string, unknown>.
+export type Library = {
+  id: string;
+  source: string;
+  source_id: string;
+  source_url: string | null;
+  name: string;
+  institution: InstitutionType;
+  address: string;
+  district: string;
+  lat: number;
+  lng: number;
+  google_place_id: string | null;
+  opening_hours: OpeningHours;
+  total_seats: number | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type OccupancyStatus = {
+  library_id: string;
+  google_live_pct: number | null;
+  google_hist_pct: number | null;
+  predicted_base_pct: number | null;
+  crowd_pct: number | null;
+  /** NULL = sin datos / cerrada. Nunca equivale a 0 % (biblioteca vacía). */
+  final_occupancy_pct: number | null;
+  /** Columna generada en SQL a partir de `final_occupancy_pct`. */
+  status_label: OccupancyLabel | null;
+  base_source: string;
+  base_observed_at: string | null;
+  base_valid_until: string | null;
+  primary_source: string;
+  active_reports_count: number;
+  updated_at: string;
+};
+
+export type LibraryWithOccupancy = Library & {
+  /** Relación 1:1. Puede faltar si la fila de estado aún no existe o no es legible. */
+  occupancy: OccupancyStatus | null;
+};
+
+/** Fila tal como la devuelve `select('*, occupancy_status(*)')`. PostgREST puede devolver objeto o array. */
+export type LibraryRowWithEmbed = Library & {
+  occupancy_status: OccupancyStatus | OccupancyStatus[] | null;
+};
+
+/** Payload crudo de `postgres_changes` sobre `public.occupancy_status`. */
+export interface OccupancyRealtimePayload {
+  schema: "public";
+  table: "occupancy_status";
+  commit_timestamp: string;
+  eventType: "INSERT" | "UPDATE" | "DELETE";
+  new: Partial<OccupancyStatus>;
+  old: Partial<OccupancyStatus>;
+  errors: string[] | null;
+}
+
+/** Cambio ya validado y normalizado que consume el estado de React. */
+export type OccupancyChange =
+  | { type: "INSERT" | "UPDATE"; status: OccupancyStatus }
+  | { type: "DELETE"; libraryId: string };
+
+export type RealtimeConnection = "connecting" | "live" | "reconnecting" | "offline";
+
+export interface UserPosition {
+  lat: number;
+  lng: number;
+  /** Radio de precisión en metros que informa el navegador. */
+  accuracy: number;
+  timestamp: number;
+}
+
+export type ReportErrorKind =
+  | "rate_limit"
+  | "too_far"
+  | "invalid"
+  | "network"
+  | "geo_denied"
+  | "geo_unavailable"
+  | "insecure_context"
+  | "unknown";
+
+export interface ReportError {
+  kind: ReportErrorKind;
+  message: string;
+}
+
+/** Tipado mínimo para el cliente de Supabase (solo lo que el frontend usa). */
+export interface Database {
+  public: {
+    Tables: {
+      libraries: {
+        Row: Library;
+        Insert: never;
+        Update: never;
+        Relationships: [];
+      };
+      occupancy_status: {
+        Row: OccupancyStatus;
+        Insert: never;
+        Update: never;
+        Relationships: [
+          {
+            foreignKeyName: "occupancy_status_library_id_fkey";
+            columns: ["library_id"];
+            isOneToOne: true;
+            referencedRelation: "libraries";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+    };
+    Views: Record<string, never>;
+    Functions: {
+      submit_report: {
+        Args: {
+          p_library_id: string;
+          p_reported_value: number;
+          p_device_hash: string;
+          p_user_lat: number;
+          p_user_lng: number;
+        };
+        Returns: string;
+      };
+    };
+    Enums: {
+      institution_type: InstitutionType;
+      occupancy_label: OccupancyLabel;
+    };
+    CompositeTypes: Record<string, never>;
+  };
+}

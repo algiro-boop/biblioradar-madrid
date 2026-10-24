@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+@keyframes banner-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+html,
+body {
+  height: 100%;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: var(--color-slate-100);
+  color: var(--color-slate-900);
+}
+
+/* Pines divIcon: sin la caja blanca por defecto de Leaflet. */
+.leaflet-div-icon.biblio-pin,
+.biblio-pin {
+  background: transparent;
+  border: 0;
+}
+
+/* Aclara las teselas estándar de OSM para un look tipo Positron. */
+.biblio-tiles-soft {
+  filter: saturate(0.3) brightness(1.06) contrast(0.9);
+}
+
+.leaflet-container {
+  font-family: var(--font-sans);
+}
+
+.leaflet-control-attribution {
+  font-size: 10px;
+}
+
+/* En móvil se usa el pellizco; los botones de zoom solo estorban. */
+@media (max-width: 767px) {
+  .leaflet-control-zoom {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

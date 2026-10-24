@@ -1,0 +1,175 @@
+"use client";
+
+import dynamic from "next/dynamic";
+import { useCallback, useDeferredValue, useMemo, useState } from "react";
+import { useGeolocation } from "@/hooks/useGeolocation";
+import { useLibraries } from "@/hooks/useLibraries";
+import { useNow } from "@/hooks/useNow";
+import { applyFilters, EMPTY_FILTERS, hasActiveFilters, type FilterInstitution, type LibraryFilters } from "@/lib/filters";
+import { GeolocationFailure, haversineMeters } from "@/lib/geo";
+import { Header, type ViewMode } from "./Header";
+import { LibraryDrawer } from "./LibraryDrawer";
+import { LibraryList } from "./LibraryList";
+import { ProximityBanner } from "./ProximityBanner";
+
+const MapView = dynamic(() => import("./MapView"), {
+  ssr: false,
+  loading: () => (
+    <div className="grid h-full w-full place-items-center bg-slate-100 text-sm text-slate-400">Cargando mapa…</div>
+  ),
+});
+
+function ConfigNotice({ message }: { message: string }) {
+  return (
+    <main className="grid min-h-dvh place-items-center bg-slate-50 p-6">
+      <div className="max-w-md rounded-3xl bg-white p-6 shadow-lg ring-1 ring-slate-200">
+        <h1 className="text-lg font-bold text-slate-900">Falta configurar Supabase</h1>
+        <p className="mt-2 text-sm text-slate-600">{message}</p>
+        <pre className="mt-4 overflow-x-auto rounded-xl bg-slate-900 p-3 text-xs text-slate-100">
+          {"NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co\nNEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ..."}
+        </pre>
+      </div>
+    </main>
+  );
+}
+
+export function AppShell() {
+  const { libraries, loading, error, configError, connection, reload, refreshLibrary } = useLibraries();
+  const geo = useGeolocation();
+  const now = useNow();
+
+  const [filters, setFilters] = useState<LibraryFilters>(EMPTY_FILTERS);
+  const [nearMe, setNearMe] = useState(false);
+  const [view, setView] = useState<ViewMode>("map");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [focusUserKey, setFocusUserKey] = useState(0);
+  const [geoMessage, setGeoMessage] = useState<string | null>(null);
+  const deferredQuery = useDeferredValue(filters.query);
+
+  // "Cerca de mí" sigue la posición en vivo mientras está activo.
+  const effectiveFilters = useMemo<LibraryFilters>(
+    () => ({
+      ...filters,
+      query: deferredQuery,
+      near: nearMe && geo.position ? { lat: geo.position.lat, lng: geo.position.lng } : null,
+    }),
+    [filters, deferredQuery, nearMe, geo.position],
+  );
+  const items = useMemo(() => applyFilters(libraries, effectiveFilters), [libraries, effectiveFilters]);
+  const mapLibraries = useMemo(() => items.map((i) => i.library), [items]);
+
+  const selected = useMemo(() => libraries.find((l) => l.id === selectedId) ?? null, [libraries, selectedId]);
+  const selectedDistance = selected && geo.position ? haversineMeters(geo.position, selected) : null;
+
+  const toggleNear = useCallback(async () => {
+    if (nearMe) {
+      setNearMe(false);
+      return;
+    }
+    setGeoMessage(null);
+    try {
+      await geo.locate();
+      setNearMe(true);
+      setFocusUserKey((k) => k + 1);
+    } catch (err) {
+      setGeoMessage(err instanceof GeolocationFailure ? err.message : "No se pudo obtener tu ubicación.");
+    }
+  }, [nearMe, geo]);
+
+  const toggleInstitution = useCallback((i: FilterInstitution) => {
+    setFilters((f) => ({
+      ...f,
+      institutions: f.institutions.includes(i) ? f.institutions.filter((x) => x !== i) : [...f.institutions, i],
+    }));
+  }, []);
+
+  const clearFilters = useCallback(() => {
+    setFilters(EMPTY_FILTERS);
+    setNearMe(false);
+  }, []);
+
+  const handleReported = useCallback(
+    (libraryId: string) => {
+      // Respaldo por si el WebSocket no está conectado: Realtime normalmente llega antes.
+      window.setTimeout(() => void refreshLibrary(libraryId), 800);
+    },
+    [refreshLibrary],
+  );
+
+  const closeDrawer = useCallback(() => setSelectedId(null), []);
+
+  if (configError) return <ConfigNotice message={error ?? ""} />;
+
+  return (
+    <main className="relative flex h-dvh w-full overflow-hidden bg-slate-100 text-slate-900">
+      {/* Panel lateral: en móvil cabecera flotante + lista a pantalla completa; en escritorio barra fija. */}
+      <section
+        className={`absolute inset-0 z-[1000] flex flex-col md:static md:z-auto md:w-[400px] md:shrink-0 md:border-r md:border-slate-200 md:bg-slate-50 ${
+          view === "list" ? "bg-slate-50" : "pointer-events-none md:pointer-events-auto"
+        }`}
+      >
+        <div className="p-3 pt-[max(0.75rem,env(safe-area-inset-top))] md:p-0">
+          <Header
+            filters={filters}
+            onQueryChange={(query) => setFilters((f) => ({ ...f, query }))}
+            onToggleRoom={() => setFilters((f) => ({ ...f, onlyWithRoom: !f.onlyWithRoom }))}
+            onToggleInstitution={toggleInstitution}
+            onToggleNear={() => void toggleNear()}
+            locating={geo.status === "locating"}
+            geoMessage={geoMessage}
+            connection={connection}
+            view={view}
+            onViewChange={setView}
+          />
+        </div>
+        <div className={`min-h-0 flex-1 flex-col ${view === "list" ? "flex" : "hidden"} md:flex`}>
+          <LibraryList
+            items={items}
+            total={libraries.length}
+            loading={loading}
+            error={error}
+            now={now}
+            selectedId={selectedId}
+            filtersActive={nearMe || hasActiveFilters(filters)}
+            onSelect={setSelectedId}
+            onClearFilters={clearFilters}
+            onRetry={reload}
+          />
+        </div>
+      </section>
+
+      <section className="absolute inset-0 isolate md:static md:flex-1" aria-label="Mapa de bibliotecas">
+        <MapView
+          libraries={mapLibraries}
+          selectedId={selectedId}
+          now={now}
+          userPosition={geo.position}
+          focusUserKey={focusUserKey}
+          onSelect={setSelectedId}
+          onDeselect={closeDrawer}
+        />
+      </section>
+
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-[1050] px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:left-[400px]">
+        <ProximityBanner
+          libraries={libraries}
+          position={geo.position}
+          hidden={selectedId !== null}
+          now={now}
+          locate={geo.locate}
+          onReported={handleReported}
+          onOpen={setSelectedId}
+        />
+      </div>
+
+      <LibraryDrawer
+        library={selected}
+        distanceM={selectedDistance}
+        now={now}
+        locate={geo.locate}
+        onReported={handleReported}
+        onClose={closeDrawer}
+      />
+    </main>
+  );
+}
