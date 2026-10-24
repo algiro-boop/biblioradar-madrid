@@ -2,6 +2,7 @@
 
 import json
 import os
+import re
 import shutil
 import subprocess
 from datetime import datetime, timedelta, timezone
@@ -89,5 +90,9 @@ def test_postgresql_migrations_smoke_and_python_parity():
     execute((ROOT / "tests/supabase_smoke.sql").read_text())
     sql, expected = parity_case()
     output = execute(sql)
-    actual = next(json.loads(line) for line in output.splitlines() if line.startswith("["))
+    # jsonb_agg (PostgreSQL 16) separa los elementos con saltos de línea: decodificar el bloque
+    # JSON completo desde la primera línea que empieza por "[", no solo esa línea.
+    start = re.search(r"^\[", output, re.MULTILINE)
+    assert start, output
+    actual, _ = json.JSONDecoder().raw_decode(output[start.start() :])
     assert actual == expected

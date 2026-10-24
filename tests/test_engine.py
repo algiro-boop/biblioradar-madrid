@@ -1,7 +1,7 @@
-import json
 from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
 from pathlib import Path
+from uuid import NAMESPACE_URL, uuid5
 
 import httpx
 import pytest
@@ -17,6 +17,7 @@ from biblioradar.engine import (
     library_points,
     predict_base,
 )
+from biblioradar.ingest import DATASETS, KOS, normalize
 from biblioradar.weather import get_weather
 
 NOW = datetime(2026, 10, 23, 12, tzinfo=timezone.utc)
@@ -270,11 +271,46 @@ def test_heuristic_with_library_context():
         assert 1 <= value <= HEURISTIC_CAP
 
 
+def synthetic_catalog() -> list[dict]:
+    """Catálogo en memoria normalizado como en la importación (sin depender de data/)."""
+    kinds = [
+        ("bibliotecas", "BibliotecasPublicas", "Biblioteca Pública Municipal Autor {}"),
+        ("bibliotecas", "BibliotecasPublicas", "Biblioteca Pública Autora {}"),
+        ("salas", "SalasEstudioLectura", "Sala de estudio Centro Cultural {}"),
+        ("salas", "SalasEstudioLectura", "Centro Sociocultural Barrio {}"),
+    ]
+    districts = ["Chamberi", "Latina", "Retiro", "Villaverde", "Moncloa-Aravaca", "Usera"]
+    rows = []
+    for n in range(96):
+        key, kind, title = kinds[n % len(kinds)]
+        district = districts[n // len(kinds) % len(districts)]
+        record = {
+            "@id": f"https://datos.madrid.es/egob/catalogo/{n}.json",
+            "@type": KOS + kind,
+            "id": str(1000 + n),
+            "title": f"{title.format(n)} ({district})",
+            "address": {
+                "street-address": "CALLE MAYOR 1",
+                "district": {
+                    "@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/"
+                    f"Distrito/{district}"
+                },
+            },
+            "location": {"latitude": 40.4, "longitude": -3.7},
+            "organization": {"schedule": "De lunes a viernes de 9 a 21 horas."},
+        }
+        row = normalize(record, {}, DATASETS[key])
+        # PostgreSQL asigna un UUID estable a cada fila; aquí uno determinista.
+        row["id"] = str(uuid5(NAMESPACE_URL, f"{row['source']}:{row['source_id']}"))
+        rows.append(row)
+    return rows
+
+
 def test_catalog_is_no_longer_flat():
-    rows = json.loads(
-        (Path(__file__).parents[1] / "data" / "libraries.preview.json").read_text("utf-8")
-    )
+    rows = synthetic_catalog()
+    assert {row["institution"] for row in rows} == {"ayuntamiento", "comunidad"}
     values = [
         heuristic_base(madrid("2026-10-23", 14), False, open_now=None, library=row) for row in rows
     ]
-    assert len(set(values)) >= 15 and min(values) >= 39 and max(values) <= 70
+    # Curva 45 a las 14:00; los puntos (-7..+26) la escalan a 45 * (1 + p/62) = 40..64.
+    assert len(set(values)) >= 12 and min(values) >= 40 and max(values) <= 64
