@@ -52,41 +52,48 @@ export function toUserPosition(pos: GeolocationPosition): UserPosition {
   };
 }
 
-/** Traduce errores de la Geolocation API a mensajes de UI. */
+/** Códigos de `GeolocationPositionError`. */
+export const PERMISSION_DENIED = 1;
+export const POSITION_UNAVAILABLE = 2;
+export const TIMEOUT = 3;
+
+/** Una posición de hace menos de esto se reutiliza: evita re-escanear Wi-Fi/GPS en cada pulsación. */
+export const POSITION_MAX_AGE_MS = 60_000;
+
+/** Traduce errores de la Geolocation API a mensajes de UI. Solo el código 1 es un bloqueo. */
 export function geolocationError(error: { code: number } | null | undefined): ReportError {
-  // 1 = PERMISSION_DENIED, 2 = POSITION_UNAVAILABLE, 3 = TIMEOUT
-  if (error?.code === 1) {
+  if (error?.code === PERMISSION_DENIED) {
     return {
       kind: "geo_denied",
       message:
         "Necesitamos tu ubicación para comprobar que estás en la biblioteca. Actívala en los ajustes del navegador.",
     };
   }
-  if (error?.code === 3) {
+  if (error?.code === TIMEOUT) {
     return {
       kind: "geo_unavailable",
-      message: "El GPS ha tardado demasiado. Prueba de nuevo, mejor cerca de una ventana.",
+      message: "No hemos podido obtener tu ubicación a tiempo. Comprueba el Wi-Fi o el GPS y vuelve a intentarlo.",
     };
   }
   return {
     kind: "geo_unavailable",
-    message: "No hemos podido obtener tu ubicación. Comprueba que el GPS está activado.",
+    message: "Tu dispositivo no ha podido determinar la ubicación ahora mismo. Comprueba que está activada y vuelve a intentarlo.",
   };
 }
 
 export class GeolocationFailure extends Error {
   readonly reportError: ReportError;
-  constructor(reportError: ReportError) {
+  /** Código de la Geolocation API (1 denegado, 2 no disponible, 3 tiempo agotado) o null. */
+  readonly code: number | null;
+  constructor(reportError: ReportError, code: number | null = null) {
     super(reportError.message);
     this.name = "GeolocationFailure";
     this.reportError = reportError;
+    this.code = code;
   }
 }
 
-/**
- * Promesa sobre `getCurrentPosition`. Rechaza con `GeolocationFailure`.
- * `maximumAge: 0`: cada intento pide una posición nueva (y el permiso, si el navegador lo permite).
- */
+/** Promesa sobre `getCurrentPosition`. Rechaza con `GeolocationFailure` (con su código). */
 export function getCurrentPosition(options?: PositionOptions): Promise<UserPosition> {
   return new Promise((resolve, reject) => {
     if (!hasGeolocation()) {
@@ -109,8 +116,29 @@ export function getCurrentPosition(options?: PositionOptions): Promise<UserPosit
     }
     navigator.geolocation.getCurrentPosition(
       (pos) => resolve(toUserPosition(pos)),
-      (err) => reject(new GeolocationFailure(geolocationError(err))),
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0, ...options },
+      (err) => reject(new GeolocationFailure(geolocationError(err), err.code)),
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: POSITION_MAX_AGE_MS, ...options },
     );
   });
+}
+
+/**
+ * Posición para reportar o filtrar por cercanía.
+ * - `fresh`: solo al reintentar tras un bloqueo de permisos se exige una lectura nueva
+ *   (`maximumAge: 0`); en el resto se acepta una de hasta 60 s.
+ * - Si la alta precisión falla por TIMEOUT o POSITION_UNAVAILABLE (habitual en ordenadores,
+ *   que no tienen GPS), se repite sin alta precisión: la posición por Wi-Fi llega al instante.
+ */
+export async function requestPosition(
+  { fresh = false }: { fresh?: boolean } = {},
+  get: (options: PositionOptions) => Promise<UserPosition> = getCurrentPosition,
+): Promise<UserPosition> {
+  const maximumAge = fresh ? 0 : POSITION_MAX_AGE_MS;
+  try {
+    return await get({ enableHighAccuracy: true, timeout: 15000, maximumAge });
+  } catch (error) {
+    const code = error instanceof GeolocationFailure ? error.code : null;
+    if (code !== TIMEOUT && code !== POSITION_UNAVAILABLE) throw error;
+    return get({ enableHighAccuracy: false, timeout: 15000, maximumAge });
+  }
 }

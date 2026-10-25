@@ -1,6 +1,6 @@
 "use client";
 
-import { List, LoaderCircle, LocateFixed, Map as MapIcon, Search, X } from "lucide-react";
+import { List, LoaderCircle, LocateFixed, Map as MapIcon, RotateCw, Search, X } from "lucide-react";
 import type { FilterInstitution, LibraryFilters } from "@/lib/filters";
 import type { RealtimeConnection } from "@/lib/types";
 
@@ -55,6 +55,7 @@ export function Header({
   onToggleNear,
   locating,
   geoMessage,
+  onGeoRetry,
   connection,
   view,
   onViewChange,
@@ -66,6 +67,8 @@ export function Header({
   onToggleNear: () => void;
   locating: boolean;
   geoMessage: string | null;
+  /** Solo para fallos que no son un bloqueo de permisos (tiempo agotado, sin señal). */
+  onGeoRetry?: () => void;
   connection: RealtimeConnection;
   view: ViewMode;
   onViewChange: (v: ViewMode) => void;
@@ -161,9 +164,19 @@ export function Header({
       </div>
 
       {geoMessage && (
-        <p className="mt-2 rounded-xl bg-amber-50 px-3 py-2 text-xs text-amber-900" role="alert">
-          {geoMessage}
-        </p>
+        <div className="mt-2 flex items-center gap-2 rounded-xl bg-amber-50 px-3 py-2 text-xs text-amber-900" role="alert">
+          <p className="min-w-0 flex-1">{geoMessage}</p>
+          {onGeoRetry && (
+            <button
+              type="button"
+              onClick={onGeoRetry}
+              disabled={locating}
+              className="inline-flex shrink-0 items-center gap-1 rounded-full bg-amber-900 px-2.5 py-1 font-semibold text-white hover:bg-amber-800 disabled:opacity-60"
+            >
+              <RotateCw className="size-3" /> Reintentar
+            </button>
+          )}
+        </div>
       )}
     </header>
   );

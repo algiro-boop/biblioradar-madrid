@@ -1,10 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { GeolocationFailure, geolocationError, getCurrentPosition } from "@/lib/geo";
+import { GeolocationFailure, geolocationError, getCurrentPosition, POSITION_MAX_AGE_MS, requestPosition } from "@/lib/geo";
 import { detectPlatform, isPermissionDenied, locateWithHelp, PURPOSE_TEXT, UNLOCK_STEPS } from "@/lib/location";
 import type { UserPosition } from "@/lib/types";
 
 const POSITION: UserPosition = { lat: 40.4168, lng: -3.7038, accuracy: 12, timestamp: 1 };
-const denied = () => new GeolocationFailure(geolocationError({ code: 1 }));
+const failure = (code: number) => new GeolocationFailure(geolocationError({ code }), code);
+const denied = () => failure(1);
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -15,18 +16,56 @@ function stubGeolocation(getCurrent: (ok: PositionCallback, fail: PositionErrorC
 }
 
 describe("getCurrentPosition", () => {
-  it("pide siempre una posición nueva (maximumAge: 0)", async () => {
+  it("con permiso concedido acepta una posición de hasta 60 s (sin re-escanear Wi-Fi)", async () => {
     const spy = stubGeolocation((ok) =>
       ok({ coords: { latitude: 40.4, longitude: -3.7, accuracy: 9 }, timestamp: 5 } as GeolocationPosition),
     );
     await expect(getCurrentPosition()).resolves.toMatchObject({ lat: 40.4, lng: -3.7 });
-    expect(spy.mock.calls[0]?.[2]).toMatchObject({ maximumAge: 0, enableHighAccuracy: true });
+    expect(spy.mock.calls[0]?.[2]).toMatchObject({ maximumAge: POSITION_MAX_AGE_MS, enableHighAccuracy: true });
   });
 
-  it("PERMISSION_DENIED se traduce a geo_denied", async () => {
-    stubGeolocation((_, fail) => fail({ code: 1 } as GeolocationPositionError));
-    const error = await getCurrentPosition().catch((e: unknown) => e);
-    expect(isPermissionDenied(error)).toBe(true);
+  it("solo PERMISSION_DENIED se considera bloqueo; TIMEOUT y POSITION_UNAVAILABLE no", async () => {
+    for (const [code, blocked] of [[1, true], [2, false], [3, false]] as const) {
+      stubGeolocation((_, fail) => fail({ code } as GeolocationPositionError));
+      const error = await getCurrentPosition().catch((e: unknown) => e);
+      expect(error).toMatchObject({ code });
+      expect(isPermissionDenied(error)).toBe(blocked);
+      if (!blocked) expect((error as GeolocationFailure).message).not.toMatch(/ajustes del navegador|bloquead/i);
+    }
+  });
+});
+
+describe("requestPosition", () => {
+  it("reutiliza hasta 60 s salvo al reintentar tras un bloqueo (maximumAge: 0)", async () => {
+    const get = vi.fn((_options?: PositionOptions) => Promise.resolve(POSITION));
+    await requestPosition({}, get);
+    await requestPosition({ fresh: true }, get);
+    expect(get.mock.calls.map(([o]) => o?.maximumAge)).toEqual([POSITION_MAX_AGE_MS, 0]);
+  });
+
+  it.each([2, 3])("con código %i reintenta sin alta precisión y timeout de 15 s", async (code) => {
+    const get = vi.fn<(o?: PositionOptions) => Promise<UserPosition>>()
+      .mockRejectedValueOnce(failure(code))
+      .mockResolvedValueOnce(POSITION);
+    await expect(requestPosition({}, get)).resolves.toEqual(POSITION);
+    expect(get.mock.calls.map(([o]) => o)).toEqual([
+      { enableHighAccuracy: true, timeout: 15_000, maximumAge: POSITION_MAX_AGE_MS },
+      { enableHighAccuracy: false, timeout: 15_000, maximumAge: POSITION_MAX_AGE_MS },
+    ]);
+  });
+
+  it("si el fallback también agota el tiempo, falla sin decir que está bloqueada", async () => {
+    const get = vi.fn(() => Promise.reject(failure(3)));
+    const error = await requestPosition({}, get).catch((e: unknown) => e);
+    expect(get).toHaveBeenCalledTimes(2);
+    expect(isPermissionDenied(error)).toBe(false);
+    expect((error as GeolocationFailure).reportError.kind).toBe("geo_unavailable");
+  });
+
+  it("PERMISSION_DENIED no reintenta", async () => {
+    const get = vi.fn(() => Promise.reject(denied()));
+    await expect(requestPosition({}, get)).rejects.toMatchObject({ code: 1 });
+    expect(get).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -57,7 +96,7 @@ describe("locateWithHelp", () => {
   });
 
   it("otros errores (GPS, tiempo agotado) no muestran la ayuda de permisos", async () => {
-    const timeout = new GeolocationFailure(geolocationError({ code: 3 }));
+    const timeout = failure(3);
     const onBlocked = vi.fn();
     await expect(locateWithHelp(() => Promise.reject(timeout), "report", onBlocked)).rejects.toBe(timeout);
     expect(onBlocked).not.toHaveBeenCalled();

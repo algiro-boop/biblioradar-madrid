@@ -1,7 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { GeolocationFailure, getCurrentPosition, hasGeolocation, toUserPosition } from "@/lib/geo";
+import {
+  GeolocationFailure,
+  hasGeolocation,
+  POSITION_MAX_AGE_MS,
+  requestPosition,
+  toUserPosition,
+} from "@/lib/geo";
 import type { ReportError, UserPosition } from "@/lib/types";
 
 export type GeoStatus = "idle" | "locating" | "granted" | "denied" | "unavailable";
@@ -10,8 +16,11 @@ export interface GeolocationState {
   status: GeoStatus;
   position: UserPosition | null;
   error: ReportError | null;
-  /** Pide una posición fresca (muestra el diálogo de permiso si hace falta) y empieza a seguirla. */
-  locate: () => Promise<UserPosition>;
+  /**
+   * Devuelve la posición (pide permiso si hace falta) y empieza a seguirla. Reutiliza una
+   * lectura de menos de 60 s; `fresh` exige una nueva (reintento tras un bloqueo de permisos).
+   */
+  locate: (options?: { fresh?: boolean }) => Promise<UserPosition>;
 }
 
 export function useGeolocation(): GeolocationState {
@@ -19,6 +28,8 @@ export function useGeolocation(): GeolocationState {
   const [position, setPosition] = useState<UserPosition | null>(null);
   const [error, setError] = useState<ReportError | null>(null);
   const watchIdRef = useRef<number | null>(null);
+  const positionRef = useRef<UserPosition | null>(null);
+  positionRef.current = position;
 
   const startWatching = useCallback(() => {
     if (watchIdRef.current !== null || !hasGeolocation()) return;
@@ -71,25 +82,37 @@ export function useGeolocation(): GeolocationState {
     };
   }, [startWatching]);
 
-  const locate = useCallback(async () => {
-    setStatus((s) => (s === "granted" ? s : "locating"));
-    try {
-      const pos = await getCurrentPosition();
-      setPosition(pos);
-      setStatus("granted");
-      setError(null);
-      startWatching();
-      return pos;
-    } catch (err) {
-      const reportError =
-        err instanceof GeolocationFailure
-          ? err.reportError
-          : { kind: "geo_unavailable" as const, message: "No se pudo obtener tu ubicación." };
-      setError(reportError);
-      setStatus(reportError.kind === "geo_denied" ? "denied" : position ? "granted" : "idle");
-      throw err instanceof GeolocationFailure ? err : new GeolocationFailure(reportError);
-    }
-  }, [position, startWatching]);
+  const locate = useCallback(
+    async ({ fresh = false }: { fresh?: boolean } = {}) => {
+      const known = positionRef.current;
+      // Con permiso concedido el seguimiento ya trae el punto azul: no forzar otro escaneo.
+      if (!fresh && known && Date.now() - known.timestamp < POSITION_MAX_AGE_MS) {
+        startWatching();
+        return known;
+      }
+      setStatus((s) => (s === "granted" ? s : "locating"));
+      try {
+        const pos = await requestPosition({ fresh });
+        setPosition(pos);
+        setStatus("granted");
+        setError(null);
+        startWatching();
+        return pos;
+      } catch (err) {
+        const failure =
+          err instanceof GeolocationFailure
+            ? err
+            : new GeolocationFailure({ kind: "geo_unavailable", message: "No se pudo obtener tu ubicación." });
+        setError(failure.reportError);
+        // Un TIMEOUT no revoca un permiso concedido: solo el código 1 marca "denied".
+        setStatus((s) =>
+          failure.reportError.kind === "geo_denied" ? "denied" : s === "granted" || positionRef.current ? "granted" : "idle",
+        );
+        throw failure;
+      }
+    },
+    [startWatching],
+  );
 
   return { status, position, error, locate };
 }

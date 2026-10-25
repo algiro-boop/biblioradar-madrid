@@ -1,4 +1,4 @@
-import { GeolocationFailure } from "./geo";
+import { GeolocationFailure, PERMISSION_DENIED } from "./geo";
 import type { UserPosition } from "./types";
 
 /** Para qué se pide la ubicación: cambia la explicación del aviso. */
@@ -42,12 +42,13 @@ export function detectPlatform(userAgent: string, maxTouchPoints = 0): LocationP
   return "desktop";
 }
 
+/** Solo PERMISSION_DENIED (código 1) es un bloqueo; un TIMEOUT nunca abre la ayuda de permisos. */
 export function isPermissionDenied(error: unknown): boolean {
-  return error instanceof GeolocationFailure && error.reportError.kind === "geo_denied";
+  return error instanceof GeolocationFailure && error.code === PERMISSION_DENIED;
 }
 
 /**
- * Cada llamada vuelve a pedir la posición (`getCurrentPosition`), también tras un "No".
+ * Cada llamada vuelve a pedir la posición, también tras un "No".
  * Si el navegador responde PERMISSION_DENIED, delega en `onBlocked`, que muestra la ayuda y
  * resuelve con la posición cuando el usuario reintenta con éxito, o rechaza si la cierra.
  */

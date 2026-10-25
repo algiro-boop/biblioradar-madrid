@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleAlert, CircleCheck, LoaderCircle, MapPin, TriangleAlert } from "lucide-react";
+import { CircleAlert, CircleCheck, LoaderCircle, MapPin, RotateCw, TriangleAlert } from "lucide-react";
 import { useReport } from "@/hooks/useReport";
 import { REPORT_OPTIONS, reportSummary } from "@/lib/reports";
 import type { Library, ReportValue, UserPosition } from "@/lib/types";
@@ -139,7 +139,17 @@ export function ReportButtons({
             ) : (
               <CircleAlert className="mt-0.5 size-4 shrink-0" />
             )}
-            <span>{error.message}</span>
+            <span className="min-w-0 flex-1">{error.message}</span>
+            {/* Tiempo agotado o sin señal: se puede reintentar sin pasar por la ayuda de permisos. */}
+            {error.kind === "geo_unavailable" && activeValue != null && (
+              <button
+                type="button"
+                onClick={() => void submit(activeValue)}
+                className="inline-flex shrink-0 items-center gap-1 rounded-full bg-red-900 px-2.5 py-1 text-xs font-semibold text-white hover:bg-red-800"
+              >
+                <RotateCw className="size-3" /> Reintentar
+              </button>
+            )}
           </p>
         )}
         {phase === "idle" && coolingDown && (

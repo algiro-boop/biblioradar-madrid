@@ -7,7 +7,7 @@ import { useLibraries } from "@/hooks/useLibraries";
 import { useNow } from "@/hooks/useNow";
 import { withCurrentOccupancy } from "@/lib/estimate";
 import { applyFilters, EMPTY_FILTERS, hasActiveFilters, type FilterInstitution, type LibraryFilters } from "@/lib/filters";
-import { GeolocationFailure, geolocationError, haversineMeters } from "@/lib/geo";
+import { GeolocationFailure, geolocationError, haversineMeters, PERMISSION_DENIED } from "@/lib/geo";
 import { isPermissionDenied, locateWithHelp, type LocationPurpose } from "@/lib/location";
 import type { UserPosition } from "@/lib/types";
 import { Header, type ViewMode } from "./Header";
@@ -51,6 +51,8 @@ export function AppShell() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [focusUserKey, setFocusUserKey] = useState(0);
   const [geoMessage, setGeoMessage] = useState<string | null>(null);
+  /** El aviso de «Cerca de mí» admite reintento (tiempo agotado, ubicación no disponible). */
+  const [geoRetryable, setGeoRetryable] = useState(false);
   const deferredQuery = useDeferredValue(filters.query);
 
   // "Cerca de mí" sigue la posición en vivo mientras está activo.
@@ -78,7 +80,7 @@ export function AppShell() {
   const requestLocation = useCallback(
     (purpose: LocationPurpose) =>
       locateWithHelp(locate, purpose, (p) => {
-        blockedRef.current?.reject(new GeolocationFailure(geolocationError({ code: 1 })));
+        blockedRef.current?.reject(new GeolocationFailure(geolocationError({ code: PERMISSION_DENIED }), PERMISSION_DENIED));
         setRetryError(null);
         setBlockedPurpose(p);
         return new Promise<UserPosition>((resolve, reject) => {
@@ -90,7 +92,7 @@ export function AppShell() {
   const locateForReport = useCallback(() => requestLocation("report"), [requestLocation]);
 
   const closeLocationHelp = useCallback(() => {
-    blockedRef.current?.reject(new GeolocationFailure(geolocationError({ code: 1 })));
+    blockedRef.current?.reject(new GeolocationFailure(geolocationError({ code: PERMISSION_DENIED }), PERMISSION_DENIED));
     blockedRef.current = null;
     setBlockedPurpose(null);
   }, []);
@@ -99,35 +101,36 @@ export function AppShell() {
     setRetrying(true);
     setRetryError(null);
     try {
-      const position = await locate();
+      // Tras un bloqueo sí se exige una lectura nueva (maximumAge: 0).
+      const position = await locate({ fresh: true });
       blockedRef.current?.resolve(position);
       blockedRef.current = null;
       setBlockedPurpose(null);
     } catch (err) {
-      setRetryError(
-        isPermissionDenied(err)
-          ? "La ubicación sigue bloqueada. Revisa el paso de arriba y vuelve a intentarlo."
-          : err instanceof GeolocationFailure
-            ? err.message
-            : "No se pudo obtener tu ubicación.",
-      );
+      if (isPermissionDenied(err)) {
+        setRetryError("La ubicación sigue bloqueada. Revisa el paso de arriba y vuelve a intentarlo.");
+      } else {
+        // El permiso ya no está bloqueado (p. ej. TIMEOUT): cerrar la ayuda y que la acción
+        // pendiente muestre su propio aviso con «Reintentar».
+        blockedRef.current?.reject(err);
+        blockedRef.current = null;
+        setBlockedPurpose(null);
+      }
     } finally {
       setRetrying(false);
     }
   }, [locate]);
   const selectedDistance = selected && geo.position ? haversineMeters(geo.position, selected) : null;
 
-  const toggleNear = useCallback(async () => {
-    if (nearMe) {
-      setNearMe(false);
-      return;
-    }
+  const findNearMe = useCallback(async () => {
     setGeoMessage(null);
+    setGeoRetryable(false);
     try {
       await requestLocation("near");
       setNearMe(true);
       setFocusUserKey((k) => k + 1);
     } catch (err) {
+      setGeoRetryable(!isPermissionDenied(err));
       setGeoMessage(
         isPermissionDenied(err)
           ? "Sin ubicación no podemos ordenar por cercanía. Pulsa «Cerca de mí» cuando quieras activarla."
@@ -136,7 +139,15 @@ export function AppShell() {
             : "No se pudo obtener tu ubicación.",
       );
     }
-  }, [nearMe, requestLocation]);
+  }, [requestLocation]);
+
+  const toggleNear = useCallback(async () => {
+    if (nearMe) {
+      setNearMe(false);
+      return;
+    }
+    await findNearMe();
+  }, [nearMe, findNearMe]);
 
   const toggleInstitution = useCallback((i: FilterInstitution) => {
     setFilters((f) => ({
@@ -179,6 +190,7 @@ export function AppShell() {
             onToggleNear={() => void toggleNear()}
             locating={geo.status === "locating"}
             geoMessage={geoMessage}
+            onGeoRetry={geoRetryable ? () => void findNearMe() : undefined}
             connection={connection}
             view={view}
             onViewChange={setView}
