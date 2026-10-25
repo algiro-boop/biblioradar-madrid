@@ -5,6 +5,7 @@ import { useCallback, useDeferredValue, useMemo, useState } from "react";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useLibraries } from "@/hooks/useLibraries";
 import { useNow } from "@/hooks/useNow";
+import { withCurrentOccupancy } from "@/lib/estimate";
 import { applyFilters, EMPTY_FILTERS, hasActiveFilters, type FilterInstitution, type LibraryFilters } from "@/lib/filters";
 import { GeolocationFailure, haversineMeters } from "@/lib/geo";
 import { Header, type ViewMode } from "./Header";
@@ -34,9 +35,12 @@ function ConfigNotice({ message }: { message: string }) {
 }
 
 export function AppShell() {
-  const { libraries, loading, error, configError, connection, reload, refreshLibrary } = useLibraries();
+  const { libraries: snapshot, loading, error, configError, connection, reload, refreshLibrary } = useLibraries();
   const geo = useGeolocation();
   const now = useNow();
+  // Si la base del cron caducó (p. ej. a las 09:00, al abrir) se muestra la estimación horaria
+  // vigente calculada aquí, sin esperar a la siguiente ejecución ni avisar de desactualización.
+  const libraries = useMemo(() => withCurrentOccupancy(snapshot, now), [snapshot, now]);
 
   const [filters, setFilters] = useState<LibraryFilters>(EMPTY_FILTERS);
   const [nearMe, setNearMe] = useState(false);
@@ -142,7 +146,6 @@ export function AppShell() {
         <MapView
           libraries={mapLibraries}
           selectedId={selectedId}
-          now={now}
           userPosition={geo.position}
           focusUserKey={focusUserKey}
           onSelect={setSelectedId}

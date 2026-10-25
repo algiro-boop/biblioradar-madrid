@@ -5,7 +5,6 @@ import {
   formatPinText,
   getOccupancyLevel,
   hasRoom,
-  isStale,
   labelFromPct,
   mergeOccupancy,
   parseLibraryRow,
@@ -14,8 +13,6 @@ import {
 } from "@/lib/occupancy";
 import { toOccupancyChange } from "@/lib/supabase";
 import type { LibraryWithOccupancy, OccupancyStatus } from "@/lib/types";
-
-const NOW = Date.parse("2026-10-23T10:00:00Z");
 
 function status(overrides: Partial<OccupancyStatus> = {}): OccupancyStatus {
   return {
@@ -128,10 +125,6 @@ describe("final_occupancy_pct: null nunca es 0 %", () => {
     expect(change?.type).toBe("UPDATE");
     expect(change && change.type !== "DELETE" ? change.status.final_occupancy_pct : "x").toBeNull();
   });
-
-  it("isStale nunca marca un null (no hay dato que caduque)", () => {
-    expect(isStale(status({ updated_at: "2026-10-20T00:00:00Z" }), NOW)).toBe(false);
-  });
 });
 
 describe("labelFromPct replica la columna generada", () => {
@@ -186,23 +179,6 @@ describe("mergeOccupancy (Realtime)", () => {
   it("aplica un paso a null (biblioteca que cierra) sin convertirlo en 0", () => {
     const next = mergeOccupancy(base, status({ final_occupancy_pct: null, updated_at: "2026-10-23T09:59:00Z" }));
     expect(next[0]?.occupancy?.final_occupancy_pct).toBeNull();
-  });
-});
-
-describe("isStale", () => {
-  it("marca bases caducadas sin reportes", () => {
-    expect(
-      isStale(
-        status({ final_occupancy_pct: 40, base_valid_until: "2026-10-23T09:30:00Z", updated_at: "2026-10-23T09:20:00Z" }),
-        NOW,
-      ),
-    ).toBe(true);
-  });
-
-  it("no marca datos vigentes", () => {
-    expect(
-      isStale(status({ final_occupancy_pct: 40, base_valid_until: "2026-10-23T10:30:00Z" }), NOW),
-    ).toBe(false);
   });
 });
 

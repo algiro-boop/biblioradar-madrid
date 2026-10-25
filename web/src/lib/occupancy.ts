@@ -12,9 +12,6 @@ import type {
 const LABELS: readonly OccupancyLabel[] = ["free", "moderate", "high", "full"];
 const INSTITUTIONS: readonly InstitutionType[] = ["ayuntamiento", "comunidad", "ucm", "otra"];
 
-/** Un dato sin recálculo durante este tiempo se marca como posiblemente desactualizado. */
-export const STALE_AFTER_MS = 90 * 60 * 1000;
-
 /**
  * Convierte un valor a porcentaje entero 0..100 o NULL.
  * Ojo: `Number(null) === 0`, por eso null/undefined/"" se tratan explícitamente como desconocido.
@@ -123,21 +120,6 @@ export const INSTITUTION_STYLES: Record<InstitutionType, string> = {
   ucm: "bg-rose-50 text-rose-800 ring-rose-200",
   otra: "bg-slate-100 text-slate-700 ring-slate-200",
 };
-
-/**
- * Un porcentaje puede estar desactualizado entre ejecuciones del cron: la base caducó y no hay
- * reportes que la sustituyan, o la fila lleva demasiado sin recalcularse.
- */
-export function isStale(status: OccupancyStatus | null | undefined, now: number): boolean {
-  if (!status || status.final_occupancy_pct === null) return false;
-  const updated = Date.parse(status.updated_at);
-  if (Number.isFinite(updated) && now - updated > STALE_AFTER_MS) return true;
-  if (status.base_valid_until && status.active_reports_count === 0) {
-    const validUntil = Date.parse(status.base_valid_until);
-    if (Number.isFinite(validUntil) && validUntil <= now) return true;
-  }
-  return false;
-}
 
 const relativeFormatter = new Intl.RelativeTimeFormat("es", { numeric: "auto" });
 

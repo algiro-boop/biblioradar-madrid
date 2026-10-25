@@ -21,11 +21,9 @@ export function InstitutionBadge({ institution }: { institution: InstitutionType
 /** Píldora compacta con el porcentaje y color semántico. NULL se muestra como "?", nunca "0%". */
 export function OccupancyPill({
   status,
-  stale = false,
   size = "md",
 }: {
   status: OccupancyStatus | null;
-  stale?: boolean;
   size?: "sm" | "md";
 }) {
   const level = getOccupancyLevel(status);
@@ -34,9 +32,9 @@ export function OccupancyPill({
   const dims = size === "sm" ? "h-7 min-w-11 text-xs" : "h-10 min-w-14 text-sm";
   return (
     <span
-      className={`inline-flex shrink-0 items-center justify-center rounded-full px-2.5 font-bold tabular-nums ${dims} ${styles.bg} ${styles.text} ${stale ? "opacity-60" : ""}`}
+      className={`inline-flex shrink-0 items-center justify-center rounded-full px-2.5 font-bold tabular-nums ${dims} ${styles.bg} ${styles.text}`}
       aria-label={pct === null ? "Sin datos de ocupación" : `Ocupación ${pct} por ciento, ${LEVEL_TEXT[level]}`}
-      title={stale ? "Dato posiblemente desactualizado" : LEVEL_TEXT[level]}
+      title={LEVEL_TEXT[level]}
     >
       {formatPinText(pct)}
     </span>

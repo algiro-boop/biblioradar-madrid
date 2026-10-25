@@ -3,7 +3,7 @@
 import { ChevronRight, RotateCw, SearchX } from "lucide-react";
 import type { LibraryListItem } from "@/lib/filters";
 import { formatDistance } from "@/lib/geo";
-import { formatRelativeTime, hasRoom, isStale } from "@/lib/occupancy";
+import { formatRelativeTime, hasRoom } from "@/lib/occupancy";
 import { InstitutionBadge, LevelText, OccupancyPill } from "./Badges";
 
 function SkeletonCard() {
@@ -89,7 +89,6 @@ export function LibraryList({
         )}
 
         {items.map(({ library, distanceM }) => {
-          const stale = isStale(library.occupancy, now);
           const selected = library.id === selectedId;
           return (
             <li key={library.id}>
@@ -101,7 +100,7 @@ export function LibraryList({
                   selected ? "ring-2 ring-slate-900" : "ring-slate-200"
                 }`}
               >
-                <OccupancyPill status={library.occupancy} stale={stale} />
+                <OccupancyPill status={library.occupancy} />
                 <span className="min-w-0 flex-1">
                   <span className="line-clamp-2 text-sm leading-snug font-semibold text-slate-900">{library.name}</span>
                   <span className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
@@ -113,7 +112,7 @@ export function LibraryList({
                     <LevelText status={library.occupancy} />
                     {library.occupancy?.final_occupancy_pct != null && (
                       <span className="text-[11px] text-slate-400">
-                        {stale ? "posiblemente desactualizado" : formatRelativeTime(library.occupancy.updated_at, now)}
+                        {library.estimatedLocally ? "estimación horaria" : formatRelativeTime(library.occupancy.updated_at, now)}
                       </span>
                     )}
                   </span>

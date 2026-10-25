@@ -171,11 +171,13 @@ def test_weather_retries(monkeypatch):
         assert get_weather(client, NOW).is_raining
 
 
-def test_new_migration_parses():
-    path = (
-        Path(__file__).resolve().parents[1] / "supabase/migrations/202610230002_phase2_fusion.sql"
-    )
-    assert len(parse_sql(path.read_text())) >= 10
+@pytest.mark.parametrize(
+    "name,statements",
+    [("202610230002_phase2_fusion.sql", 10), ("202610250003_base_validity.sql", 5)],
+)
+def test_new_migration_parses(name, statements):
+    path = Path(__file__).resolve().parents[1] / "supabase/migrations" / name
+    assert len(parse_sql(path.read_text())) >= statements
 
 
 def madrid(day, hour, minute=0):

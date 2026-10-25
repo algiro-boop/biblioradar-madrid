@@ -1,4 +1,4 @@
--- Ejecutar DESPUÉS de las dos migraciones como postgres. Todas las escrituras se revierten.
+-- Ejecutar DESPUÉS de todas las migraciones como postgres. Todas las escrituras se revierten.
 begin;
 insert into public.libraries
   (id, source, source_id, name, institution, address, district, lat, lng)
@@ -123,6 +123,58 @@ begin
     where library_id = '00000000-0000-0000-0000-000000000001'
       and active_reports_count = 0 and crowd_pct is null and final_occupancy_pct = 70) then
     raise exception 'La RPC no elimina la influencia de reportes caducados';
+  end if;
+end;
+$$;
+-- La validez enviada por el cron se respeta dentro de [1 minuto, 3 horas].
+set local role service_role;
+select public.update_occupancy_bases(jsonb_build_array(jsonb_build_object(
+  'library_id', '00000000-0000-0000-0000-000000000001',
+  'predicted_base_pct', 40, 'google_live_pct', null, 'google_hist_pct', null,
+  'base_source', 'Validez de prueba',
+  'base_valid_until', clock_timestamp() + interval '25 minutes')));
+reset role;
+do $$
+declare
+  v_left interval;
+begin
+  select base_valid_until - base_observed_at into v_left from public.occupancy_status
+    where library_id = '00000000-0000-0000-0000-000000000001';
+  if v_left not between interval '24 minutes' and interval '26 minutes' then
+    raise exception 'No se respeta la validez enviada por el cron: %', v_left;
+  end if;
+end;
+$$;
+set local role service_role;
+select public.update_occupancy_bases(jsonb_build_array(jsonb_build_object(
+  'library_id', '00000000-0000-0000-0000-000000000001',
+  'predicted_base_pct', 40, 'google_live_pct', null, 'google_hist_pct', null,
+  'base_source', 'Validez de prueba',
+  'base_valid_until', clock_timestamp() + interval '2 days')));
+reset role;
+do $$
+begin
+  if (select base_valid_until - base_observed_at from public.occupancy_status
+    where library_id = '00000000-0000-0000-0000-000000000001') <> interval '3 hours' then
+    raise exception 'La validez no se acota a 3 horas';
+  end if;
+end;
+$$;
+set local role service_role;
+select public.update_occupancy_bases(jsonb_build_array(jsonb_build_object(
+  'library_id', '00000000-0000-0000-0000-000000000001',
+  'predicted_base_pct', 40, 'google_live_pct', null, 'google_hist_pct', null,
+  'base_source', 'Validez de prueba',
+  'base_valid_until', clock_timestamp() - interval '1 hour')));
+reset role;
+do $$
+begin
+  if (select base_valid_until - base_observed_at from public.occupancy_status
+    where library_id = '00000000-0000-0000-0000-000000000001') <> interval '1 minute'
+    or not exists(select 1 from public.occupancy_status
+      where library_id = '00000000-0000-0000-0000-000000000001' and final_occupancy_pct = 40)
+  then
+    raise exception 'Una validez pasada no debe caducar la base recién recibida';
   end if;
 end;
 $$;

@@ -6,8 +6,10 @@ import pytest
 from test_engine import weather_payload
 from test_scrapers import LIBRARY, NOW, OPEN_9_21, google_page
 
-from biblioradar.engine import HEURISTIC_SOURCE
+from biblioradar.engine import HEURISTIC_SOURCE, MADRID
 from biblioradar.update_job import (
+    BASE_VALID_MINUTES,
+    base_valid_until,
     credentials,
     opening_status,
     published_weekend_status,
@@ -303,3 +305,58 @@ def test_read_libraries_selects_district_for_context():
 
     with httpx.Client(transport=httpx.MockTransport(handler)) as client:
         read_libraries(client, "https://example.org", {})
+
+
+def valid_until(rows):
+    return datetime.fromisoformat(rows[0]["base_valid_until"]).astimezone(MADRID)
+
+
+def test_closed_snapshot_expires_exactly_at_google_opening():
+    before_opening = datetime(2026, 10, 23, 6, 45, tzinfo=timezone.utc)  # 08:45 Madrid
+    rows = run_with_google(google_page(None, None, hours=OPEN_9_21), now=before_opening)
+    assert rows[0]["base_source"] == "Cerrada según horario de Google"
+    assert valid_until(rows) == datetime(2026, 10, 23, 9, tzinfo=MADRID)
+
+
+def test_open_snapshot_expires_at_closing_or_after_margin():
+    evening = datetime(2026, 10, 23, 18, 30, 20, tzinfo=timezone.utc)  # 20:30:20 Madrid
+    rows = run_with_google(google_page(None, None), now=evening)  # franja por defecto
+    assert rows[0]["predicted_base_pct"] is not None
+    assert valid_until(rows) == datetime(2026, 10, 23, 21, tzinfo=MADRID)
+    rows = run_with_google(google_page(None, None, hours=OPEN_9_21))  # 14:00, sin cambios
+    assert valid_until(rows) - NOW.astimezone(MADRID) == timedelta(minutes=BASE_VALID_MINUTES)
+
+
+@pytest.mark.parametrize(
+    "now,opening",
+    [
+        # Sábado 24-10-2026 en horario de verano (CEST, UTC+2) y domingo 25 tras el cambio a
+        # invierno (CET, UTC+1): la apertura de las 09:00 locales cae en otra hora UTC.
+        (datetime(2026, 10, 24, 6, 0, tzinfo=timezone.utc), datetime(2026, 10, 24, 7, 0)),
+        (datetime(2026, 10, 25, 7, 0, tzinfo=timezone.utc), datetime(2026, 10, 25, 8, 0)),
+    ],
+)
+def test_reviewed_opening_uses_madrid_time_across_dst(now, opening):
+    library = {
+        **LIBRARY,
+        "opening_hours": {
+            "requires_review": False,
+            "weekly": {
+                **{str(day): [["09:00", "21:00"]] for day in range(1, 6)},
+                "6": [["09:00", "14:00"]],
+                "7": [["09:00", "14:00"]],
+            },
+        },
+    }
+    rows = run_with_google(google_page(None, None), now=now, library=library)
+    assert rows[0]["base_source"] == "Cerrada según horario revisado"
+    assert datetime.fromisoformat(rows[0]["base_valid_until"]) == opening.replace(
+        tzinfo=timezone.utc
+    )
+
+
+def test_base_valid_until_never_exceeds_margin():
+    now = datetime(2026, 10, 23, 10, 0, 30, tzinfo=timezone.utc)
+    assert base_valid_until(now, lambda _: True) == now + timedelta(minutes=BASE_VALID_MINUTES)
+    flip = now.replace(second=0) + timedelta(minutes=7)
+    assert base_valid_until(now, lambda when: when < flip) == flip

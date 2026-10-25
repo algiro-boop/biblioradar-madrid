@@ -1,6 +1,6 @@
 "use client";
 
-import { Armchair, CalendarClock, Clock, MapPin, Navigation, TriangleAlert, Users, X } from "lucide-react";
+import { Armchair, CalendarClock, Clock, MapPin, Navigation, Users, X } from "lucide-react";
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { formatDistance } from "@/lib/geo";
 import {
@@ -8,7 +8,6 @@ import {
   formatOccupancy,
   formatRelativeTime,
   getOccupancyLevel,
-  isStale,
   LEVEL_STYLES,
   LEVEL_TEXT,
 } from "@/lib/occupancy";
@@ -107,7 +106,6 @@ export function LibraryDrawer({
   const level = getOccupancyLevel(status);
   const styles = LEVEL_STYLES[level];
   const pct = status?.final_occupancy_pct ?? null;
-  const stale = isStale(status, now);
   const validUntil = formatClock(status?.base_valid_until);
   const hours = library?.opening_hours.normalized_text || library?.opening_hours.raw_text || "";
 
@@ -218,14 +216,10 @@ export function LibraryDrawer({
                   <p className="font-medium text-slate-700">{status?.primary_source ?? "Sin datos de ocupación"}</p>
                   <p className="flex items-center gap-1.5">
                     <Clock className="size-3.5" />
-                    Actualizado {formatRelativeTime(status?.updated_at, now)}
+                    {library.estimatedLocally
+                      ? `Estimación de las ${formatClock(new Date(now).toISOString())} (hora de Madrid)`
+                      : `Actualizado ${formatRelativeTime(status?.updated_at, now)}`}
                   </p>
-                  {stale && (
-                    <p className="flex items-center gap-1.5 font-medium text-amber-700">
-                      <TriangleAlert className="size-3.5" />
-                      Dato posiblemente desactualizado: se recalculará en la próxima actualización.
-                    </p>
-                  )}
                 </div>
               </section>
 

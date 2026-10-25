@@ -9,7 +9,7 @@ import math
 import re
 import unicodedata
 from dataclasses import dataclass, replace
-from datetime import datetime
+from datetime import date, datetime
 
 import httpx
 
@@ -55,9 +55,15 @@ class Observation:
     university_live_pct: int | None = None
     # Horario estructurado de Google para hoy: True abierta, False cerrada, None desconocido.
     open_now: bool | None = None
+    # Tramos de ese mismo día (minutos desde medianoche en Madrid), para prever el cambio.
+    hours: tuple[tuple[int, int], ...] | None = None
+    hours_day: date | None = None
     place_id: str | None = None
     source: str = "Sin datos de concurrencia"
     error: str | None = None
+
+    def open_at(self, when: datetime) -> bool | None:
+        return open_in(self.hours, self.hours_day, when) if self.hours_day else None
 
     @property
     def available(self) -> bool:
@@ -150,14 +156,16 @@ def clean_query(library: dict) -> str:
     return " ".join(part for part in (name, address, "Madrid") if part)
 
 
-def parse_open_now(item: list, now: datetime) -> bool | None:
-    """Lee el horario por fechas de la ficha (índice 203). Nunca deduce cierre si falta."""
+def google_hours(item: list, now: datetime) -> tuple[tuple[int, int], ...] | None:
+    """Tramos de hoy (minutos desde medianoche, Madrid) del horario por fechas (índice 203).
+
+    Tupla vacía: cerrada todo el día. None: Google no da horario legible para hoy.
+    """
     days = nested(item, 203, 0)
     if not isinstance(days, list):
         return None
     local = aware(now).astimezone(MADRID)
     today = [local.year, local.month, local.day]
-    current = local.hour * 60 + local.minute
     for day in days:
         if nested(day, 2) != today:
             continue
@@ -178,10 +186,24 @@ def parse_open_now(item: list, now: datetime) -> bool | None:
             start_m, end_m = (h * 60 + m for h, m in hm)
             intervals.append((start_m, end_m if end_m > start_m else end_m + 1440))
         if intervals:
-            return any(start <= current < end for start, end in intervals)
+            return tuple(intervals)
         labels = " ".join(str(nested(slot, 0)) for slot in slots)
-        return False if "cerrad" in text_key(labels) else None
+        return () if "cerrad" in text_key(labels) else None
     return None
+
+
+def open_in(hours: tuple[tuple[int, int], ...] | None, day: date, when: datetime) -> bool | None:
+    """Apertura en `when` según los tramos de `day`; None si es otro día o no hay horario."""
+    local = aware(when).astimezone(MADRID)
+    if hours is None or local.date() != day:
+        return None
+    current = local.hour * 60 + local.minute
+    return any(start <= current < end for start, end in hours)
+
+
+def parse_open_now(item: list, now: datetime) -> bool | None:
+    """Lee el horario por fechas de la ficha (índice 203). Nunca deduce cierre si falta."""
+    return open_in(google_hours(item, now), aware(now).astimezone(MADRID).date(), now)
 
 
 def is_week(value) -> bool:
@@ -280,10 +302,13 @@ def parse_google(page: str, library: dict, now: datetime) -> Observation:
                 if nested(hour, 0) == local.hour:
                     hist = nested(hour, 1)
     place_id = nested(item, 78)
+    hours = google_hours(item, now)
     return Observation(
         google_live_pct=live,
         google_hist_pct=hist,
-        open_now=parse_open_now(item, now),
+        open_now=open_in(hours, local.date(), now),
+        hours=hours,
+        hours_day=local.date() if hours is not None else None,
         place_id=place_id if isinstance(place_id, str) else None,
         source="Google Maps",
     )
@@ -325,7 +350,12 @@ def get_google(client: httpx.Client, library: dict, now: datetime) -> Observatio
             error = f"Google no disponible: {type(exc).__name__}"
             continue
         if found and observation.open_now is None:
-            observation = replace(observation, open_now=found.open_now)
+            observation = replace(
+                observation,
+                open_now=found.open_now,
+                hours=found.hours,
+                hours_day=found.hours_day,
+            )
         if observation.available:
             return observation
         found = found or observation

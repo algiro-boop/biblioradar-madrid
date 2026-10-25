@@ -8,6 +8,7 @@ import logging
 import os
 import re
 import unicodedata
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -27,7 +28,7 @@ from biblioradar.engine import (
     predict_base,
 )
 from biblioradar.ingest import request_with_retry
-from biblioradar.scrapers import get_observation
+from biblioradar.scrapers import Observation, get_observation
 from biblioradar.weather import get_weather
 
 LOG = logging.getLogger("biblioradar.update")
@@ -186,6 +187,101 @@ def published_weekend_status(hours: dict, now: datetime) -> bool | None:
     return None
 
 
+# Validez de cada base: varios ciclos del cron (cada 15 min) aunque GitHub lo retrase, salvo
+# que antes cambie la apertura. La web recalcula la estimación horaria al caducar.
+BASE_VALID_MINUTES = 90
+# Peticiones simultáneas a fuentes externas (Google, UCM). httpx.Client admite hilos.
+SOURCE_WORKERS = 6
+
+
+def open_at(hours: dict, observation: Observation | None, when: datetime) -> bool:
+    """Apertura prevista en `when` con la misma prioridad que el cálculo de la base.
+
+    Horario revisado, horario de Google del día, texto publicado de fin de semana y, por
+    último, la franja por defecto de la estimación horaria (L-V 8:30-21:00).
+    """
+    for status in (
+        opening_status(hours, when),
+        observation.open_at(when) if observation else None,
+        published_weekend_status(hours, when),
+    ):
+        if status is not None:
+            return status
+    return heuristic_base(when, False, open_now=None) is not None
+
+
+def base_valid_until(now: datetime, is_open) -> datetime:
+    """Primer minuto en que cambia la apertura (p. ej. 09:00) o, si no cambia, now + margen."""
+    current = is_open(now)
+    minute = now.replace(second=0, microsecond=0)
+    for step in range(1, BASE_VALID_MINUTES + 1):
+        when = minute + timedelta(minutes=step)
+        if when - now >= timedelta(minutes=BASE_VALID_MINUTES):
+            break
+        if is_open(when) != current:
+            return when
+    return now + timedelta(minutes=BASE_VALID_MINUTES)
+
+
+def library_row(
+    sources: httpx.Client, library: dict, now: datetime, raining: bool, weather_known: bool
+) -> tuple[dict, Observation | None]:
+    reviewed = opening_status(library.get("opening_hours", {}), now)
+    closed = {
+        "library_id": library["id"],
+        "google_live_pct": None,
+        "google_hist_pct": None,
+        "predicted_base_pct": None,
+    }
+    if reviewed is False:
+        return {**closed, "base_source": "Cerrada según horario revisado"}, None
+    observation = get_observation(sources, library, now)
+    if observation.error:
+        LOG.warning("%s: %s", library["id"], observation.error)
+    # El horario revisado manda; si falta, se usa el horario estructurado de Google.
+    open_now = reviewed if reviewed is not None else observation.open_now
+    if open_now is False and observation.university_live_pct is None:
+        return {**closed, "base_source": "Cerrada según horario de Google"}, observation
+    if open_now is None:
+        # Último recurso: el texto publicado ("Sábados de 9 a 14 horas").
+        open_now = published_weekend_status(library.get("opening_hours"), now)
+        if open_now is False and observation.university_live_pct is None:
+            return {**closed, "base_source": "Cerrada según horario publicado"}, observation
+    if observation.university_live_pct is not None:
+        base = observation.university_live_pct  # Medición directa, sin ajuste contextual.
+        source = observation.source
+    else:
+        base = predict_base(
+            observation.google_live_pct,
+            observation.google_hist_pct,
+            now.astimezone(MADRID),
+            raining,
+        )
+        source = (
+            "Concurrencia Google en vivo"
+            if observation.google_live_pct is not None
+            else "Estimación contextual + histórico Google"
+            if base is not None
+            else "Sin datos de concurrencia"
+        )
+        if base is None:
+            # Sin afluencia de Google (salas pequeñas o respuesta sin gráfica):
+            # curva horaria de Madrid ajustada por exámenes, fin de semana y lluvia.
+            base = heuristic_base(now, raining, open_now=open_now, library=library)
+            if base is not None:
+                source = HEURISTIC_SOURCE
+        if not weather_known and base is not None and observation.google_live_pct is None:
+            source += " · clima no disponible"
+    row = {
+        "library_id": library["id"],
+        "google_live_pct": observation.google_live_pct,
+        "google_hist_pct": observation.google_hist_pct,
+        "predicted_base_pct": base,
+        "base_source": source,
+    }
+    return row, observation
+
+
 def run_job(
     database: httpx.Client,
     sources: httpx.Client,
@@ -209,67 +305,24 @@ def run_job(
         LOG.warning(
             "Clima no disponible (%s); no se aplica multiplicador de lluvia", type(exc).__name__
         )
-    updates = []
-    heuristic_count = 0
     for library in libraries:
         UUID(library["id"])
-        reviewed = opening_status(library.get("opening_hours", {}), now)
-        closed = {
-            "library_id": library["id"],
-            "google_live_pct": None,
-            "google_hist_pct": None,
-            "predicted_base_pct": None,
-        }
-        if reviewed is False:
-            row = {**closed, "base_source": "Cerrada según horario revisado"}
-        else:
-            observation = get_observation(sources, library, now)
-            if observation.error:
-                LOG.warning("%s: %s", library["id"], observation.error)
-            # El horario revisado manda; si falta, se usa el horario estructurado de Google.
-            open_now = reviewed if reviewed is not None else observation.open_now
-            if open_now is False and observation.university_live_pct is None:
-                updates.append({**closed, "base_source": "Cerrada según horario de Google"})
-                continue
-            if open_now is None:
-                # Último recurso: el texto publicado ("Sábados de 9 a 14 horas").
-                open_now = published_weekend_status(library.get("opening_hours"), now)
-                if open_now is False and observation.university_live_pct is None:
-                    updates.append({**closed, "base_source": "Cerrada según horario publicado"})
-                    continue
-            if observation.university_live_pct is not None:
-                base = observation.university_live_pct  # Medición directa, sin ajuste contextual.
-                source = observation.source
-            else:
-                base = predict_base(
-                    observation.google_live_pct,
-                    observation.google_hist_pct,
-                    now.astimezone(MADRID),
-                    raining,
-                )
-                source = (
-                    "Concurrencia Google en vivo"
-                    if observation.google_live_pct is not None
-                    else "Estimación contextual + histórico Google"
-                    if base is not None
-                    else "Sin datos de concurrencia"
-                )
-                if base is None:
-                    # Sin afluencia de Google (salas pequeñas o respuesta sin gráfica):
-                    # curva horaria de Madrid ajustada por exámenes, fin de semana y lluvia.
-                    base = heuristic_base(now, raining, open_now=open_now, library=library)
-                    if base is not None:
-                        source = HEURISTIC_SOURCE
-                        heuristic_count += 1
-                if not weather_known and base is not None and observation.google_live_pct is None:
-                    source += " · clima no disponible"
-            row = {
-                "library_id": library["id"],
-                "google_live_pct": observation.google_live_pct,
-                "google_hist_pct": observation.google_hist_pct,
-                "predicted_base_pct": base,
-                "base_source": source,
-            }
+    # Consultas en paralelo moderado: ~1 s por centro en serie, unos 20 s para 119 con 6.
+    with ThreadPoolExecutor(max_workers=SOURCE_WORKERS) as pool:
+        results = list(
+            pool.map(
+                lambda library: library_row(sources, library, now, raining, weather_known),
+                libraries,
+            )
+        )
+    updates = []
+    heuristic_count = 0
+    for library, (row, observation) in zip(libraries, results):
+        heuristic_count += row["base_source"].startswith(HEURISTIC_SOURCE)
+        hours = library.get("opening_hours", {})
+        row["base_valid_until"] = base_valid_until(
+            now, lambda when: open_at(hours, observation, when)
+        ).isoformat()
         updates.append(row)
     if not dry_run:
         for offset in range(0, len(updates), 1000):

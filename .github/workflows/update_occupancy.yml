@@ -4,9 +4,12 @@ on:
   push:
     paths: ['src/**', 'tests/**', 'supabase/**', 'pyproject.toml', 'uv.lock', '.github/workflows/update_occupancy.yml']
   pull_request:
+  # Cada 15 min en minutos desplazados (:14, :29, :44, :59) para esquivar la congestión de
+  # GitHub a las horas en punto. 05-22 UTC = 06:14-23:59 en invierno (CET) y 07:14-00:59 en
+  # verano (CEST): la ejecución de :59 precede a las aperturas de las 8:00, 8:30 y 9:00.
+  # Cada base caduca en su siguiente cambio de apertura y la web estima mientras tanto.
   schedule:
-    - cron: '*/20 6-21 * * *'
-    - cron: '0 22 * * *'
+    - cron: '14,29,44,59 5-22 * * *'
   workflow_dispatch:
     inputs:
       dry_run:
@@ -17,12 +20,15 @@ on:
 permissions:
   contents: read
 
+# El cron no espera detrás de una validación de un push: grupos separados por tipo de ejecución.
 concurrency:
-  group: occupancy-${{ github.workflow }}-${{ github.ref }}
+  group: occupancy-${{ github.workflow }}-${{ github.ref }}-${{ (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && 'update' || 'validate' }}
   cancel-in-progress: false
 
 jobs:
+  # Tests completos con PostgreSQL solo al cambiar código; nunca en las ejecuciones del cron.
   validate:
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     services:
@@ -50,11 +56,11 @@ jobs:
       - run: command -v psql
       - run: uv run pytest -q
 
+  # Sin `needs: validate`: arranca sin esperar al contenedor de PostgreSQL (< 1 min en total).
   update:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-    needs: validate
     runs-on: ubuntu-latest
-    timeout-minutes: 19
+    timeout-minutes: 10
     env:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}

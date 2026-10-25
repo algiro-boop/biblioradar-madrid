@@ -157,7 +157,7 @@ Validación de las descargas oficiales del 24 de octubre de 2026. Bibliotecas: 5
 
 ## Fase 2: instalación y ejecución
 
-Sobre el proyecto que ya tiene la Fase 1, ejecuta **una vez** `supabase/migrations/202610230002_phase2_fusion.sql` como `postgres`, o aplica las migraciones pendientes con Supabase CLI. No vuelvas a aplicar la primera migración. Esta migración añade las funciones y el trigger; no habilita ningún cron dentro de la base de datos.
+Sobre el proyecto que ya tiene la Fase 1, ejecuta **una vez** y en orden `supabase/migrations/202610230002_phase2_fusion.sql` y `supabase/migrations/202610250003_base_validity.sql` como `postgres`, o aplica las migraciones pendientes con Supabase CLI. No vuelvas a aplicar la primera migración. Estas migraciones añaden las funciones y el trigger; no habilitan ningún cron dentro de la base de datos. La tercera solo sustituye `update_occupancy_bases` para aceptar la validez que calcula el cron. No cambia tablas ni permisos.
 
 ```sh
 uv sync --locked
@@ -190,7 +190,7 @@ Sin reportes se conserva la base y `crowd_pct` queda `NULL`. Sin base pero con r
 
 Tras una inserción aceptada por `submit_report`, el trigger `AFTER INSERT` llama a la fusión y la confirma dentro de la misma transacción del reporte. RLS sigue ocultando los reportes; Realtime publica el cambio de `occupancy_status` al confirmar la transacción. El bloqueo de fila por biblioteca serializa la fusión frente al cron y otros reportes; el agregado se lee después de tomar el bloqueo. Los lotes bloquean bibliotecas ordenadas por UUID. Los advisory locks de la Fase 1 siguen protegiendo el límite por dispositivo.
 
-Cada base incorpora `base_source`, `base_observed_at` y `base_valid_until` (60 minutos desde su recepción). Un recálculo excluye bases caducadas. Si una consulta nueva falla, nunca se prolonga el dato anterior: se usa la estimación horaria descrita abajo o, si no procede, base `NULL`. Las marcas de tiempo indican recepción, no una garantía de frescura interna del proveedor. UCM no proporciona fecha de medición en el contrato observado del widget.
+Cada base incorpora `base_source`, `base_observed_at` y `base_valid_until`. El cron calcula la validez de cada centro (`update_job.base_valid_until`). Vale hasta el **primer minuto en que cambia su apertura**: por ejemplo, una fila “Cerrada” de las 08:44 caduca a las 09:00. Si nada cambia, vale `BASE_VALID_MINUTES` = 90 minutos, varios ciclos del cron aunque GitHub lo retrase. La apertura se evalúa con la misma prioridad que la base: horario revisado, horario de Google del día, texto publicado de fin de semana y franja por defecto. Todo se calcula en hora de Madrid (`Europe/Madrid`, con CET/CEST). La RPC acota el valor recibido a [1 minuto, 3 horas] y, si falta, usa 60 minutos como antes. Un recálculo excluye bases caducadas. En ese hueco la web calcula la estimación horaria vigente (ver `web/README.md`). Si una consulta nueva falla, nunca se prolonga el dato anterior: se usa la estimación horaria descrita abajo o, si no procede, base `NULL`. Las marcas de tiempo indican recepción, no una garantía de frescura interna del proveedor. UCM no proporciona fecha de medición en el contrato observado del widget.
 
 **El paso del tiempo no dispara triggers.** El cron vuelve a calcular las bibliotecas, incluso cerradas o sin fuente, para retirar la influencia de reportes antiguos. Entre ejecuciones la tabla es una instantánea, por lo que la retirada por caducidad puede demorarse hasta el siguiente recálculo. Fuera de la ventana del cron o si GitHub se retrasa puede tardar más. El futuro frontend debe mostrar `updated_at`, vigencia y estado desactualizado; la emisión de Realtime se ha preparado en SQL, pero no se ha probado una conexión WebSocket a tu Supabase.
 
@@ -243,7 +243,7 @@ ISO 1=lunes…7=domingo; fin de intervalo exclusivo. Se admiten `24:00` y franja
 
 ### GitHub Actions
 
-`.github/workflows/update_occupancy.yml` ejecuta el cron a las **06:00, 06:20, …, 21:40 y 22:00 UTC** (49 ejecuciones diarias), conforme a la ventana solicitada. En Madrid equivale a 07:00–23:00 en invierno y 08:00–00:00 en verano. No cubre aperturas de 24 horas fuera de esa ventana.
+`.github/workflows/update_occupancy.yml` ejecuta el cron **cada 15 minutos en los minutos :14, :29, :44 y :59, de 05 a 22 UTC** (72 ejecuciones diarias). Se evitan así las horas en punto, cuando GitHub acumula más retrasos. En Madrid equivale a 06:14–23:59 en invierno y 07:14–00:59 en verano. La ejecución de :59 precede a las aperturas habituales. No cubre aperturas nocturnas fuera de esa ventana.
 
 Sube el repositorio y configura en **Settings → Secrets and variables → Actions**:
 
@@ -252,11 +252,11 @@ SUPABASE_URL
 SUPABASE_SERVICE_ROLE_KEY
 ```
 
-Aplica antes las migraciones en el proyecto. El cron solo se activa desde la rama predeterminada. La ejecución manual arranca por defecto en modo simulación. Los eventos push/PR ejecutan comprobaciones sin credenciales de producción; los eventos de cron/manual ejecutan la actualización después de pasar CI. Los jobs comparten exclusión por rama para evitar solaparse.
+Aplica antes las migraciones en el proyecto. El cron solo se activa desde la rama predeterminada. La ejecución manual arranca por defecto en modo simulación. Los eventos push/PR ejecutan el job `validate` (tests con PostgreSQL) sin credenciales de producción. Los eventos de cron y manuales ejecutan solo `update`, sin esperar al contenedor de PostgreSQL. Las fuentes se consultan con 6 peticiones simultáneas: una prueba real con 119 centros tardó 16 s de consulta, frente a unos 110 s en serie. La validación y la actualización usan grupos de concurrencia distintos: el cron no espera detrás de un push, y dos actualizaciones nunca se solapan.
 
-CI instala con `uv --locked`, ejecuta `ruff`, `pytest` y parsea las migraciones con `pglast`. Además arranca un PostgreSQL 16 desechable para aplicar ambas migraciones, ejecutar el smoke y comparar siete casos de fusión con Python. Los jobs tienen permisos de lectura del repositorio y las fuentes externas no reciben las credenciales Supabase. No se ha publicado el workflow ni configurado secretos desde este entorno.
+CI instala con `uv --locked`, ejecuta `ruff`, `pytest` y parsea las migraciones con `pglast`. Además arranca un PostgreSQL 16 desechable para aplicar las migraciones, ejecutar el smoke y comparar siete casos de fusión con Python. Los jobs tienen permisos de lectura del repositorio y las fuentes externas no reciben las credenciales Supabase. No se ha publicado el workflow ni configurado secretos desde este entorno.
 
-GitHub puede retrasar ejecuciones programadas y no es un temporizador exacto. La gratuidad depende de las cuotas y modalidad de tu cuenta y de los proveedores; no se garantiza coste cero para cualquier volumen. [Documentación de schedule](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule).
+GitHub puede retrasar ejecuciones programadas y no es un temporizador exacto. Por eso la validez de cada base y la estimación en la web no dependen de que el cron llegue puntual. En un repositorio **privado**, 72 ejecuciones de ~1 minuto al día suman unos 2 200 minutos al mes, por encima de los 2 000 incluidos en el plan gratuito; en repositorios públicos no se cobran. Si hace falta, reduce la frecuencia (p. ej. `29,59 5-22 * * *`). La gratuidad depende de las cuotas y modalidad de tu cuenta y de los proveedores; no se garantiza coste cero para cualquier volumen. [Documentación de schedule](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule).
 
 ### Verificación de la Fase 2
 

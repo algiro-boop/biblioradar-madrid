@@ -58,6 +58,8 @@ export type OccupancyStatus = {
 export type LibraryWithOccupancy = Library & {
   /** Relación 1:1. Puede faltar si la fila de estado aún no existe o no es legible. */
   occupancy: OccupancyStatus | null;
+  /** Solo frontend: `occupancy` es la estimación horaria calculada en el navegador (base caducada). */
+  estimatedLocally?: boolean;
 };
 
 /** Fila tal como la devuelve `select('*, occupancy_status(*)')`. PostgREST puede devolver objeto o array. */

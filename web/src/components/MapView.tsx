@@ -5,7 +5,7 @@ import "leaflet/dist/leaflet.css";
 import { useEffect, useMemo, useRef } from "react";
 import { Circle, CircleMarker, MapContainer, Marker, TileLayer, useMap, useMapEvents, ZoomControl } from "react-leaflet";
 import { MADRID_CENTER, REPORT_RADIUS_M } from "@/lib/geo";
-import { formatPinText, getOccupancyLevel, isStale, LEVEL_STYLES, LEVEL_TEXT } from "@/lib/occupancy";
+import { formatPinText, getOccupancyLevel, LEVEL_STYLES, LEVEL_TEXT } from "@/lib/occupancy";
 import { getTileConfig } from "@/lib/tiles";
 import type { LibraryWithOccupancy, OccupancyLevel, UserPosition } from "@/lib/types";
 
@@ -18,14 +18,14 @@ function escapeHtml(text: string): string {
 }
 
 /** divIcon con Tailwind: píldora con el porcentaje (o "?") y una punta del mismo color. */
-function pinIcon(level: OccupancyLevel, pct: number | null, selected: boolean, stale: boolean, name: string): L.DivIcon {
-  const key = `${level}|${pct}|${selected}|${stale}|${name}`;
+function pinIcon(level: OccupancyLevel, pct: number | null, selected: boolean, name: string): L.DivIcon {
+  const key = `${level}|${pct}|${selected}|${name}`;
   const cached = iconCache.get(key);
   if (cached) return cached;
   const s = LEVEL_STYLES[level];
   const label = pct === null ? `${name}: sin datos` : `${name}: ${pct}%, ${LEVEL_TEXT[level]}`;
   const html = `
-    <div class="flex flex-col items-center transition-transform duration-150 ${selected ? "scale-125" : "hover:scale-110"} ${stale ? "opacity-60" : ""}" role="img" aria-label="${escapeHtml(label)}">
+    <div class="flex flex-col items-center transition-transform duration-150 ${selected ? "scale-125" : "hover:scale-110"}" role="img" aria-label="${escapeHtml(label)}">
       <div class="relative z-10 flex h-8 min-w-11 items-center justify-center rounded-full px-2 text-[13px] leading-none font-bold tabular-nums shadow-md ring-2 ${selected ? "ring-slate-900" : "ring-white"} ${s.bg} ${s.text}">${formatPinText(pct)}</div>
       <div class="-mt-1.5 size-3 rotate-45 rounded-[2px] shadow-md ${s.bg}"></div>
     </div>`;
@@ -80,7 +80,6 @@ function MapController({
 export default function MapView({
   libraries,
   selectedId,
-  now,
   userPosition,
   focusUserKey,
   onSelect,
@@ -88,7 +87,6 @@ export default function MapView({
 }: {
   libraries: LibraryWithOccupancy[];
   selectedId: string | null;
-  now: number;
   userPosition: UserPosition | null;
   focusUserKey: number;
   onSelect: (id: string) => void;
@@ -134,7 +132,7 @@ export default function MapView({
           <Marker
             key={lib.id}
             position={[lib.lat, lib.lng]}
-            icon={pinIcon(getOccupancyLevel(lib.occupancy), pct, isSelected, isStale(lib.occupancy, now), lib.name)}
+            icon={pinIcon(getOccupancyLevel(lib.occupancy), pct, isSelected, lib.name)}
             zIndexOffset={isSelected ? 1000 : pct === null ? -100 : 0}
             title={lib.name}
             alt={lib.name}
