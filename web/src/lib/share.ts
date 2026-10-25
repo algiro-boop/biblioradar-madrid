@@ -3,6 +3,9 @@ import type { LibraryWithOccupancy } from "./types";
 
 export const SITE_URL = "https://biblioradar-madrid.vercel.app";
 
+/** Mensaje para recomendar la app en general (botón "Compartir app" del header). */
+export const APP_SHARE_TEXT = `📡 ¿Buscas sitio para estudiar en Madrid? Mira en tiempo real el aforo de +110 bibliotecas públicas y salas de estudio en BiblioRadar: ${SITE_URL}`;
+
 /** El estado viene de un horario (revisado, de Google o publicado) que la da por cerrada. */
 function isClosed(library: Pick<LibraryWithOccupancy, "occupancy">): boolean {
   const source = library.occupancy?.primary_source ?? library.occupancy?.base_source ?? "";

@@ -2,6 +2,7 @@
 
 import { Check, Copy, MessageCircle, Share2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useNativeShare } from "@/hooks/useNativeShare";
 import { shareOrCopy, shareText, whatsappUrl, type ShareOutcome } from "@/lib/share";
 import type { LibraryWithOccupancy } from "@/lib/types";
 
@@ -9,15 +10,10 @@ const FEEDBACK_MS = 2000;
 
 /** "Avisar por WhatsApp" + compartir nativo en móvil o copiar el texto en ordenador. */
 export function ShareButtons({ library }: { library: Pick<LibraryWithOccupancy, "id" | "name" | "occupancy"> }) {
-  const [native, setNative] = useState(false);
+  const native = useNativeShare();
   const [feedback, setFeedback] = useState<ShareOutcome | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const text = shareText(library);
-
-  useEffect(() => {
-    // La hoja nativa solo en pantallas táctiles: en ordenador es más útil copiar el texto.
-    setNative(typeof navigator.share === "function" && window.matchMedia("(pointer: coarse)").matches);
-  }, []);
 
   useEffect(() => {
     setFeedback(null);

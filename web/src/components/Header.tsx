@@ -1,8 +1,11 @@
 "use client";
 
 import { List, LoaderCircle, LocateFixed, Map as MapIcon, RotateCw, Search, X } from "lucide-react";
+import { BRAND_ICON_SRC } from "@/lib/brand";
 import type { FilterInstitution, LibraryFilters } from "@/lib/filters";
 import type { RealtimeConnection } from "@/lib/types";
+import { InstallAppButton } from "./InstallAppButton";
+import { ShareAppButton } from "./ShareAppButton";
 
 export type ViewMode = "map" | "list";
 
@@ -75,23 +78,28 @@ export function Header({
 }) {
   const conn = CONNECTION_TEXT[connection];
   return (
-    <header className="pointer-events-auto rounded-3xl bg-white/95 p-3 shadow-lg ring-1 ring-slate-900/5 backdrop-blur md:rounded-none md:bg-transparent md:px-4 md:pt-4 md:pb-2 md:shadow-none md:ring-0">
+    <header className="pointer-events-auto relative z-10 rounded-3xl bg-white/95 p-3 shadow-lg ring-1 ring-slate-900/5 backdrop-blur md:rounded-none md:bg-transparent md:px-4 md:pt-4 md:pb-2 md:shadow-none md:ring-0">
       <div className="flex items-center justify-between gap-2 px-1 pb-2.5">
-        <h1 className="flex items-center gap-2 text-base font-extrabold tracking-tight text-slate-900">
-          <span className="grid size-7 place-items-center rounded-lg bg-slate-900 text-sm text-white" aria-hidden>
-            B
+        <h1 className="flex min-w-0 items-center gap-2 text-base font-extrabold tracking-tight text-slate-900">
+          <img src={BRAND_ICON_SRC} alt="" width={28} height={28} className="size-7 shrink-0 rounded-lg" />
+          <span className="truncate">
+            BiblioRadar <span className="font-semibold text-slate-400 max-[379px]:hidden">Madrid</span>
           </span>
-          BiblioRadar <span className="font-semibold text-slate-400">Madrid</span>
         </h1>
-        <span className="flex items-center gap-1.5 text-xs font-medium text-slate-500" role="status">
-          <span className="relative flex size-2">
-            {connection === "live" && (
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-60" />
-            )}
-            <span className={`relative inline-flex size-2 rounded-full ${conn.dot}`} />
+        <div className="flex shrink-0 items-center gap-2">
+          <span className="flex items-center gap-1.5 text-xs font-medium text-slate-500" role="status" title={conn.label}>
+            <span className="relative flex size-2">
+              {connection === "live" && (
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+              )}
+              <span className={`relative inline-flex size-2 rounded-full ${conn.dot}`} />
+            </span>
+            {/* En la columna fija de 400 px (md+) o en móviles estrechos basta el punto. */}
+            <span className="max-[429px]:sr-only md:sr-only">{conn.label}</span>
           </span>
-          {conn.label}
-        </span>
+          <ShareAppButton />
+          <InstallAppButton />
+        </div>
       </div>
 
       <div className="flex items-center gap-2">
