@@ -14,6 +14,7 @@ import {
 import type { LibraryWithOccupancy, ReportValue, UserPosition } from "@/lib/types";
 import { InstitutionBadge } from "./Badges";
 import { ReportButtons } from "./ReportButtons";
+import { ShareButtons } from "./ShareButtons";
 
 function directionsUrl(library: LibraryWithOccupancy): string {
   const params = new URLSearchParams({ api: "1", destination: `${library.lat},${library.lng}` });
@@ -223,6 +224,9 @@ export function LibraryDrawer({
                       ? `Estimación de las ${formatClock(new Date(now).toISOString())} (hora de Madrid)`
                       : `Actualizado ${formatRelativeTime(status?.updated_at, now)}`}
                   </p>
+                </div>
+                <div className="mt-4 border-t border-slate-100 pt-4">
+                  <ShareButtons library={library} />
                 </div>
               </section>
 
