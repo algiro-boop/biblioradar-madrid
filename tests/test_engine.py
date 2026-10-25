@@ -121,7 +121,25 @@ def test_window_boundary_and_future_reports():
     assert fuse(80, [Report(30, NOW - timedelta(minutes=91))], NOW).final_occupancy_pct == 80
 
 
-@pytest.mark.parametrize("value", [0, 99, 101, True])
+@pytest.mark.parametrize("value", [20, 30, 40, 75, 90, 100])
+def test_five_report_levels_and_legacy_30(value):
+    result = fuse(None, [Report(value, NOW)], NOW)
+    assert result.crowd_pct == result.final_occupancy_pct == value
+
+
+def test_mixed_levels_fuse_with_base():
+    reports = [Report(20, NOW), Report(90, NOW - timedelta(minutes=10))]
+    # Pesos e^0 = 1 y e^(-600/2700) = 0.8007; media (20 + 90·0.8007) / 1.8007 = 51.13;
+    # confianza min(0.85, 1.8007·0.35) = 0.63; final 51.13·0.63 + 70·0.37 = 58.1.
+    result = fuse(70, reports, NOW)
+    assert (result.crowd_pct, result.final_occupancy_pct, result.active_reports_count) == (
+        51,
+        58,
+        2,
+    )
+
+
+@pytest.mark.parametrize("value", [0, 50, 70, 99, 101, True])
 def test_invalid_report(value):
     with pytest.raises(ValueError):
         fuse(50, [Report(value, NOW)], NOW)
@@ -173,7 +191,11 @@ def test_weather_retries(monkeypatch):
 
 @pytest.mark.parametrize(
     "name,statements",
-    [("202610230002_phase2_fusion.sql", 10), ("202610250003_base_validity.sql", 5)],
+    [
+        ("202610230002_phase2_fusion.sql", 10),
+        ("202610250003_base_validity.sql", 5),
+        ("202610260004_report_levels.sql", 6),
+    ],
 )
 def test_new_migration_parses(name, statements):
     path = Path(__file__).resolve().parents[1] / "supabase/migrations" / name

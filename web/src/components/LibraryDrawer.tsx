@@ -51,6 +51,7 @@ export function LibraryDrawer({
   distanceM,
   now,
   locate,
+  locationGranted,
   onReported,
   onClose,
 }: {
@@ -58,6 +59,8 @@ export function LibraryDrawer({
   distanceM: number | null;
   now: number;
   locate: () => Promise<UserPosition>;
+  /** Permiso ya concedido: si no, se explica al enviar por qué se pide la ubicación. */
+  locationGranted: boolean;
   onReported: (libraryId: string, value: ReportValue) => void;
   onClose: () => void;
 }) {
@@ -271,7 +274,7 @@ export function LibraryDrawer({
                   ¿Estás aquí? Ayuda a otros estudiantes
                 </h3>
                 <p className="mt-0.5 mb-3 text-sm text-slate-500">Dinos cómo está la sala ahora mismo.</p>
-                <ReportButtons library={library} locate={locate} onReported={onReported} />
+                <ReportButtons library={library} locate={locate} locationGranted={locationGranted} onReported={onReported} />
               </section>
             </div>
           </>

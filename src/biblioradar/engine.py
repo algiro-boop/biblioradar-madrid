@@ -161,6 +161,12 @@ def heuristic_base(
     return max(1, min(HEURISTIC_CAP, round_pct(base)))
 
 
+# Niveles del formulario (casi vacía, bastante sitio, pocos sitios, casi llena, completa) y
+# 30, el antiguo "Hay sitio", que sigue siendo válido para reportes y clientes anteriores.
+REPORT_VALUES = (20, 40, 75, 90, 100)
+ACCEPTED_REPORT_VALUES = frozenset((*REPORT_VALUES, 30))
+
+
 @dataclass(frozen=True)
 class Report:
     reported_value: int
@@ -186,8 +192,11 @@ def fuse(base: int | None, reports: list[Report], now: datetime) -> Fusion:
         ctx.prec = 28
         for report in reports:
             aware(report.created_at)
-            if type(report.reported_value) is not int or report.reported_value not in (30, 75, 100):
-                raise ValueError("Reporte fuera de 30, 75, 100")
+            if (
+                type(report.reported_value) is not int
+                or report.reported_value not in ACCEPTED_REPORT_VALUES
+            ):
+                raise ValueError("Reporte fuera de 20, 30, 40, 75, 90, 100")
             age = now.astimezone(timezone.utc) - report.created_at.astimezone(timezone.utc)
             seconds = Decimal(age.days * 86400 + age.seconds) + Decimal(age.microseconds) / 1000000
             if not 0 <= seconds <= 5400:

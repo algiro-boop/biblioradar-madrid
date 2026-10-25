@@ -106,12 +106,14 @@ Lectura pública de `libraries` y `occupancy_status`. `user_reports` no admite l
 ```javascript
 const { data: reportId, error } = await supabase.rpc('submit_report', {
   p_library_id: libraryId,
-  p_reported_value: 30, // 30, 75 o 100
+  p_reported_value: 75, // 20, 40, 75, 90 o 100 (30 se acepta por compatibilidad)
   p_device_hash: deviceHash, // SHA-256 hexadecimal minúsculo, 64 caracteres
   p_user_lat: latitude,
   p_user_lng: longitude,
 });
 ```
+
+Niveles del formulario desde `202610260004_report_levels.sql`: **20** casi vacía, **40** bastante sitio, **75** pocos sitios, **90** casi llena y **100** completa. El CHECK de `user_reports` y el trigger aceptan además **30**, el antiguo “Hay sitio”. Así los reportes existentes siguen siendo válidos y una PWA antigua en caché puede seguir enviando sin errores. `engine.fuse` admite el mismo conjunto. Aplica la migración en Supabase **antes** de desplegar la web nueva: sin ella, la base de datos rechazaría 20, 40 y 90 con el error `22023`.
 
 El trigger usa Haversine con radio terrestre 6.371.000 m y rechaza distancias **>= 250 m**. La hora la asigna el servidor. Un bloqueo transaccional por biblioteca/dispositivo evita que peticiones simultáneas eludan el límite de 30 minutos. El cliente no puede editar ni borrar reportes. El trigger de la Fase 2 recalcula inmediatamente el agregado y excluye reportes de más de 90 minutos en cada recálculo.
 

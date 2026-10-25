@@ -83,7 +83,10 @@ export class GeolocationFailure extends Error {
   }
 }
 
-/** Promesa sobre `getCurrentPosition`. Rechaza con `GeolocationFailure`. */
+/**
+ * Promesa sobre `getCurrentPosition`. Rechaza con `GeolocationFailure`.
+ * `maximumAge: 0`: cada intento pide una posición nueva (y el permiso, si el navegador lo permite).
+ */
 export function getCurrentPosition(options?: PositionOptions): Promise<UserPosition> {
   return new Promise((resolve, reject) => {
     if (!hasGeolocation()) {
@@ -107,7 +110,7 @@ export function getCurrentPosition(options?: PositionOptions): Promise<UserPosit
     navigator.geolocation.getCurrentPosition(
       (pos) => resolve(toUserPosition(pos)),
       (err) => reject(new GeolocationFailure(geolocationError(err))),
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 30000, ...options },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0, ...options },
     );
   });
 }

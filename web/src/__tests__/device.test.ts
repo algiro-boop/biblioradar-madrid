@@ -94,8 +94,15 @@ describe("registro local de reportes recientes", () => {
 
   it("es independiente por biblioteca", () => {
     const storage = memoryStorage();
-    recordRecentReport("lib-1", 30, t0, storage);
+    recordRecentReport("lib-1", 40, t0, storage);
     expect(getRecentReport("lib-2", t0, storage)).toBeNull();
+  });
+
+  it("un 30 guardado por la versión anterior mantiene la espera sin mostrar el valor", () => {
+    const storage = memoryStorage();
+    storage.setItem("biblioradar:recent-reports:v1", JSON.stringify({ "lib-1": { value: 30, at: t0 } }));
+    expect(getRecentReport("lib-1", t0 + 60_000, storage)).toEqual({ value: null, at: t0 });
+    expect(minutesUntilNextReport("lib-1", t0 + 60_000, storage)).toBe(29);
   });
 
   it("tolera datos corruptos en localStorage", () => {

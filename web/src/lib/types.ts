@@ -7,8 +7,8 @@ export type OccupancyLabel = "free" | "moderate" | "high" | "full";
 /** Nivel visual: las cuatro etiquetas SQL más "unknown" cuando el porcentaje es NULL. */
 export type OccupancyLevel = OccupancyLabel | "unknown";
 
-/** Únicos valores que acepta `submit_report`. */
-export type ReportValue = 30 | 75 | 100;
+/** Niveles que ofrece el formulario (`submit_report` acepta además 30, el nivel heredado). */
+export type ReportValue = 20 | 40 | 75 | 90 | 100;
 
 export type OpeningHours = {
   timezone: "Europe/Madrid" | string;

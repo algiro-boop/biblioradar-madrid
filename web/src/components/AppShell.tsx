@@ -1,16 +1,19 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useDeferredValue, useMemo, useState } from "react";
+import { useCallback, useDeferredValue, useMemo, useRef, useState } from "react";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useLibraries } from "@/hooks/useLibraries";
 import { useNow } from "@/hooks/useNow";
 import { withCurrentOccupancy } from "@/lib/estimate";
 import { applyFilters, EMPTY_FILTERS, hasActiveFilters, type FilterInstitution, type LibraryFilters } from "@/lib/filters";
-import { GeolocationFailure, haversineMeters } from "@/lib/geo";
+import { GeolocationFailure, geolocationError, haversineMeters } from "@/lib/geo";
+import { isPermissionDenied, locateWithHelp, type LocationPurpose } from "@/lib/location";
+import type { UserPosition } from "@/lib/types";
 import { Header, type ViewMode } from "./Header";
 import { LibraryDrawer } from "./LibraryDrawer";
 import { LibraryList } from "./LibraryList";
+import { LocationHelpModal } from "./LocationHelpModal";
 import { ProximityBanner } from "./ProximityBanner";
 
 const MapView = dynamic(() => import("./MapView"), {
@@ -63,6 +66,55 @@ export function AppShell() {
   const mapLibraries = useMemo(() => items.map((i) => i.library), [items]);
 
   const selected = useMemo(() => libraries.find((l) => l.id === selectedId) ?? null, [libraries, selectedId]);
+
+  // Ubicación bloqueada: la ayuda queda abierta hasta que un reintento funcione o se cierre.
+  type Blocked = { purpose: LocationPurpose; resolve: (p: UserPosition) => void; reject: (e: unknown) => void };
+  const blockedRef = useRef<Blocked | null>(null);
+  const [blockedPurpose, setBlockedPurpose] = useState<LocationPurpose | null>(null);
+  const [retrying, setRetrying] = useState(false);
+  const [retryError, setRetryError] = useState<string | null>(null);
+  const { locate } = geo;
+
+  const requestLocation = useCallback(
+    (purpose: LocationPurpose) =>
+      locateWithHelp(locate, purpose, (p) => {
+        blockedRef.current?.reject(new GeolocationFailure(geolocationError({ code: 1 })));
+        setRetryError(null);
+        setBlockedPurpose(p);
+        return new Promise<UserPosition>((resolve, reject) => {
+          blockedRef.current = { purpose: p, resolve, reject };
+        });
+      }),
+    [locate],
+  );
+  const locateForReport = useCallback(() => requestLocation("report"), [requestLocation]);
+
+  const closeLocationHelp = useCallback(() => {
+    blockedRef.current?.reject(new GeolocationFailure(geolocationError({ code: 1 })));
+    blockedRef.current = null;
+    setBlockedPurpose(null);
+  }, []);
+
+  const retryLocation = useCallback(async () => {
+    setRetrying(true);
+    setRetryError(null);
+    try {
+      const position = await locate();
+      blockedRef.current?.resolve(position);
+      blockedRef.current = null;
+      setBlockedPurpose(null);
+    } catch (err) {
+      setRetryError(
+        isPermissionDenied(err)
+          ? "La ubicación sigue bloqueada. Revisa el paso de arriba y vuelve a intentarlo."
+          : err instanceof GeolocationFailure
+            ? err.message
+            : "No se pudo obtener tu ubicación.",
+      );
+    } finally {
+      setRetrying(false);
+    }
+  }, [locate]);
   const selectedDistance = selected && geo.position ? haversineMeters(geo.position, selected) : null;
 
   const toggleNear = useCallback(async () => {
@@ -72,13 +124,19 @@ export function AppShell() {
     }
     setGeoMessage(null);
     try {
-      await geo.locate();
+      await requestLocation("near");
       setNearMe(true);
       setFocusUserKey((k) => k + 1);
     } catch (err) {
-      setGeoMessage(err instanceof GeolocationFailure ? err.message : "No se pudo obtener tu ubicación.");
+      setGeoMessage(
+        isPermissionDenied(err)
+          ? "Sin ubicación no podemos ordenar por cercanía. Pulsa «Cerca de mí» cuando quieras activarla."
+          : err instanceof GeolocationFailure
+            ? err.message
+            : "No se pudo obtener tu ubicación.",
+      );
     }
-  }, [nearMe, geo]);
+  }, [nearMe, requestLocation]);
 
   const toggleInstitution = useCallback((i: FilterInstitution) => {
     setFilters((f) => ({
@@ -159,7 +217,7 @@ export function AppShell() {
           position={geo.position}
           hidden={selectedId !== null}
           now={now}
-          locate={geo.locate}
+          locate={locateForReport}
           onReported={handleReported}
           onOpen={setSelectedId}
         />
@@ -169,10 +227,21 @@ export function AppShell() {
         library={selected}
         distanceM={selectedDistance}
         now={now}
-        locate={geo.locate}
+        locate={locateForReport}
+        locationGranted={geo.status === "granted"}
         onReported={handleReported}
         onClose={closeDrawer}
       />
+
+      {blockedPurpose && (
+        <LocationHelpModal
+          purpose={blockedPurpose}
+          retrying={retrying}
+          retryError={retryError}
+          onRetry={() => void retryLocation()}
+          onClose={closeLocationHelp}
+        />
+      )}
     </main>
   );
 }

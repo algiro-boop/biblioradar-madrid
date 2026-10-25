@@ -1,5 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { isReportValue, mapReportError, rateLimitError, REPORT_VALUES, tooFarError } from "@/lib/reports";
+import { labelFromPct } from "@/lib/occupancy";
+import {
+  isReportValue,
+  mapReportError,
+  rateLimitError,
+  REPORT_OPTIONS,
+  REPORT_VALUES,
+  reportSummary,
+  tooFarError,
+} from "@/lib/reports";
 
 describe("mapReportError (errores de submit_report)", () => {
   it("P0001 → límite de 1 reporte cada 30 minutos", () => {
@@ -52,12 +61,27 @@ describe("mensajes de cliente", () => {
 });
 
 describe("valores de reporte", () => {
-  it("solo 30, 75 y 100", () => {
-    expect(REPORT_VALUES).toEqual([30, 75, 100]);
-    expect(isReportValue(30)).toBe(true);
-    expect(isReportValue(75)).toBe(true);
-    expect(isReportValue(100)).toBe(true);
-    expect(isReportValue(50)).toBe(false);
-    expect(isReportValue("30")).toBe(false);
+  it("cinco niveles: 20, 40, 75, 90 y 100", () => {
+    expect(REPORT_VALUES).toEqual([20, 40, 75, 90, 100]);
+    expect(REPORT_OPTIONS.map((o) => [o.value, o.label])).toEqual([
+      [20, "Casi vacía"],
+      [40, "Bastante sitio"],
+      [75, "Pocos sitios"],
+      [90, "Casi llena"],
+      [100, "Completa"],
+    ]);
+    for (const value of [20, 40, 75, 90, 100]) expect(isReportValue(value)).toBe(true);
+    // 30 sigue siendo válido en la base de datos (reportes antiguos), pero ya no se ofrece.
+    for (const value of [30, 50, 70, 0, "20", null]) expect(isReportValue(value)).toBe(false);
+  });
+
+  it("cada nivel tiene descripción y frase de confirmación", () => {
+    expect(REPORT_OPTIONS.find((o) => o.value === 75)?.description).toBe("Hay que buscar hueco o compartir mesa");
+    expect(reportSummary(90)).toBe("está casi llena");
+    expect(REPORT_OPTIONS.every((o) => o.description && o.summary)).toBe(true);
+  });
+
+  it("el nivel reportado cae en la etiqueta de ocupación esperada", () => {
+    expect(REPORT_VALUES.map(labelFromPct)).toEqual(["free", "free", "moderate", "high", "full"]);
   });
 });

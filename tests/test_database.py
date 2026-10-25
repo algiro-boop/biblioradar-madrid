@@ -25,6 +25,8 @@ def parity_case():
         (80, [(30, 1)] * 8),
         (None, []),
         (0, [(100, 10)]),
+        (62, [(20, 2), (40, 12), (90, 33)]),
+        (None, [(90, 5), (20, 50)]),
     ]
     now = datetime.now(timezone.utc)
     sql = ["begin;"]

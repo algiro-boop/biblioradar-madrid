@@ -190,4 +190,35 @@ begin
   end if;
 end;
 $$;
+-- Cinco niveles de reporte (20, 40, 75, 90, 100) y 30 heredado; cualquier otro se rechaza.
+insert into public.libraries
+  (id, source, source_id, name, institution, address, district, lat, lng)
+values ('00000000-0000-0000-0000-000000000002', 'test', 'test-levels',
+  'Biblioteca niveles', 'ayuntamiento', 'Dirección de prueba', 'Centro', 40.4168, -3.7038);
+set local role anon;
+select public.submit_report('00000000-0000-0000-0000-000000000002', v, repeat(h, 64),
+  40.4168, -3.7038)
+from (values (20, 'c'), (40, 'd'), (75, 'e'), (90, 'f'), (100, '1'), (30, '2')) as x(v, h);
+do $$
+begin
+  begin
+    perform public.submit_report('00000000-0000-0000-0000-000000000002', 50, repeat('3', 64),
+      40.4168, -3.7038);
+    raise exception 'Se acepta un nivel de reporte inexistente';
+  exception when sqlstate '22023' then null;
+  end;
+end;
+$$;
+reset role;
+do $$
+begin
+  if (select count(*) from public.user_reports
+    where library_id = '00000000-0000-0000-0000-000000000002') <> 6
+    or not exists(select 1 from public.occupancy_status
+      where library_id = '00000000-0000-0000-0000-000000000002'
+        and active_reports_count = 6 and crowd_pct = 59) then
+    raise exception 'Los cinco niveles no se fusionan como se esperaba';
+  end if;
+end;
+$$;
 rollback;

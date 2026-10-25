@@ -1,21 +1,33 @@
 import { formatDistance, REPORT_RADIUS_M } from "./geo";
 import type { ReportError, ReportValue } from "./types";
 
-export const REPORT_VALUES: readonly ReportValue[] = [30, 75, 100];
+export const REPORT_VALUES: readonly ReportValue[] = [20, 40, 75, 90, 100];
 
 export const REPORT_OPTIONS: ReadonlyArray<{
   value: ReportValue;
-  emoji: string;
   label: string;
-  hint: string;
+  description: string;
+  /** Frase para "Has indicado que…" / "Ya reportaste que…". */
+  summary: string;
 }> = [
-  { value: 30, emoji: "🟢", label: "Hay sitio", hint: "30%" },
-  { value: 75, emoji: "🟡", label: "Quedan pocos", hint: "75%" },
-  { value: 100, emoji: "🔴", label: "Llena / Cola", hint: "100%" },
+  { value: 20, label: "Casi vacía", description: "Mesas prácticamente desiertas", summary: "está casi vacía" },
+  { value: 40, label: "Bastante sitio", description: "Muchas mesas libres", summary: "hay bastante sitio" },
+  {
+    value: 75,
+    label: "Pocos sitios",
+    description: "Hay que buscar hueco o compartir mesa",
+    summary: "quedan pocos sitios",
+  },
+  { value: 90, label: "Casi llena", description: "Sitios muy contados y sueltos", summary: "está casi llena" },
+  { value: 100, label: "Completa", description: "Sin sitio libre", summary: "está completa" },
 ];
 
 export function isReportValue(value: unknown): value is ReportValue {
-  return value === 30 || value === 75 || value === 100;
+  return (REPORT_VALUES as readonly unknown[]).includes(value);
+}
+
+export function reportSummary(value: ReportValue): string {
+  return REPORT_OPTIONS.find((o) => o.value === value)?.summary ?? "";
 }
 
 /** Forma común de `PostgrestError` y de errores de red de supabase-js. */

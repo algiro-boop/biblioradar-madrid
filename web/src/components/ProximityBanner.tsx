@@ -111,7 +111,7 @@ export function ProximityBanner({
           <X className="size-4" />
         </button>
       </div>
-      <ReportButtons library={candidate} locate={locate} onReported={handleReported} compact />
+      <ReportButtons library={candidate} locate={locate} locationGranted onReported={handleReported} compact />
       <button
         type="button"
         onClick={() => onOpen(candidate.id)}

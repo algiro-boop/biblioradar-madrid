@@ -1,3 +1,4 @@
+import { isReportValue } from "./reports";
 import type { ReportValue } from "./types";
 
 export const DEVICE_HASH_PATTERN = /^[0-9a-f]{64}$/;
@@ -152,7 +153,8 @@ function readRecent(storage: KeyValueStorage, now: number): RecentReports {
     const { value, at } = entry as { value?: unknown; at?: unknown };
     if (typeof at !== "number" || !Number.isFinite(at)) continue;
     if (now - at >= REPORT_COOLDOWN_MS || at - now > 60_000) continue;
-    const v = value === 30 || value === 75 || value === 100 ? value : null;
+    // Un valor de la versión anterior (30) o desconocido mantiene la espera sin mostrarse.
+    const v = isReportValue(value) ? value : null;
     result[id] = { value: v, at };
   }
   return result;
