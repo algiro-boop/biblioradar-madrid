@@ -1,5 +1,6 @@
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata, Viewport } from "next";
+import { PwaMetrics } from "@/components/PwaMetrics";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { ICON_VERSION } from "@/lib/brand";
 import "./globals.css";
@@ -34,6 +35,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         {children}
         <ServiceWorkerRegister />
         <Analytics />
+        <PwaMetrics />
       </body>
     </html>
   );

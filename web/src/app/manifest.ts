@@ -8,7 +8,7 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: "BiblioRadar",
     description: "Ocupación en tiempo real de las bibliotecas y salas de estudio públicas de Madrid.",
     lang: "es",
-    start_url: "/",
+    start_url: "/app",
     scope: "/",
     display: "standalone",
     orientation: "portrait",
