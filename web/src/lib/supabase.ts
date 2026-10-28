@@ -64,6 +64,17 @@ export async function fetchOccupancy(libraryId: string): Promise<OccupancyStatus
   return parseOccupancyStatus(data);
 }
 
+/** Snapshot ligero para recuperar eventos perdidos sin descargar de nuevo las curvas CSV. */
+export async function fetchOccupancySnapshot(
+  libraryIds: string[], signal: AbortSignal,
+): Promise<OccupancyStatus[]> {
+  if (!libraryIds.length) return [];
+  const { data, error } = await getSupabase().from("occupancy_status").select("*")
+    .in("library_id", libraryIds).abortSignal(signal);
+  if (error) throw new Error(error.message);
+  return (data ?? []).map(parseOccupancyStatus).filter((row): row is OccupancyStatus => row !== null);
+}
+
 /** Convierte el payload crudo de Realtime en un cambio validado, o null si no es utilizable. */
 export function toOccupancyChange(
   payload: Pick<RealtimePostgresChangesPayload<OccupancyStatus>, "eventType" | "new" | "old">,

@@ -89,6 +89,8 @@ def test_postgresql_migrations_smoke_and_python_parity():
       grant usage on schema public to anon, authenticated, service_role;""")
     for migration in sorted((ROOT / "supabase/migrations").glob("*.sql")):
         execute(migration.read_text())
+    execute((ROOT / "supabase/migrations/202610280007_occupancy_cron.sql").read_text())
+    execute((ROOT / "tests/occupancy_cron_smoke.sql").read_text())
     execute((ROOT / "tests/supabase_smoke.sql").read_text())
     execute((ROOT / "tests/csv_bayesian_smoke.sql").read_text())
     execute((ROOT / "supabase/migrations/202610280005_csv_bayesian.sql").read_text())

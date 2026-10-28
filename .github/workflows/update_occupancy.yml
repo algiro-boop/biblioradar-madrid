@@ -4,7 +4,8 @@ on:
   push:
     paths: ['src/**', 'tests/**', 'sync_csv_to_supabase.py', 'data/csv/**', 'supabase/**', 'pyproject.toml', 'uv.lock', '.github/workflows/update_occupancy.yml']
   pull_request:
-  # CSV + reportes: cada 15 minutos durante todo el día para actualizar cierres y expiraciones.
+  # Respaldo del cron principal de Supabase (cada 5 min, migración 007).
+  # GitHub puede retrasar/saltar ejecuciones; la disponibilidad no depende de este cron.
   schedule:
     - cron: '14,29,44,59 * * * *'
   workflow_dispatch:

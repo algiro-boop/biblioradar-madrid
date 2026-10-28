@@ -24,7 +24,7 @@ uv run sync_csv_to_supabase.py data/csv/bibliotecas_madrid_popular_times.csv \
 La simulación consulta el catálogo actual, valida 88 filas y 140 columnas y escribe `data/csv_sync_plan.json`. Revisar `unresolved`, `rows`, `new_ids` y `deactivate_details`. Ninguna coincidencia ambigua se aplica automáticamente. Para una validación completamente offline se puede añadir `--catalog data/catalogo_actual.json` si se dispone de ese snapshot; no permite combinarse con `--apply`.
 
 4. Una vez revisado el plan, repetir el comando sustituyendo `--dry-run` por `--apply`. El script vuelve a leer el catálogo actual y llama una sola vez a `sync_csv_catalog`: altas, modificaciones, desactivación y recálculo se confirman en una misma transacción. Un error revierte todo. El servidor también exige 88 UUID y nombres distintos y valida las curvas.
-5. Desplegar la web con el filtro `is_active=true` después de aplicar la migración. El workflow `update_occupancy.yml` mantiene el estado cada 15 minutos, con los mismos dos secretos en GitHub. Puede probarse manualmente con `dry_run=true`.
+5. Desplegar la web con el filtro `is_active=true` después de aplicar la migración. Aplicar también `202610280007_occupancy_cron.sql` en Supabase: el job `biblioradar-refresh-csv-occupancy` recalcula cada 5 minutos dentro de PostgreSQL. El workflow `update_occupancy.yml` sigue como respaldo cada 15 minutos, con los mismos dos secretos en GitHub. Puede probarse manualmente con `dry_run=true`.
 
 La primera simulación con el catálogo real de 119 fichas resolvió **85 UUID existentes y 3 altas nuevas**. Por tanto se archivan **34 fichas**, quedando 88 activas de 122 totales. El resultado difiere de 31 porque tres centros del CSV no existían en el catálogo anterior. Las coordenadas de las altas —Escuelas Pías UNED, Histórica Marqués de Valdecilla y Central UNED— y sus fuentes oficiales están en `verified_locations.json`. Las trece correspondencias manuales están en `name_matches.json`. Las coordenadas de las 85 coincidencias se conservan, incluso si un payload incluye otras.
 
@@ -39,7 +39,22 @@ uv run python -m biblioradar.csv_job --dry-run
 uv run python -m biblioradar.csv_job
 ```
 
-El primer comando solo cuenta las bibliotecas que se actualizarían; no calcula un posterior simulado ni modifica filas. `python -m biblioradar.update_job` es un alias del mismo mantenimiento. El cron usa un bloqueo asesor para evitar ejecuciones simultáneas y el motor bloquea cada fila de estado durante el recálculo. GitHub Actions puede retrasar ejecuciones; el intervalo programado no garantiza una hora exacta de entrega.
+El primer comando solo cuenta las bibliotecas que se actualizarían; no calcula un posterior simulado ni modifica filas. `python -m biblioradar.update_job` es un alias del mismo mantenimiento. El cron usa un bloqueo asesor para evitar ejecuciones simultáneas y el motor bloquea cada fila de estado durante el recálculo. GitHub Actions puede retrasar o saltar ejecuciones: el 28 de octubre dejó pasar horas entre ejecuciones y la web ocultó correctamente los posteriores al caducar su validez de 30 minutos. La migración 007 recupera los estados y programa el cálculo directamente en Supabase, sin HTTP ni claves almacenadas en el job. Repetirla actualiza el mismo job por nombre. En PostgreSQL local/CI sin `pg_cron` se omite explícitamente la programación; en Supabase debe comprobarse el job activo y una ejecución automática satisfactoria.
+
+Diagnóstico en el editor SQL de Supabase (sin exponer estas tablas al cliente):
+
+```sql
+select jobid, jobname, schedule, active from cron.job
+where jobname = 'biblioradar-refresh-csv-occupancy';
+select d.status, d.start_time, d.end_time, d.return_message
+from cron.job_run_details d join cron.job j using (jobid)
+where j.jobname = 'biblioradar-refresh-csv-occupancy'
+order by d.start_time desc limit 5;
+```
+
+`tests/occupancy_cron_smoke.sql` verifica que no haya duplicados, que el job esté activo con el comando e intervalo esperados y que ninguna biblioteca CSV activa siga con el estado caducado después de aplicar la migración.
+
+Las pestañas abiertas también consultan un snapshot ligero de `occupancy_status`: cada minuto si Realtime no está conectado y cada cinco minutos si lo está, para recuperar eventos perdidos. Solo consultan mientras la pestaña esté visible y haya conexión; cancelan peticiones al desmontar y respetan las marcas de tiempo para no sobrescribir reportes más recientes. No descargan de nuevo las curvas CSV ni mantienen posteriores caducados como si fueran actuales. La regresión se comprueba con Realtime desconectado en Chromium y WebKit mediante `web/e2e/occupancy-recovery.spec.ts`.
 
 ## Horarios y datos ausentes
 

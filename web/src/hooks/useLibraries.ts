@@ -5,6 +5,7 @@ import { clearOccupancy, mergeOccupancy } from "@/lib/occupancy";
 import {
   fetchLibraries,
   fetchOccupancy,
+  fetchOccupancySnapshot,
   subscribeToOccupancy,
   SupabaseConfigError,
 } from "@/lib/supabase";
@@ -124,6 +125,33 @@ export function useLibraries(): LibrariesState {
       window.removeEventListener("offline", onOffline);
     };
   }, [load, applyChange]);
+
+  // Un WebSocket puede quedar desconectado o perder eventos sin cambiar de pestaña.
+  // Recuperar por HTTP cada minuto si falla; con Realtime activo basta cada 5 minutos.
+  useEffect(() => {
+    if (configError) return;
+    const controller = new AbortController();
+    let pending = false;
+    const sync = async () => {
+      if (pending || !loadedRef.current || document.visibilityState !== "visible" || !navigator.onLine) return;
+      pending = true;
+      try {
+        const rows = await fetchOccupancySnapshot([...knownIdsRef.current], controller.signal);
+        if (!controller.signal.aborted) {
+          setLibraries((prev) => rows.reduce((list, row) => mergeOccupancy(list, row), prev));
+        }
+      } catch {
+        // Mantener los últimos datos recibidos; reintentar en el siguiente intervalo.
+      } finally {
+        pending = false;
+      }
+    };
+    const timer = window.setInterval(() => void sync(), connection === "live" ? 300_000 : 60_000);
+    return () => {
+      window.clearInterval(timer);
+      controller.abort();
+    };
+  }, [connection, configError]);
 
   const refreshLibrary = useCallback(async (libraryId: string) => {
     try {

@@ -176,6 +176,8 @@ def test_opening_exceptions_can_replace_hours_without_changing_other_dates():
 def test_migration_and_smoke_parse():
     for path in [
         ROOT / "supabase/migrations/202610280005_csv_bayesian.sql",
+        ROOT / "supabase/migrations/202610280007_occupancy_cron.sql",
+        ROOT / "tests/occupancy_cron_smoke.sql",
         ROOT / "tests/csv_bayesian_smoke.sql",
     ]:
         assert parse_sql(path.read_text())
