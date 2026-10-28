@@ -19,5 +19,50 @@
     "district": "Moncloa-Aravaca",
     "institution": "otra",
     "source_url": "https://www.uned.es/universidad/biblioteca/contacto.html"
+  },
+  "Biblioteca Municipal Santiago Amón (Leganés)": {
+    "lat": 40.3283,
+    "lng": -3.7661,
+    "district": "Leganés",
+    "institution": "ayuntamiento",
+    "source_url": "https://www.comunidad.madrid/centros/biblioteca-municipal-santiago-amon",
+    "coordinate_source": "user_supplied",
+    "verification_note": "Dirección contrastada en la ficha enlazada; coordenadas y horarios proporcionados por el usuario."
+  },
+  "Biblioteca Federico García Lorca (Rivas)": {
+    "lat": 40.3519,
+    "lng": -3.5356,
+    "district": "Rivas-Vaciamadrid",
+    "institution": "ayuntamiento",
+    "source_url": "https://sede-electronica.rivasciudad.es/equipamiento/centro-cultural-federico-garcia-lorca/",
+    "coordinate_source": "user_supplied",
+    "verification_note": "Dirección contrastada en la ficha enlazada; coordenadas y horarios proporcionados por el usuario."
+  },
+  "Biblioteca José Saramago (Rivas)": {
+    "lat": 40.3688,
+    "lng": -3.5398,
+    "district": "Rivas-Vaciamadrid",
+    "institution": "ayuntamiento",
+    "source_url": "https://sede-electronica.rivasciudad.es/equipamiento/biblioteca-jose-saramago/",
+    "coordinate_source": "user_supplied",
+    "verification_note": "Dirección contrastada en la ficha enlazada; coordenadas y horarios proporcionados por el usuario."
+  },
+  "Biblioteca Almudena Grandes (Rivas)": {
+    "lat": 40.3268,
+    "lng": -3.5152,
+    "district": "Rivas-Vaciamadrid",
+    "institution": "ayuntamiento",
+    "source_url": "https://sede-electronica.rivasciudad.es/equipamiento/biblioteca-casco-antiguo/",
+    "coordinate_source": "user_supplied",
+    "verification_note": "Dirección contrastada en la ficha enlazada; coordenadas y horarios proporcionados por el usuario."
+  },
+  "Sala de Estudio Hacienda de Pavones (Moratalaz)": {
+    "lat": 40.4005,
+    "lng": -3.6358,
+    "district": "Moratalaz",
+    "institution": "ayuntamiento",
+    "source_url": "https://www.google.com/maps/search/?api=1&query=40.4005%2C-3.6358",
+    "coordinate_source": "user_supplied",
+    "verification_note": "Ubicación y existencia de la sala proporcionadas por el usuario, sin confirmación independiente."
   }
 }

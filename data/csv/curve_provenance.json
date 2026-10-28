@@ -1,0 +1,94 @@
+{
+  "Biblioteca Pública Municipal Francisco Ayala": {
+    "kind": "reference_estimate",
+    "created_on": "2026-10-28",
+    "references": [
+      "Biblioteca Pública Municipal José Hierro",
+      "Biblioteca Pública Municipal Canillejas",
+      "Biblioteca Pública Municipal Francisco Umbral",
+      "Biblioteca Pública Municipal Gerardo Diego",
+      "Biblioteca Pública Municipal Gabriel García Márquez",
+      "Biblioteca Pública Municipal Huerta de la Salud",
+      "Biblioteca Pública Municipal San Blas",
+      "Biblioteca Pública Municipal Aluche",
+      "Biblioteca Pública Municipal José Saramago",
+      "Biblioteca Pública Municipal Ciudad Lineal",
+      "Biblioteca Pública Municipal Pablo Neruda",
+      "Biblioteca Pública Municipal “VALLECAS” de Madrid.",
+      "Biblioteca Pública Municipal María Zambrano",
+      "Biblioteca Pública Municipal Dámaso Alonso",
+      "Biblioteca Pública Municipal La Elipa",
+      "Biblioteca Pública Municipal Ana María Matute",
+      "Biblioteca Pública Municipal Manuel Vázquez Montalbán",
+      "Biblioteca Pública Municipal Francisco Ibáñez",
+      "Biblioteca Pública Municipal Benito Pérez Galdós",
+      "Biblioteca Pública Municipal Pío Baroja"
+    ],
+    "method": "Media por día y hora de bibliotecas públicas municipales abiertas L–V 08:30–21:00, adaptada al horario solicitado. Si una hora carece de observaciones en todos los donantes se toma la hora abierta más cercana del mismo día.",
+    "metadata_source": "Datos y coordenadas proporcionados por el usuario; curva estimada, no medición de este centro."
+  },
+  "Biblioteca Municipal Santiago Amón (Leganés)": {
+    "kind": "reference_estimate",
+    "created_on": "2026-10-28",
+    "references": [
+      "Biblioteca Pública Municipal José Hierro",
+      "Biblioteca Pública Municipal Canillejas",
+      "Biblioteca Pública Municipal Francisco Umbral",
+      "Biblioteca Pública Municipal Gerardo Diego",
+      "Biblioteca Pública Municipal Gabriel García Márquez",
+      "Biblioteca Pública Municipal Huerta de la Salud",
+      "Biblioteca Pública Municipal San Blas",
+      "Biblioteca Pública Municipal Aluche",
+      "Biblioteca Pública Municipal José Saramago",
+      "Biblioteca Pública Municipal Ciudad Lineal",
+      "Biblioteca Pública Municipal Pablo Neruda",
+      "Biblioteca Pública Municipal “VALLECAS” de Madrid.",
+      "Biblioteca Pública Municipal María Zambrano",
+      "Biblioteca Pública Municipal Dámaso Alonso",
+      "Biblioteca Pública Municipal La Elipa",
+      "Biblioteca Pública Municipal Ana María Matute",
+      "Biblioteca Pública Municipal Manuel Vázquez Montalbán",
+      "Biblioteca Pública Municipal Francisco Ibáñez",
+      "Biblioteca Pública Municipal Benito Pérez Galdós",
+      "Biblioteca Pública Municipal Pío Baroja"
+    ],
+    "method": "Media por día y hora de bibliotecas públicas municipales abiertas L–V 08:30–21:00, adaptada al horario solicitado. Si una hora carece de observaciones en todos los donantes se toma la hora abierta más cercana del mismo día.",
+    "metadata_source": "Datos y coordenadas proporcionados por el usuario; curva estimada, no medición de este centro."
+  },
+  "Biblioteca Federico García Lorca (Rivas)": {
+    "kind": "reference_estimate",
+    "created_on": "2026-10-28",
+    "references": [
+      "Biblioteca Gloria Fuertes"
+    ],
+    "method": "Curva de Gloria Fuertes adaptada al horario solicitado; lunes usa media de martes a viernes por hora porque el lunes de referencia está vacío.",
+    "metadata_source": "Datos y coordenadas proporcionados por el usuario; curva estimada, no medición de este centro."
+  },
+  "Biblioteca José Saramago (Rivas)": {
+    "kind": "reference_estimate",
+    "created_on": "2026-10-28",
+    "references": [
+      "Biblioteca Gloria Fuertes"
+    ],
+    "method": "Curva de Gloria Fuertes adaptada al horario solicitado; lunes usa media de martes a viernes por hora porque el lunes de referencia está vacío.",
+    "metadata_source": "Datos y coordenadas proporcionados por el usuario; curva estimada, no medición de este centro."
+  },
+  "Biblioteca Almudena Grandes (Rivas)": {
+    "kind": "reference_estimate",
+    "created_on": "2026-10-28",
+    "references": [
+      "Biblioteca Gloria Fuertes"
+    ],
+    "method": "Curva de Gloria Fuertes adaptada al horario solicitado; lunes usa media de martes a viernes por hora porque el lunes de referencia está vacío.",
+    "metadata_source": "Datos y coordenadas proporcionados por el usuario; curva estimada, no medición de este centro."
+  },
+  "Sala de Estudio Hacienda de Pavones (Moratalaz)": {
+    "kind": "reference_estimate",
+    "created_on": "2026-10-28",
+    "references": [
+      "Centro Sociocultural Moratalaz"
+    ],
+    "method": "Horario idéntico al centro de referencia; variación determinista de -3, -2, +2 o +3 puntos solo en franjas abiertas.",
+    "metadata_source": "Datos y coordenadas proporcionados por el usuario; curva estimada, no medición de este centro."
+  }
+}

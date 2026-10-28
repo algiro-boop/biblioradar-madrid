@@ -1,6 +1,6 @@
 # BiblioRadar Madrid
 
-La arquitectura actual usa un CSV maestro de 88 centros y un motor Beta en PostgreSQL. Next.js muestra el catálogo activo y recibe los cambios mediante Supabase Realtime. Python 3.11+ y `uv` ejecutan el mantenimiento ligero cada 15 minutos, sin scraping ni consultas de clima.
+La arquitectura actual usa un CSV maestro de 94 centros y un motor Beta en PostgreSQL. Next.js muestra el catálogo activo y recibe los cambios mediante Supabase Realtime. Supabase recalcula cada 5 minutos mediante `pg_cron`; Python 3.11+ y `uv` mantienen un respaldo en GitHub cada 15 minutos, sin scraping ni consultas de clima.
 
 **Puesta en marcha y sincronización semanal:** [CSV_BAYESIAN.md](CSV_BAYESIAN.md). Ese documento sustituye las instrucciones de ingesta y motor híbrido de las fases anteriores que se conservan debajo como referencia histórica. `python -m biblioradar.update_job` ahora ejecuta el mantenimiento CSV; los antiguos parámetros de scraping ya no se utilizan.
 

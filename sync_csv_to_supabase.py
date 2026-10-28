@@ -26,6 +26,7 @@ from pathlib import Path
 from uuid import NAMESPACE_URL, UUID, uuid5
 
 DAYS = ("lun", "mar", "mie", "jue", "vie", "sab", "dom")
+CATALOG_SIZE = 94
 META = (
     "nombre tipo valoracion num_resenas direccion telefono horario_lun horario_mar horario_mie "
     "horario_jue horario_vie horario_sab horario_dom nota_horario_domingo"
@@ -101,7 +102,7 @@ def clean_curve(row: dict, day: str, intervals: list[list[str]] | None) -> list[
     return result
 
 
-def prepare(records: list[dict], expected_rows: int = 88) -> list[dict]:
+def prepare(records: list[dict], expected_rows: int = CATALOG_SIZE) -> list[dict]:
     if len(records) != expected_rows:
         raise ValueError(f"Se requieren {expected_rows} filas; recibidas {len(records)}")
     result, names = [], set()
@@ -213,7 +214,7 @@ def match_catalog(
     return resolved, problems
 
 
-def read_csv(path: Path) -> list[dict]:
+def read_csv(path: Path, expected_rows: int = CATALOG_SIZE) -> list[dict]:
     import pandas as pd
 
     # pandas renombra cabeceras repetidas; detectarlas ANTES de que desaparezca el problema.
@@ -222,7 +223,29 @@ def read_csv(path: Path) -> list[dict]:
     if len(header) != 140 or len(set(header)) != 140 or set(header) != set(COLUMNS):
         raise ValueError("Cabecera CSV inválida (faltan, sobran o se repiten columnas)")
     frame = pd.read_csv(path, encoding="utf-8-sig", dtype=str).fillna("")
-    return prepare(frame.to_dict("records"))
+    return prepare(frame.to_dict("records"), expected_rows=expected_rows)
+
+
+def apply_curve_provenance(rows: list[dict], provenance: dict) -> None:
+    """Mantener trazabilidad de las curvas de referencia, sin presentarlas como mediciones."""
+    names = {row["name"] for row in rows}
+    if not isinstance(provenance, dict):
+        raise ValueError("Procedencia de curvas inválida")
+    for name, source in provenance.items():
+        if (
+            name not in names
+            or not isinstance(source, dict)
+            or source.get("kind") != "reference_estimate"
+            or not isinstance(source.get("method"), str)
+            or not source["method"].strip()
+            or not isinstance(source.get("references"), list)
+            or not source["references"]
+            or any(not isinstance(ref, str) or ref not in names for ref in source["references"])
+        ):
+            raise ValueError(f"Procedencia de curva inválida: {name}")
+    for row in rows:
+        if row["name"] in provenance:
+            row["historical_popularity"]["provenance"] = provenance[row["name"]]
 
 
 def apply_opening_exceptions(rows: list[dict], exceptions: dict) -> None:
@@ -255,6 +278,12 @@ def apply_opening_exceptions(rows: list[dict], exceptions: dict) -> None:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("csv", type=Path)
+    parser.add_argument(
+        "--expected-rows",
+        type=int,
+        default=CATALOG_SIZE,
+        help="Tamaño completo esperado del catálogo (mínimo 88)",
+    )
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument(
         "--dry-run", action="store_true", help="Validar sin escribir (predeterminado)"
@@ -281,10 +310,19 @@ def main(argv: list[str] | None = None) -> int:
         default=Path(__file__).resolve().parent / "data/csv/opening_exceptions.json",
         help="Excepciones por biblioteca y fecha (incluye cierres temporales)",
     )
+    parser.add_argument(
+        "--curve-provenance",
+        type=Path,
+        default=Path(__file__).resolve().parent / "data/csv/curve_provenance.json",
+        help="Procedencia de las curvas estimadas por referencia",
+    )
     args = parser.parse_args(argv)
     try:
-        rows = read_csv(args.csv)
+        if args.expected_rows < 88:
+            raise ValueError("El catálogo completo debe contener al menos 88 centros")
+        rows = read_csv(args.csv, expected_rows=args.expected_rows)
         apply_opening_exceptions(rows, json.loads(args.opening_exceptions.read_text()))
+        apply_curve_provenance(rows, json.loads(args.curve_provenance.read_text()))
         client = None
         if args.catalog:
             if args.apply:
@@ -366,7 +404,9 @@ def main(argv: list[str] | None = None) -> int:
         args.output.write_text(
             json.dumps(plan, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
         )
-        print(f"Emparejadas: {len(resolved)}/88. Pendientes: {len(problems)}. Plan: {args.output}")
+        print(
+            f"Emparejadas: {len(resolved)}/{len(rows)}. Pendientes: {len(problems)}. Plan: {args.output}"
+        )
         if problems:
             print(
                 "No se ha modificado Supabase. Resuelve el fichero de correspondencias antes de aplicar."

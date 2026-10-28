@@ -123,7 +123,7 @@ do $$ begin
 end $$;
 rollback;
 
--- Sync atómico de 88 fichas, UUID/coordenadas estables y archivo sin borrar reportes.
+-- Sync atómico de 94 fichas, UUID/coordenadas estables y archivo sin borrar reportes.
 begin;
 create temporary table csv_payload as select jsonb_agg(jsonb_build_object(
  'id',('10000000-0000-0000-0000-'||lpad(n::text,12,'0'))::uuid,'name','Centro '||n,
@@ -133,16 +133,22 @@ create temporary table csv_payload as select jsonb_agg(jsonb_build_object(
  (select jsonb_object_agg(d::text,'[["09:00","21:00"]]'::jsonb) from generate_series(1,7)d)),
  'historical_popularity',jsonb_build_object('model','csv-v1','days',
  (select jsonb_object_agg(d::text,(select jsonb_object_agg(lpad(h::text,2,'0'),40)
- from generate_series(6,23)h)) from generate_series(1,7)d)))) payload from generate_series(1,88)n;
+ from generate_series(6,23)h)) from generate_series(1,7)d)))) payload from generate_series(1,94)n;
 insert into public.libraries(id,source,source_id,name,institution,address,district,lat,lng)
  values('10000000-0000-0000-0000-000000000001','old','preserved','Old name','otra','Test','Test',40.42,-3.72),
  ('20000000-0000-0000-0000-000000000001','old','archived','Archived','otra','Test','Test',40.4,-3.7);
+insert into public.user_reports(library_id,reported_value,device_hash,user_lat,user_lng)
+values('10000000-0000-0000-0000-000000000001',40,repeat('8',64),40.42,-3.72);
+update public.libraries set is_active=false where source_id='preserved';
 select public.sync_csv_catalog(payload,repeat('a',64)) from csv_payload;
 select public.sync_csv_catalog(payload,repeat('a',64)) from csv_payload;
 do $$ begin
- if (select count(*) from public.libraries where is_active)<>88 then raise exception 'No hay exactamente 88 activas'; end if;
+ if (select count(*) from public.libraries where is_active)<>94 then raise exception 'No hay exactamente 94 activas'; end if;
  if not exists(select 1 from public.libraries where source_id='preserved' and lat=40.42 and lng=-3.72 and name='Centro 1') then
  raise exception 'El sync cambió las coordenadas existentes'; end if;
+ if not exists(select 1 from public.libraries where source_id='preserved' and is_active)
+ or not exists(select 1 from public.user_reports where library_id='10000000-0000-0000-0000-000000000001') then
+ raise exception 'Reactivar un centro perdió su identidad o reportes'; end if;
  if not exists(select 1 from public.libraries where source_id='archived' and not is_active) then
  raise exception 'No se archivó el centro antiguo'; end if;
  begin
@@ -151,6 +157,21 @@ do $$ begin
  exception when invalid_parameter_value then null; end;
  if exists(select 1 from public.libraries where is_active and csv_sha256<>repeat('a',64)) then
  raise exception 'El sync incompleto no se revirtió'; end if;
+end $$;
+-- Una futura ampliación no exige cambiar la función; un lote truncado o duplicado se rechaza.
+do $$ declare v_payload jsonb; v_extra jsonb; v_result jsonb; begin
+ select payload into v_payload from csv_payload;
+ foreach v_extra in array array['[]'::jsonb, '{}'::jsonb,
+   jsonb_set(v_payload,'{93,id}',to_jsonb('10000000-0000-0000-0000-000000000001'::text))] loop
+   begin
+     perform public.sync_csv_catalog(v_extra,repeat('a',64));
+     raise exception 'Payload incompleto o duplicado aceptado';
+   exception when invalid_parameter_value then null; end;
+ end loop;
+ v_extra := jsonb_set(jsonb_set(v_payload->0,'{id}',to_jsonb('10000000-0000-0000-0000-000000000095'::text)),
+   '{name}',to_jsonb('Centro 95'::text));
+ v_result := public.sync_csv_catalog(v_payload||jsonb_build_array(v_extra),repeat('a',64));
+ if (v_result->>'active')::integer<>95 then raise exception 'No permite ampliar a 95'; end if;
 end $$;
 set local role anon;
 do $$ begin
