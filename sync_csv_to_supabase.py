@@ -20,7 +20,7 @@ import math
 import os
 import re
 import unicodedata
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from difflib import SequenceMatcher
 from pathlib import Path
 from uuid import NAMESPACE_URL, UUID, uuid5
@@ -225,6 +225,33 @@ def read_csv(path: Path) -> list[dict]:
     return prepare(frame.to_dict("records"))
 
 
+def apply_opening_exceptions(rows: list[dict], exceptions: dict) -> None:
+    """Aplicar excepciones fechadas sin alterar horarios semanales ni curvas."""
+    if not isinstance(exceptions, dict):
+        raise ValueError("Las excepciones deben ser un objeto de nombres y fechas")
+    names = {row["name"] for row in rows}
+    validated = {}
+    for name, dates in exceptions.items():
+        if name not in names or not isinstance(dates, dict):
+            raise ValueError(f"Biblioteca o excepciones inválidas: {name}")
+        validated[name] = {}
+        for day, slots in dates.items():
+            if date.fromisoformat(day).isoformat() != day or not isinstance(slots, list):
+                raise ValueError(f"Excepción inválida: {name}, {day}")
+            if any(
+                not isinstance(slot, list)
+                or len(slot) != 2
+                or any(not isinstance(t, str) for t in slot)
+                for slot in slots
+            ):
+                raise ValueError(f"Franjas inválidas: {name}, {day}")
+            validated[name][day] = (
+                parse_hours(" / ".join("–".join(s) for s in slots)) if slots else []
+            )
+    for row in rows:
+        row["opening_hours"]["date_overrides"].update(validated.get(row["name"], {}))
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("csv", type=Path)
@@ -248,9 +275,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--holidays", type=Path, help="JSON de fechas YYYY-MM-DD con ajuste festivo"
     )
+    parser.add_argument(
+        "--opening-exceptions",
+        type=Path,
+        default=Path(__file__).resolve().parent / "data/csv/opening_exceptions.json",
+        help="Excepciones por biblioteca y fecha (incluye cierres temporales)",
+    )
     args = parser.parse_args(argv)
     try:
         rows = read_csv(args.csv)
+        apply_opening_exceptions(rows, json.loads(args.opening_exceptions.read_text()))
         client = None
         if args.catalog:
             if args.apply:
@@ -307,8 +341,6 @@ def main(argv: list[str] | None = None) -> int:
                     }
                 )
         if args.holidays:
-            from datetime import date
-
             holidays = json.loads(args.holidays.read_text())
             if not isinstance(holidays, list) or any(
                 date.fromisoformat(d).isoformat() != d for d in holidays

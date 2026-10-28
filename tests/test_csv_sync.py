@@ -3,6 +3,7 @@
 import csv
 import importlib.util
 import json
+from datetime import datetime
 from pathlib import Path
 from uuid import uuid4
 
@@ -11,6 +12,7 @@ import pytest
 from pglast import parse_sql
 
 from biblioradar import csv_job
+from biblioradar.update_job import opening_status
 
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location("csv_sync", ROOT / "sync_csv_to_supabase.py")
@@ -118,6 +120,57 @@ def test_real_csv_and_verified_matches():
         assert elipa["opening_hours"]["weekly"][day] == []
         assert all(v == 0.0 for v in elipa["historical_popularity"]["days"][day].values())
     assert len(json.loads((ROOT / "data/csv/verified_locations.json").read_text())) == 3
+
+
+def test_pablo_neruda_closure_and_november_3_reopening():
+    with (ROOT / "data/csv/bibliotecas_madrid_popular_times.csv").open(newline="") as f:
+        rows = sync.prepare(list(csv.DictReader(f)))
+    library = next(r for r in rows if r["name"] == "Biblioteca Pública Municipal Pablo Neruda")
+    original_weekly = json.dumps(library["opening_hours"]["weekly"])
+    original_curve = json.dumps(library["historical_popularity"])
+    sync.apply_opening_exceptions(
+        rows, json.loads((ROOT / "data/csv/opening_exceptions.json").read_text())
+    )
+    hours = library["opening_hours"]
+    assert json.dumps(hours["weekly"]) == original_weekly
+    assert json.dumps(library["historical_popularity"]) == original_curve
+    for day in ["2026-10-28", "2026-10-29", "2026-10-30", "2026-10-31", "2026-11-01", "2026-11-02"]:
+        assert hours["date_overrides"][day] == []
+        assert opening_status(hours, datetime.fromisoformat(day + "T12:00:00+01:00")) is False
+    assert "2026-11-03" not in hours["date_overrides"]
+    for time, expected in [("08:29", False), ("08:30", True), ("20:59", True), ("21:00", False)]:
+        assert (
+            opening_status(hours, datetime.fromisoformat(f"2026-11-03T{time}:00+01:00")) is expected
+        )
+    assert all(not r["opening_hours"]["date_overrides"] for r in rows if r is not library)
+
+
+@pytest.mark.parametrize(
+    "exceptions",
+    [
+        [],
+        {"Desconocida": {}},
+        {"Biblioteca Prueba": []},
+        {"Biblioteca Prueba": {"2026-02-30": []}},
+        {"Biblioteca Prueba": {"2026-11-02": None}},
+        {"Biblioteca Prueba": {"2026-11-02": [["21:00", "09:00"]]}},
+        {"Biblioteca Prueba": {"2026-11-02": [["09:00"]]}},
+        {"Biblioteca Prueba": {"2026-11-02": [[9, "10:00"]]}},
+    ],
+)
+def test_invalid_opening_exceptions(exceptions):
+    with pytest.raises(ValueError):
+        sync.apply_opening_exceptions(sync.prepare([row()], expected_rows=1), exceptions)
+
+
+def test_opening_exceptions_can_replace_hours_without_changing_other_dates():
+    rows = sync.prepare([row()], expected_rows=1)
+    rows[0]["opening_hours"]["date_overrides"]["2026-11-01"] = []
+    sync.apply_opening_exceptions(rows, {"Biblioteca Prueba": {"2026-11-02": [["9:00", "13:00"]]}})
+    assert rows[0]["opening_hours"]["date_overrides"] == {
+        "2026-11-01": [],
+        "2026-11-02": [["09:00", "13:00"]],
+    }
 
 
 def test_migration_and_smoke_parse():
