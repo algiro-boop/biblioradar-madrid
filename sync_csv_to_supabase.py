@@ -1,0 +1,363 @@
+#!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.11"
+# dependencies = ["pandas>=2.2,<3", "supabase>=2.15,<3", "python-dotenv>=1.1,<2"]
+# ///
+"""Sincronización semanal: validar por defecto; --apply confirma un único RPC atómico.
+
+uv run sync_csv_to_supabase.py bibliotecas_madrid_popular_times.csv --catalog data/catalogo_actual.json
+uv run sync_csv_to_supabase.py bibliotecas_madrid_popular_times.csv --apply
+No crea coordenadas: coincidencias ambiguas o ausentes impiden aplicar todo el lote.
+"""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import hashlib
+import json
+import math
+import os
+import re
+import unicodedata
+from datetime import datetime, timezone
+from difflib import SequenceMatcher
+from pathlib import Path
+from uuid import NAMESPACE_URL, UUID, uuid5
+
+DAYS = ("lun", "mar", "mie", "jue", "vie", "sab", "dom")
+META = (
+    "nombre tipo valoracion num_resenas direccion telefono horario_lun horario_mar horario_mie "
+    "horario_jue horario_vie horario_sab horario_dom nota_horario_domingo"
+).split()
+COLUMNS = META + [f"ocupacion_{day}_{hour:02}" for day in DAYS for hour in range(6, 24)]
+GENERIC = set(
+    "biblioteca bibliotecas publica publico municipal centro cultural sociocultural socio "
+    "sala salas estudio estudios espacio lectura de del la el los las y madrid".split()
+)
+
+
+def normalize(value: str) -> str:
+    value = re.sub(r"\([^)]*\)", " ", value)
+    value = unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode().lower()
+    return " ".join(re.findall(r"[a-z0-9]+", value))
+
+
+def minute(text: str) -> int:
+    match = re.fullmatch(r"(\d{1,2}):(\d{2})", text.strip())
+    if not match:
+        raise ValueError(f"Hora ilegible: {text!r}")
+    hour, minutes = map(int, match.groups())
+    if not (0 <= hour <= 24 and 0 <= minutes < 60 and (hour < 24 or minutes == 0)):
+        raise ValueError(f"Hora inválida: {text!r}")
+    return hour * 60 + minutes
+
+
+def parse_hours(value: str) -> list[list[str]] | None:
+    if not value.strip():
+        return None  # Ausente no equivale a cerrado.
+    if normalize(value) in {"cerrado", "cerrada", "closed"}:
+        return []
+    intervals = []
+    for part in value.split("/"):
+        match = re.fullmatch(r"\s*(\d{1,2}:\d{2})\s*[-–—]\s*(\d{1,2}:\d{2})\s*", part)
+        if not match:
+            raise ValueError(f"Horario sin reconocer: {value!r}")
+        start, end = minute(match[1]), minute(match[2])
+        if start >= end:
+            raise ValueError("El CSV debe separar horarios que cruzan medianoche")
+        if intervals and start < minute(intervals[-1][1]):
+            raise ValueError("Franjas solapadas o desordenadas")
+        intervals.append([f"{start // 60:02}:{start % 60:02}", f"{end // 60:02}:{end % 60:02}"])
+    return intervals
+
+
+def number(value: str, low: float, high: float) -> float | None:
+    if not value.strip() or value.strip().lower() in {"nan", "na", "null"}:
+        return None
+    result = float(value.replace(",", "."))
+    if not math.isfinite(result) or not low <= result <= high:
+        raise ValueError(f"Número fuera de rango: {value!r}")
+    return result
+
+
+def clean_curve(row: dict, day: str, intervals: list[list[str]] | None) -> list[float | None]:
+    raw = [number(row[f"ocupacion_{day}_{hour:02}"], 0, 100) for hour in range(6, 24)]
+    if intervals is None:
+        return [None] * 18
+    result: list[float | None] = [0.0] * 18
+    for start, end in intervals:
+        # Una hora 08:00 también representa la franja 08:00–09:00 si abre a las 08:30.
+        indices = [
+            i for i in range(18) if (i + 7) * 60 > minute(start) and (i + 6) * 60 < minute(end)
+        ]
+        for i in indices:
+            result[i] = raw[i]
+        # Solo huecos interiores aislados, con vecinos observados de la misma franja.
+        for i in indices:
+            if raw[i] is None and i - 1 in indices and i + 1 in indices:
+                if raw[i - 1] is not None and raw[i + 1] is not None:
+                    result[i] = (raw[i - 1] + raw[i + 1]) / 2
+    return result
+
+
+def prepare(records: list[dict], expected_rows: int = 88) -> list[dict]:
+    if len(records) != expected_rows:
+        raise ValueError(f"Se requieren {expected_rows} filas; recibidas {len(records)}")
+    result, names = [], set()
+    for row in records:
+        if set(row) != set(COLUMNS):
+            raise ValueError("El CSV debe tener exactamente las 140 columnas especificadas")
+        name = row["nombre"].strip()
+        key = normalize(name)
+        if not key or key in names:
+            raise ValueError(f"Nombre vacío/duplicado: {name!r}")
+        names.add(key)
+        hours = {str(i): parse_hours(row[f"horario_{day}"]) for i, day in enumerate(DAYS, 1)}
+        curve = {
+            str(i): {
+                f"{h:02}": value
+                for h, value in zip(range(6, 24), clean_curve(row, day, hours[str(i)]))
+            }
+            for i, day in enumerate(DAYS, 1)
+        }
+        reviews = number(row["num_resenas"], 0, 10_000_000)
+        if reviews is not None and reviews != int(reviews):
+            raise ValueError(f"num_resenas no entero en {name}")
+        text = " · ".join(f"{day}: {row[f'horario_{day}']}" for day in DAYS)
+        result.append(
+            {
+                "name": name,
+                "tipo": row["tipo"].strip(),
+                "valoracion": number(row["valoracion"], 0, 5),
+                "num_resenas": int(reviews or 0),
+                "direccion": row["direccion"].strip(),
+                "telefono": row["telefono"].strip(),
+                "opening_hours": {
+                    "timezone": "Europe/Madrid",
+                    "weekly": hours,
+                    "requires_review": any(value is None for value in hours.values()),
+                    "raw_text": text,
+                    "normalized_text": text,
+                    "date_overrides": {},
+                    "sunday_note": row["nota_horario_domingo"].strip(),
+                },
+                "historical_popularity": {
+                    "model": "csv-v1",
+                    "timezone": "Europe/Madrid",
+                    "days": curve,
+                },
+            }
+        )
+    return result
+
+
+def match_catalog(
+    rows: list[dict], catalog: list[dict], overrides: dict
+) -> tuple[list[dict], list[dict]]:
+    resolved, problems, used = [], [], set()
+    ids = {row["id"]: row for row in catalog}
+    for row in rows:
+        key = normalize(row["name"])
+        tokens = set(key.split()) - GENERIC
+        ranked = []
+        for existing in catalog:
+            other = normalize(existing["name"])
+            other_tokens = set(other.split()) - GENERIC
+            score = (
+                1.0
+                if key == other
+                else 0.98
+                if tokens and tokens == other_tokens
+                else (
+                    0.8
+                    * SequenceMatcher(
+                        None, " ".join(sorted(tokens)), " ".join(sorted(other_tokens))
+                    ).ratio()
+                    + 0.2
+                    * SequenceMatcher(
+                        None, normalize(row["direccion"]), normalize(existing.get("address") or "")
+                    ).ratio()
+                )
+            )
+            ranked.append((score, existing["id"]))
+        ranked.sort(reverse=True)
+        chosen = overrides.get(row["name"])
+        if (
+            chosen is None
+            and ranked
+            and ranked[0][0] >= 0.92
+            and (len(ranked) < 2 or ranked[0][0] - ranked[1][0] >= 0.06)
+        ):
+            chosen = ranked[0][1]
+        existing = ids.get(chosen)
+        valid = existing and all(
+            isinstance(existing.get(k), (int, float)) and math.isfinite(existing[k])
+            for k in ("lat", "lng")
+        )
+        if not valid or chosen in used:
+            problems.append(
+                {
+                    "name": row["name"],
+                    "reason": "unmatched_or_ambiguous",
+                    "candidates": [
+                        {"id": id, "name": ids[id]["name"], "score": round(score, 4)}
+                        for score, id in ranked[:3]
+                    ],
+                }
+            )
+            continue
+        UUID(chosen)
+        used.add(chosen)
+        resolved.append({**row, "id": chosen})
+    return resolved, problems
+
+
+def read_csv(path: Path) -> list[dict]:
+    import pandas as pd
+
+    # pandas renombra cabeceras repetidas; detectarlas ANTES de que desaparezca el problema.
+    with path.open(encoding="utf-8-sig", newline="") as handle:
+        header = next(csv.reader(handle))
+    if len(header) != 140 or len(set(header)) != 140 or set(header) != set(COLUMNS):
+        raise ValueError("Cabecera CSV inválida (faltan, sobran o se repiten columnas)")
+    frame = pd.read_csv(path, encoding="utf-8-sig", dtype=str).fillna("")
+    return prepare(frame.to_dict("records"))
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("csv", type=Path)
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument(
+        "--dry-run", action="store_true", help="Validar sin escribir (predeterminado)"
+    )
+    mode.add_argument(
+        "--apply",
+        action="store_true",
+        help="Aplicar catálogo atómicamente (por defecto solo validar)",
+    )
+    parser.add_argument(
+        "--catalog", type=Path, help="Snapshot local del catálogo, para validación offline"
+    )
+    parser.add_argument("--overrides", type=Path, help="JSON de nombres CSV a UUID verificados")
+    parser.add_argument("--output", type=Path, default=Path("data/csv_sync_plan.json"))
+    parser.add_argument(
+        "--new-locations", type=Path, help="JSON de ubicaciones verificadas para altas nuevas"
+    )
+    parser.add_argument(
+        "--holidays", type=Path, help="JSON de fechas YYYY-MM-DD con ajuste festivo"
+    )
+    args = parser.parse_args(argv)
+    try:
+        rows = read_csv(args.csv)
+        client = None
+        if args.catalog:
+            if args.apply:
+                raise ValueError(
+                    "--catalog es solo para validación; aplicar requiere leer Supabase actual"
+                )
+            catalog = json.loads(args.catalog.read_text())
+        else:
+            from dotenv import load_dotenv
+
+            from supabase import create_client
+
+            load_dotenv()
+            client = create_client(
+                os.environ["SUPABASE_URL"], os.environ["SUPABASE_SERVICE_ROLE_KEY"]
+            )
+            catalog = []
+            while True:
+                page = (
+                    client.table("libraries")
+                    .select("id,name,address,lat,lng")
+                    .order("id")
+                    .range(len(catalog), len(catalog) + 499)
+                    .execute()
+                    .data
+                )
+                if not page:
+                    break
+                catalog.extend(page)
+        overrides = json.loads(args.overrides.read_text()) if args.overrides else {}
+        locations = json.loads(args.new_locations.read_text()) if args.new_locations else {}
+        expanded = list(catalog)
+        new_ids = set()
+        for name, location in locations.items():
+            if any(normalize(existing["name"]) == normalize(name) for existing in catalog):
+                continue
+            if not (
+                -90 <= location["lat"] <= 90
+                and -180 <= location["lng"] <= 180
+                and location.get("source_url", "").startswith("https://")
+            ):
+                raise ValueError("Ubicación nueva sin coordenadas y fuente verificadas")
+            id = str(uuid5(NAMESPACE_URL, "biblioradar:csv:" + normalize(name)))
+            expanded.append({"id": id, "name": name, "address": "", **location})
+            new_ids.add(id)
+        resolved, problems = match_catalog(rows, expanded, overrides)
+        for row in resolved:
+            if row["id"] in new_ids:
+                location = next(x for x in expanded if x["id"] == row["id"])
+                row.update(
+                    {
+                        key: location[key]
+                        for key in ("lat", "lng", "institution", "district", "source_url")
+                    }
+                )
+        if args.holidays:
+            from datetime import date
+
+            holidays = json.loads(args.holidays.read_text())
+            if not isinstance(holidays, list) or any(
+                date.fromisoformat(d).isoformat() != d for d in holidays
+            ):
+                raise ValueError("Calendario festivo inválido")
+            for row in resolved:
+                row["opening_hours"]["holidays"] = holidays
+        plan = {
+            "csv_sha256": hashlib.sha256(args.csv.read_bytes()).hexdigest(),
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "matched": len(resolved),
+            "new_ids": sorted(new_ids),
+            "unresolved": problems,
+            "deactivate": [r["id"] for r in catalog if r["id"] not in {x["id"] for x in resolved}],
+            "deactivate_details": [
+                {"id": r["id"], "name": r["name"]}
+                for r in catalog
+                if r["id"] not in {x["id"] for x in resolved}
+            ],
+            "rows": resolved,
+        }
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(
+            json.dumps(plan, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
+        )
+        print(f"Emparejadas: {len(resolved)}/88. Pendientes: {len(problems)}. Plan: {args.output}")
+        if problems:
+            print(
+                "No se ha modificado Supabase. Resuelve el fichero de correspondencias antes de aplicar."
+            )
+            return 1
+        if args.apply:
+            print(
+                client.rpc(
+                    "sync_csv_catalog", {"p_rows": resolved, "p_csv_sha256": plan["csv_sha256"]}
+                )
+                .execute()
+                .data
+            )
+        else:
+            print("Simulación: no se ha modificado Supabase. Usa --apply tras revisar el plan.")
+        return 0
+    except (ValueError, KeyError, OSError) as exc:
+        print(f"Error de validación: {exc}")
+        return 1
+    except Exception as exc:
+        print(f"Error de conexión/sincronización: {type(exc).__name__}")
+        return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
