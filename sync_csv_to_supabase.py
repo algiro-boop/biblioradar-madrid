@@ -26,7 +26,7 @@ from pathlib import Path
 from uuid import NAMESPACE_URL, UUID, uuid5
 
 DAYS = ("lun", "mar", "mie", "jue", "vie", "sab", "dom")
-CATALOG_SIZE = 94
+CATALOG_SIZE = 95
 META = (
     "nombre tipo valoracion num_resenas direccion telefono horario_lun horario_mar horario_mie "
     "horario_jue horario_vie horario_sab horario_dom nota_horario_domingo"
@@ -79,6 +79,64 @@ def number(value: str, low: float, high: float) -> float | None:
     result = float(value.replace(",", "."))
     if not math.isfinite(result) or not low <= result <= high:
         raise ValueError(f"Número fuera de rango: {value!r}")
+    return result
+
+
+def import_long_popularity(records: list[dict]) -> dict:
+    """Convertir el CSV largo suministrado en una fila del maestro, sin inferir huecos."""
+    columns = {"centro", "direccion", "dia", "horario_apertura", "hora", "ocupacion_pct"}
+    labels = ("lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo")
+    if not records or any(set(r) != columns for r in records):
+        raise ValueError("CSV largo vacío o con columnas inválidas")
+    names = {r["centro"].strip() for r in records}
+    addresses = {r["direccion"].strip() for r in records}
+    if len(names) != 1 or not next(iter(names)) or len(addresses) != 1 or not next(iter(addresses)):
+        raise ValueError("El CSV largo debe describir un único centro y dirección")
+    groups = {label: [] for label in labels}
+    for record in records:
+        day = normalize(record["dia"])
+        if day not in groups:
+            raise ValueError("Día desconocido en CSV largo")
+        groups[day].append(record)
+    result = dict.fromkeys(COLUMNS, "")
+    result.update(
+        nombre=next(iter(names)),
+        direccion=next(iter(addresses)),
+        tipo="Centro cultural",
+        num_resenas="0",
+    )
+    for label, day in zip(labels, DAYS):
+        rows = groups[label]
+        schedules = {r["horario_apertura"].strip() for r in rows}
+        if len(schedules) != 1:
+            raise ValueError("Horario ausente o inconsistente en CSV largo")
+        slots = parse_hours(next(iter(schedules)))
+        if slots is None:
+            raise ValueError("Horario desconocido en CSV largo")
+        values = {}
+        if not slots:
+            if len(rows) != 1 or rows[0]["hora"].strip() or rows[0]["ocupacion_pct"].strip():
+                raise ValueError("Un día cerrado debe tener una única fila sin hora ni porcentaje")
+            result[f"horario_{day}"] = "Cerrado"
+            values = dict.fromkeys(range(6, 24), 0)
+        else:
+            result[f"horario_{day}"] = " / ".join("–".join(slot) for slot in slots)
+            for record in rows:
+                minutes = minute(record["hora"])
+                hour = minutes // 60
+                value = number(record["ocupacion_pct"], 0, 100)
+                if minutes % 60 or hour not in range(6, 24) or hour in values or value is None:
+                    raise ValueError("Hora duplicada, ausente o inválida en CSV largo")
+                opened = any(
+                    (hour + 1) * 60 > minute(a) and hour * 60 < minute(b) for a, b in slots
+                )
+                if not opened and value != 0:
+                    raise ValueError("Ocupación no nula fuera del horario de apertura")
+                values[hour] = value
+            if set(values) != set(range(6, 24)):
+                raise ValueError("Curva incompleta en CSV largo: se requieren las horas 06–23")
+        for hour, value in values.items():
+            result[f"ocupacion_{day}_{hour:02}"] = f"{value:g}"
     return result
 
 
@@ -226,6 +284,33 @@ def read_csv(path: Path, expected_rows: int = CATALOG_SIZE) -> list[dict]:
     return prepare(frame.to_dict("records"), expected_rows=expected_rows)
 
 
+def expand_catalog(
+    catalog: list[dict], locations: dict, overrides: dict
+) -> tuple[list[dict], set[str]]:
+    """Sembrar altas verificadas, respetando UUID explícitos aunque un homónimo ya exista."""
+    expanded, new_ids = list(catalog), set()
+    for name, location in locations.items():
+        target = overrides.get(name)
+        if target is not None:
+            UUID(target)
+            if any(existing["id"] == target for existing in catalog):
+                continue
+        elif any(normalize(existing["name"]) == normalize(name) for existing in catalog):
+            continue
+        if not (
+            -90 <= location["lat"] <= 90
+            and -180 <= location["lng"] <= 180
+            and location.get("source_url", "").startswith("https://")
+        ):
+            raise ValueError("Ubicación nueva sin coordenadas y fuente verificadas")
+        id = target or str(uuid5(NAMESPACE_URL, "biblioradar:csv:" + normalize(name)))
+        if id in new_ids:
+            raise ValueError("UUID duplicado en las altas nuevas")
+        expanded.append({**location, "id": id, "name": name, "address": ""})
+        new_ids.add(id)
+    return expanded, new_ids
+
+
 def apply_curve_provenance(rows: list[dict], provenance: dict) -> None:
     """Mantener trazabilidad de las curvas de referencia, sin presentarlas como mediciones."""
     names = {row["name"] for row in rows}
@@ -354,20 +439,7 @@ def main(argv: list[str] | None = None) -> int:
                 catalog.extend(page)
         overrides = json.loads(args.overrides.read_text()) if args.overrides else {}
         locations = json.loads(args.new_locations.read_text()) if args.new_locations else {}
-        expanded = list(catalog)
-        new_ids = set()
-        for name, location in locations.items():
-            if any(normalize(existing["name"]) == normalize(name) for existing in catalog):
-                continue
-            if not (
-                -90 <= location["lat"] <= 90
-                and -180 <= location["lng"] <= 180
-                and location.get("source_url", "").startswith("https://")
-            ):
-                raise ValueError("Ubicación nueva sin coordenadas y fuente verificadas")
-            id = str(uuid5(NAMESPACE_URL, "biblioradar:csv:" + normalize(name)))
-            expanded.append({"id": id, "name": name, "address": "", **location})
-            new_ids.add(id)
+        expanded, new_ids = expand_catalog(catalog, locations, overrides)
         resolved, problems = match_catalog(rows, expanded, overrides)
         for row in resolved:
             if row["id"] in new_ids:

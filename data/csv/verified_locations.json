@@ -64,5 +64,14 @@
     "source_url": "https://www.google.com/maps/search/?api=1&query=40.4005%2C-3.6358",
     "coordinate_source": "user_supplied",
     "verification_note": "Ubicación y existencia de la sala proporcionadas por el usuario, sin confirmación independiente."
+  },
+  "Biblioteca Gloria Fuertes (Rivas)": {
+    "lat": 40.3493674,
+    "lng": -3.5264018,
+    "district": "Rivas-Vaciamadrid",
+    "institution": "ayuntamiento",
+    "source_url": "https://sede-electronica.rivasciudad.es/equipamiento/biblioteca-gloria-fuertes/",
+    "coordinate_source": "official_municipal_map",
+    "verification_note": "Coordenadas del mapa de la ficha del Ayuntamiento de Rivas; dirección corroborada en el directorio de la Comunidad de Madrid."
   }
 }

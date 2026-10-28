@@ -106,7 +106,7 @@ def test_matching_preserves_ids_ambiguity_requires_override():
 def test_real_csv_and_verified_matches():
     with (ROOT / "data/csv/bibliotecas_madrid_popular_times.csv").open(newline="") as f:
         prepared = sync.prepare(list(csv.DictReader(f)))
-    assert len(prepared) == 94
+    assert len(prepared) == 95
     assert all(len(r["historical_popularity"]["days"]) == 7 for r in prepared)
     elipa = next(r for r in prepared if "La Elipa" in r["name"])
     assert elipa["opening_hours"]["requires_review"] is False
@@ -120,7 +120,7 @@ def test_real_csv_and_verified_matches():
     for day in ["6", "7"]:
         assert elipa["opening_hours"]["weekly"][day] == []
         assert all(v == 0.0 for v in elipa["historical_popularity"]["days"][day].values())
-    assert len(json.loads((ROOT / "data/csv/verified_locations.json").read_text())) == 8
+    assert len(json.loads((ROOT / "data/csv/verified_locations.json").read_text())) == 9
 
 
 def test_six_additions_have_complete_reference_curves_and_distinct_ids():
@@ -149,7 +149,7 @@ def test_six_additions_have_complete_reference_curves_and_distinct_ids():
         if "Hacienda de Pavones" not in name:
             assert library["opening_hours"]["weekly"]["6"] == []
             assert library["opening_hours"]["weekly"]["7"] == []
-    gloria = next(r for r in raw if r["nombre"] == "Biblioteca Gloria Fuertes")
+    gloria = next(r for r in raw if r["nombre"] == "Biblioteca Gloria Fuertes (Rivas)")
     monday = float(
         (sum(Decimal(gloria[f"ocupacion_{d}_12"]) for d in sync.DAYS[1:5]) / 4).quantize(
             Decimal("0.1"), rounding=ROUND_HALF_UP
@@ -182,12 +182,112 @@ def test_six_additions_have_complete_reference_curves_and_distinct_ids():
 
 
 def test_catalog_count_guard_and_explicit_future_expansion():
-    records = [{**row(), "nombre": f"Biblioteca {i}"} for i in range(95)]
+    records = [{**row(), "nombre": f"Biblioteca {i}"} for i in range(96)]
     with pytest.raises(ValueError):
         sync.prepare(records)
-    assert len(sync.prepare(records, expected_rows=95)) == 95
+    assert len(sync.prepare(records, expected_rows=96)) == 96
     with pytest.raises(ValueError):
         sync.prepare(records[:88])  # Un CSV truncado no debe archivar seis centros por accidente.
+
+
+def gloria_source():
+    with (ROOT / "data/csv/sources/centro_cultural_gloria_fuertes.csv").open(
+        encoding="utf-8-sig", newline=""
+    ) as f:
+        return list(csv.DictReader(f))
+
+
+def test_barajas_curve_matches_every_supplied_hour_and_weekends_are_closed():
+    imported = sync.import_long_popularity(gloria_source())
+    with (ROOT / "data/csv/bibliotecas_madrid_popular_times.csv").open(newline="") as f:
+        raw = list(csv.DictReader(f))
+    barajas = next(r for r in raw if r["nombre"] == "Centro Cultural Gloria Fuertes (Barajas)")
+    for key in [c for c in sync.COLUMNS if c.startswith(("ocupacion_", "horario_"))]:
+        assert barajas[key] == imported[key]
+    assert barajas["direccion"] == "Av. de Logroño, 179, Barajas, 28042 Madrid"
+    assert barajas["ocupacion_lun_07"] == "33"
+    assert all(barajas[f"horario_{day}"] == "07:30–22:00" for day in sync.DAYS[:5])
+    assert all(
+        barajas[f"ocupacion_{day}_{hour:02}"] == "0"
+        for day in ["sab", "dom"]
+        for hour in range(6, 24)
+    )
+    rivas = next(r for r in raw if r["nombre"] == "Biblioteca Gloria Fuertes (Rivas)")
+    assert rivas["direccion"] == "C. Jovellanos, 30, 28522 Rivas-Vaciamadrid, Madrid"
+    assert rivas["telefono"] == "913 22 23 95"
+    assert rivas["horario_mar"] == "9:00–21:00"
+    assert rivas["horario_lun"] == "Cerrado"
+    hours = sync.prepare([barajas], expected_rows=1)[0]["opening_hours"]
+    for time, expected in [("07:29", False), ("07:30", True), ("21:59", True), ("22:00", False)]:
+        assert (
+            opening_status(hours, datetime.fromisoformat(f"2026-10-28T{time}:00+01:00")) is expected
+        )
+    assert opening_status(hours, datetime.fromisoformat("2026-10-31T12:00:00+01:00")) is False
+
+
+@pytest.mark.parametrize(
+    "problem",
+    [
+        "missing_hour",
+        "duplicate_hour",
+        "missing_day",
+        "bad_day",
+        "bad_pct",
+        "closed_pct",
+        "bad_address",
+    ],
+)
+def test_long_csv_rejects_incomplete_or_inconsistent_data(problem):
+    rows = gloria_source()
+    if problem == "missing_hour":
+        rows.pop(0)
+    elif problem == "duplicate_hour":
+        rows.append(dict(rows[0]))
+    elif problem == "missing_day":
+        rows = [r for r in rows if r["dia"] != "domingo"]
+    elif problem == "bad_day":
+        rows[0]["dia"] = "festivo"
+    elif problem == "bad_pct":
+        rows[0]["ocupacion_pct"] = "101"
+    elif problem == "closed_pct":
+        rows[0]["ocupacion_pct"] = "1"  # 06:00 aún cerrado.
+    elif problem == "bad_address":
+        rows[0]["direccion"] = "Otra ubicación"
+    with pytest.raises(ValueError):
+        sync.import_long_popularity(rows)
+
+
+def test_gloria_homonyms_use_physical_ids_and_do_not_duplicate_on_resync():
+    barajas_id = "15e27271-a7ab-4cfb-a65a-9ab63e4e8d6c"
+    rivas_id = "f9500e30-9722-5aa7-b781-5fd22bf82ebe"
+    mappings = json.loads((ROOT / "data/csv/name_matches.json").read_text())
+    locations = json.loads((ROOT / "data/csv/verified_locations.json").read_text())
+    rivas_name, barajas_name = (
+        "Biblioteca Gloria Fuertes (Rivas)",
+        "Centro Cultural Gloria Fuertes (Barajas)",
+    )
+    assert mappings[rivas_name] == rivas_id and mappings[barajas_name] == barajas_id
+    # El nombre erróneo anterior no debe impedir un alta explícita con otro UUID.
+    original = [
+        {
+            "id": barajas_id,
+            "name": "Biblioteca Gloria Fuertes",
+            "lat": 40.460559472287,
+            "lng": -3.59374618117853,
+        }
+    ]
+    expanded, new_ids = sync.expand_catalog(original, {rivas_name: locations[rivas_name]}, mappings)
+    assert new_ids == {rivas_id}
+    assert expanded[0] == original[0]
+    assert expanded[1]["district"] == "Rivas-Vaciamadrid"
+    assert expanded[1]["lat"] == 40.3493674 and expanded[1]["lng"] == -3.5264018
+    rows = [{"name": name, "direccion": ""} for name in [rivas_name, barajas_name]]
+    resolved, problems = sync.match_catalog(rows, expanded, mappings)
+    assert not problems and [r["id"] for r in resolved] == [rivas_id, barajas_id]
+    assert sync.expand_catalog(expanded, {rivas_name: locations[rivas_name]}, mappings) == (
+        expanded,
+        set(),
+    )
 
 
 @pytest.mark.parametrize(
@@ -282,7 +382,7 @@ def test_csv_cron_uses_rpc_and_dry_run(monkeypatch):
         assert request.url.path == "/rest/v1/rpc/refresh_csv_occupancy"
         assert json.loads(request.content) == {"p_dry_run": True}
         assert request.headers["apikey"] == "server-test"
-        return httpx.Response(200, json={"libraries": 94, "dry_run": True})
+        return httpx.Response(200, json={"libraries": 95, "dry_run": True})
 
     monkeypatch.setattr(
         csv_job.httpx,
