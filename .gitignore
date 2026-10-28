@@ -25,3 +25,8 @@ resultados_gmaps/
 
 # Archivos locales de macOS.
 .DS_Store
+
+# Resultados locales de pruebas de navegador.
+web/test-results/
+web/playwright-report/
+web/.next-e2e/

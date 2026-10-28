@@ -174,14 +174,14 @@ export function AppShell() {
   if (configError) return <ConfigNotice message={error ?? ""} />;
 
   return (
-    <main className="relative flex h-dvh w-full overflow-hidden bg-slate-100 text-slate-900">
+    <main className="app-viewport relative flex min-h-0 min-w-0 w-full overflow-hidden bg-slate-100 text-slate-900">
       {/* Panel lateral: en móvil cabecera flotante + lista a pantalla completa; en escritorio barra fija. */}
       <section
-        className={`absolute inset-0 z-[1000] flex flex-col md:static md:z-auto md:w-[400px] md:shrink-0 md:border-r md:border-slate-200 md:bg-slate-50 ${
-          view === "list" ? "bg-slate-50" : "pointer-events-none md:pointer-events-auto"
+        className={`absolute inset-0 z-[1000] flex min-h-0 min-w-0 flex-col lg:static lg:z-auto lg:w-[320px] xl:w-[400px] lg:shrink-0 lg:border-r lg:border-slate-200 lg:bg-slate-50 ${
+          view === "list" ? "bg-slate-50" : "pointer-events-none lg:pointer-events-auto"
         }`}
       >
-        <div className="p-3 pt-[max(0.75rem,env(safe-area-inset-top))] md:p-0">
+        <div className="p-3 pt-[max(0.75rem,env(safe-area-inset-top))] lg:p-0">
           <Header
             filters={filters}
             onQueryChange={(query) => setFilters((f) => ({ ...f, query }))}
@@ -194,9 +194,10 @@ export function AppShell() {
             connection={connection}
             view={view}
             onViewChange={setView}
+            libraries={snapshot}
           />
         </div>
-        <div className={`min-h-0 flex-1 flex-col ${view === "list" ? "flex" : "hidden"} md:flex`}>
+        <div className={`min-h-0 flex-1 flex-col ${view === "list" ? "flex" : "hidden"} lg:flex`}>
           <LibraryList
             items={items}
             total={libraries.length}
@@ -212,7 +213,7 @@ export function AppShell() {
         </div>
       </section>
 
-      <section className="absolute inset-0 isolate md:static md:flex-1" aria-label="Mapa de bibliotecas">
+      <section className={`absolute inset-0 isolate h-full min-h-0 min-w-0 lg:static lg:flex-1 ${view === "list" ? "hidden lg:block" : "block"}`} aria-label="Mapa de bibliotecas">
         <MapView
           libraries={mapLibraries}
           selectedId={selectedId}
@@ -223,7 +224,7 @@ export function AppShell() {
         />
       </section>
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-[1050] px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:left-[400px]">
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-[1050] px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] lg:left-[320px] xl:left-[400px]">
         <ProximityBanner
           libraries={libraries}
           position={geo.position}

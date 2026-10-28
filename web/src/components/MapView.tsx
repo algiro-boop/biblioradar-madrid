@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { Circle, CircleMarker, MapContainer, Marker, TileLayer, useMap, useMapEvents, ZoomControl } from "react-leaflet";
 import { MADRID_CENTER, REPORT_RADIUS_M } from "@/lib/geo";
 import { formatPinText, getOccupancyLevel, LEVEL_STYLES, LEVEL_TEXT } from "@/lib/occupancy";
+import { observeMapSize } from "@/lib/map-resize";
 import { getTileConfig } from "@/lib/tiles";
 import type { LibraryWithOccupancy, OccupancyLevel, UserPosition } from "@/lib/types";
 
@@ -51,6 +52,7 @@ function MapController({
   onBackgroundClick: () => void;
 }) {
   const map = useMap();
+  useEffect(() => observeMapSize(map), [map]);
   const userRef = useRef(userPosition);
   userRef.current = userPosition;
 
@@ -59,13 +61,21 @@ function MapController({
   // Centra la biblioteca seleccionada dejando hueco al drawer (abajo en móvil, derecha en escritorio).
   useEffect(() => {
     if (!selected) return;
-    const zoom = Math.max(map.getZoom(), 15);
-    const size = map.getSize();
-    const mobile = size.x < 768;
-    const offset = mobile ? L.point(0, size.y * 0.28) : L.point(Math.min(210, size.x * 0.25), 0);
-    const target = map.unproject(map.project([selected.lat, selected.lng], zoom).add(offset), zoom);
-    map.flyTo(target, zoom, { duration: 0.6 });
-    // Solo al cambiar de selección, no con cada actualización de ocupación.
+    const centerSelected = (animate: boolean) => {
+      const zoom = Math.max(map.getZoom(), 15);
+      const size = map.getSize();
+      // El mismo breakpoint que el drawer; el ancho DEL MAPA no equivale al de pantalla.
+      const desktop = window.matchMedia("(min-width: 1024px)").matches;
+      const halfDrawer = window.matchMedia("(min-width: 1280px)").matches ? 210 : 180;
+      const offset = desktop ? L.point(Math.min(halfDrawer, size.x * 0.35), 0) : L.point(0, size.y * 0.22);
+      const target = map.unproject(map.project([selected.lat, selected.lng], zoom).add(offset), zoom);
+      map.flyTo(target, zoom, { duration: 0.6, animate });
+    };
+    centerSelected(true);
+    const resized = () => centerSelected(false);
+    map.on("resize", resized);
+    return () => { map.off("resize", resized); };
+    // Recolocar al rotar o cambiar de panel, sin reaccionar a cada actualización de ocupación.
   }, [selected?.id, map]);
 
   useEffect(() => {
@@ -104,7 +114,8 @@ export default function MapView({
       minZoom={10}
       maxZoom={19}
       zoomControl={false}
-      className="h-full w-full bg-slate-100"
+      tapHold={false}
+      className="h-full min-h-0 w-full min-w-0 bg-slate-100"
       attributionControl
     >
       <TileLayer

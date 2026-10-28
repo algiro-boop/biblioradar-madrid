@@ -112,6 +112,7 @@ export type ReportErrorKind =
   | "unknown";
 
 export interface ReportError {
+  retryAfterSeconds?: number;
   kind: ReportErrorKind;
   message: string;
 }
@@ -143,6 +144,16 @@ export interface Database {
     };
     Views: Record<string, never>;
     Functions: {
+      submit_feedback: {
+        Args: {
+          p_category: string;
+          p_message: string;
+          p_device_hash: string;
+          p_library_id?: string | null;
+          p_contact_info?: string | null;
+        };
+        Returns: string;
+      };
       submit_report: {
         Args: {
           p_library_id: string;

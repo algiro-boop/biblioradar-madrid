@@ -8,6 +8,8 @@ La arquitectura actual usa un CSV maestro de 88 centros y un motor Beta en Postg
 
 **Estado inicial:** los porcentajes y la etiqueta son `NULL` hasta disponer de una medición o estimación. Es una extensión deliberada del esquema solicitado para no representar la ausencia de datos como “0 %, libre”. El frontend deberá representar este estado como desconocido. Las etiquetas se calculan automáticamente: `free` < 70, `moderate` 70–89, `high` 90–99 y `full` 100. Los pines de los dos últimos estados serán rojos.
 
+La incorporación de sugerencias privadas, la revisión del cooldown y las correcciones de iPad están documentadas en [FEEDBACK_IPAD.md](FEEDBACK_IPAD.md).
+
 ## 1. Crear la base de datos
 
 Crea un proyecto Supabase. Abre SQL Editor y ejecuta el contenido completo de:

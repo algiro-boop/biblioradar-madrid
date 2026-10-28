@@ -85,3 +85,9 @@ describe("valores de reporte", () => {
     expect(REPORT_VALUES.map(labelFromPct)).toEqual(["free", "free", "moderate", "high", "full"]);
   });
 });
+
+it("conserva el tiempo restante del servidor y no reinicia 30 minutos", () => {
+  const error = mapReportError({ code: "P0001", details: '{"retry_after_seconds":60}' });
+  expect(error.retryAfterSeconds).toBe(60);
+  expect(mapReportError({ code: "P0001", details: '{"retry_after_seconds":5400}' }).retryAfterSeconds).toBeUndefined();
+});

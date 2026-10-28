@@ -7,6 +7,7 @@ import {
   InsecureContextError,
   minutesUntilNextReport,
   recordRecentReport,
+  REPORT_COOLDOWN_MS,
   subscribeRecentReports,
   type RecentReport,
 } from "@/lib/device";
@@ -120,8 +121,11 @@ export function useReport(options: {
           lng: position.lng,
         });
         if (!result.ok) {
-          // El servidor manda: sincronizar el registro local para no insistir durante 30 min.
-          if (result.error.kind === "rate_limit") recordRecentReport(library.id, null);
+          // Conservar solo la espera pendiente: un rechazo a los 29 min no añade otros 30.
+          if (result.error.kind === "rate_limit") {
+            const remaining = (result.error.retryAfterSeconds ?? REPORT_COOLDOWN_MS / 1000) * 1000;
+            recordRecentReport(library.id, null, Date.now() - REPORT_COOLDOWN_MS + remaining);
+          }
           fail(result.error);
           return;
         }

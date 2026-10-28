@@ -4,6 +4,8 @@ import { List, LoaderCircle, LocateFixed, Map as MapIcon, RotateCw, Search, X } 
 import { BRAND_ICON_SRC } from "@/lib/brand";
 import type { FilterInstitution, LibraryFilters } from "@/lib/filters";
 import type { RealtimeConnection } from "@/lib/types";
+import type { Library } from "@/lib/types";
+import { FeedbackButton } from "./FeedbackButton";
 import { InstallAppButton } from "./InstallAppButton";
 import { ShareAppButton } from "./ShareAppButton";
 
@@ -62,7 +64,9 @@ export function Header({
   connection,
   view,
   onViewChange,
+  libraries,
 }: {
+  libraries: Pick<Library, "id" | "name">[];
   filters: LibraryFilters;
   onQueryChange: (q: string) => void;
   onToggleRoom: () => void;
@@ -78,7 +82,7 @@ export function Header({
 }) {
   const conn = CONNECTION_TEXT[connection];
   return (
-    <header className="pointer-events-auto relative z-10 rounded-3xl bg-white/95 p-3 shadow-lg ring-1 ring-slate-900/5 backdrop-blur md:rounded-none md:bg-transparent md:px-4 md:pt-4 md:pb-2 md:shadow-none md:ring-0">
+    <header className="pointer-events-auto relative z-10 rounded-3xl bg-white/95 p-3 shadow-lg ring-1 ring-slate-900/5 backdrop-blur lg:rounded-none lg:bg-transparent lg:px-4 lg:pt-4 lg:pb-2 lg:shadow-none lg:ring-0">
       <div className="flex items-center justify-between gap-2 px-1 pb-2.5">
         <h1 className="flex min-w-0 items-center gap-2 text-base font-extrabold tracking-tight text-slate-900">
           <img src={BRAND_ICON_SRC} alt="" width={28} height={28} className="size-7 shrink-0 rounded-lg" />
@@ -95,7 +99,7 @@ export function Header({
               <span className={`relative inline-flex size-2 rounded-full ${conn.dot}`} />
             </span>
             {/* En la columna fija de 400 px (md+) o en móviles estrechos basta el punto. */}
-            <span className="max-[429px]:sr-only md:sr-only">{conn.label}</span>
+            <span className="max-[429px]:sr-only lg:sr-only">{conn.label}</span>
           </span>
           <ShareAppButton />
           <InstallAppButton />
@@ -114,7 +118,7 @@ export function Header({
             value={filters.query}
             onChange={(e) => onQueryChange(e.target.value)}
             placeholder="Nombre o distrito…"
-            className="h-11 w-full rounded-2xl bg-slate-100 pr-10 pl-10 text-[16px] text-slate-900 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-slate-900 focus:outline-none md:text-sm [&::-webkit-search-cancel-button]:hidden"
+            className="h-11 w-full rounded-2xl bg-slate-100 pr-10 pl-10 text-[16px] text-slate-900 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-slate-900 focus:outline-none lg:text-sm [&::-webkit-search-cancel-button]:hidden"
           />
           {filters.query && (
             <button
@@ -128,7 +132,7 @@ export function Header({
           )}
         </label>
 
-        <div className="flex h-11 shrink-0 rounded-2xl bg-slate-100 p-1 md:hidden" role="tablist" aria-label="Vista">
+        <div className="flex h-11 shrink-0 rounded-2xl bg-slate-100 p-1 lg:hidden" role="tablist" aria-label="Vista">
           {(
             [
               { value: "map", label: "Mapa", Icon: MapIcon },
@@ -152,7 +156,7 @@ export function Header({
         </div>
       </div>
 
-      <div className="-mx-3 mt-2.5 flex gap-2 overflow-x-auto px-3 pb-0.5 [scrollbar-width:none] md:mx-0 md:flex-wrap md:px-0 [&::-webkit-scrollbar]:hidden">
+      <div className="-mx-3 mt-2.5 flex gap-2 overflow-x-auto px-3 pb-0.5 [scrollbar-width:none] lg:mx-0 lg:flex-wrap lg:px-0 [&::-webkit-scrollbar]:hidden">
         <Pill active={filters.near !== null} onClick={onToggleNear} busy={locating}>
           {locating ? <LoaderCircle className="size-4 animate-spin" /> : <LocateFixed className="size-4" />}
           Cerca de mí
@@ -170,6 +174,8 @@ export function Header({
           </Pill>
         ))}
       </div>
+
+      <FeedbackButton libraries={libraries} />
 
       {geoMessage && (
         <div className="mt-2 flex items-center gap-2 rounded-xl bg-amber-50 px-3 py-2 text-xs text-amber-900" role="alert">

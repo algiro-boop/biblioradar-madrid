@@ -47,6 +47,7 @@ export function mapReportError(error: RpcErrorLike | null | undefined): ReportEr
   if (code === "P0001") {
     return {
       kind: "rate_limit",
+      retryAfterSeconds: retrySeconds(error?.details, 1800),
       message: "Ya enviaste un reporte de esta biblioteca. Solo se permite uno cada 30 minutos.",
     };
   }
@@ -94,4 +95,15 @@ export function rateLimitError(minutesLeft: number): ReportError {
         ? `Ya reportaste aquí. Podrás volver a hacerlo en ${minutesLeft} min.`
         : "Ya reportaste aquí hace poco. Solo se permite un reporte cada 30 minutos.",
   };
+}
+
+/** PostgreSQL devuelve el plazo restante; rechazar valores corruptos o excesivos. */
+export function retrySeconds(details: string | null | undefined, maximum: number): number | undefined {
+  try {
+    const n: unknown = JSON.parse(details ?? "null")?.retry_after_seconds;
+    return typeof n === "number" && Number.isFinite(n) && n > 0 && n <= maximum
+      ? Math.ceil(n) : undefined;
+  } catch {
+    return undefined;
+  }
 }

@@ -62,3 +62,20 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Altura definida para Safari/PWA; fallback para Safari anterior a las unidades dinámicas. */
+.app-viewport {
+  height: 100vh;
+  height: 100dvh;
+}
+
+.feedback-dialog {
+  width: calc(100% - 1.5rem);
+  max-width: 32rem;
+  max-height: calc(100vh - 2rem);
+  max-height: calc(100dvh - 2rem);
+  margin: auto;
+  border: 0;
+  overflow: hidden;
+}
+.feedback-dialog:not([open]) { display: none; }

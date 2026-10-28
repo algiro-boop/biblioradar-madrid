@@ -113,3 +113,12 @@ describe("registro local de reportes recientes", () => {
     expect(getRecentReport("lib-1", t0, storage)?.value).toBe(100);
   });
 });
+
+it("un rechazo a los 29 minutos solo conserva el minuto pendiente", () => {
+  const storage = memoryStorage();
+  const now = Date.UTC(2026, 9, 28, 10);
+  recordRecentReport("lib-1", null, now - REPORT_COOLDOWN_MS + 60_000, storage);
+  expect(minutesUntilNextReport("lib-1", now, storage)).toBe(1);
+  expect(minutesUntilNextReport("lib-1", now + 60_000, storage)).toBe(0);
+  expect(minutesUntilNextReport("lib-1", now + 31 * 60_000, storage)).toBe(0);
+});

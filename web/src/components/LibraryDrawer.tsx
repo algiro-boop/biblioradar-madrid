@@ -120,7 +120,7 @@ export function LibraryDrawer({
   return (
     <>
       <div
-        className={`fixed inset-0 z-[1100] bg-slate-950/30 transition-opacity md:hidden ${
+        className={`fixed inset-0 z-[1100] bg-slate-950/30 transition-opacity lg:hidden ${
           open ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
         onClick={onClose}
@@ -134,14 +134,14 @@ export function LibraryDrawer({
         aria-hidden={!open}
         inert={!open}
         style={dragY ? { transform: `translateY(${dragY}px)`, transition: "none" } : undefined}
-        className={`fixed inset-x-0 bottom-0 z-[1200] flex max-h-[88dvh] flex-col rounded-t-3xl bg-white shadow-2xl transition-transform duration-300 ease-out md:inset-x-auto md:top-3 md:right-3 md:bottom-3 md:max-h-none md:w-[420px] md:rounded-3xl ${
-          open ? "translate-y-0 md:translate-x-0" : "translate-y-full md:translate-x-[calc(100%+1.5rem)] md:translate-y-0"
+        className={`fixed inset-x-0 bottom-0 z-[1200] flex max-h-[88dvh] flex-col sm:max-h-[65dvh] rounded-t-3xl bg-white shadow-2xl transition-transform duration-300 ease-out lg:inset-x-auto lg:top-3 lg:right-3 lg:bottom-3 lg:max-h-none lg:w-[360px] xl:w-[420px] lg:rounded-3xl ${
+          open ? "translate-y-0 lg:translate-x-0" : "translate-y-full lg:translate-x-[calc(100%+1.5rem)] lg:translate-y-0"
         }`}
       >
         {library && (
           <>
             <div
-              className="flex touch-none cursor-grab justify-center pt-2.5 pb-1 md:hidden"
+              className="flex touch-none cursor-grab justify-center pt-2.5 pb-1 lg:hidden"
               onPointerDown={onPointerDown}
               onPointerMove={onPointerMove}
               onPointerUp={onPointerUp}
@@ -150,7 +150,7 @@ export function LibraryDrawer({
               <span className="h-1.5 w-10 rounded-full bg-slate-300" aria-hidden />
             </div>
 
-            <div className="flex items-start gap-3 px-5 pt-2 pb-3 md:pt-5">
+            <div className="flex items-start gap-3 px-5 pt-2 pb-3 lg:pt-5">
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-1.5">
                   <InstitutionBadge institution={library.institution} />
@@ -249,8 +249,8 @@ export function LibraryDrawer({
                   icon={<Users className="size-3.5" />}
                   detail={
                     status && status.active_reports_count > 0
-                      ? `${status.active_reports_count} ${status.active_reports_count === 1 ? "reporte" : "reportes"} en los últimos 90 min`
-                      : "Nadie ha reportado en los últimos 90 min"
+                      ? `${status.active_reports_count} ${status.active_reports_count === 1 ? "reporte" : "reportes"} usados en el cálculo (últimos 90 min)`
+                      : "Sin reportes para el cálculo en los últimos 90 min"
                   }
                 />
               </section>
