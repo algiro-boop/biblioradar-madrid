@@ -2,18 +2,15 @@ name: BiblioRadar occupancy
 
 on:
   push:
-    paths: ['src/**', 'tests/**', 'supabase/**', 'pyproject.toml', 'uv.lock', '.github/workflows/update_occupancy.yml']
+    paths: ['src/**', 'tests/**', 'sync_csv_to_supabase.py', 'data/csv/**', 'supabase/**', 'pyproject.toml', 'uv.lock', '.github/workflows/update_occupancy.yml']
   pull_request:
-  # Cada 15 min en minutos desplazados (:14, :29, :44, :59) para esquivar la congestión de
-  # GitHub a las horas en punto. 05-22 UTC = 06:14-23:59 en invierno (CET) y 07:14-00:59 en
-  # verano (CEST): la ejecución de :59 precede a las aperturas de las 8:00, 8:30 y 9:00.
-  # Cada base caduca en su siguiente cambio de apertura y la web estima mientras tanto.
+  # CSV + reportes: cada 15 minutos durante todo el día para actualizar cierres y expiraciones.
   schedule:
-    - cron: '14,29,44,59 5-22 * * *'
+    - cron: '14,29,44,59 * * * *'
   workflow_dispatch:
     inputs:
       dry_run:
-        description: Calcular sin escribir en Supabase
+        description: Contar centros del CSV sin modificar Supabase
         type: boolean
         default: true
 
@@ -76,7 +73,7 @@ jobs:
           DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
         run: |
           if [ "$DRY_RUN" = "true" ]; then
-            uv run --no-dev python -m biblioradar.update_job --dry-run
+            uv run --no-dev python -m biblioradar.csv_job --dry-run
           else
-            uv run --no-dev python -m biblioradar.update_job
+            uv run --no-dev python -m biblioradar.csv_job
           fi

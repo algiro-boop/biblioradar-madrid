@@ -206,3 +206,16 @@ describe("applyFilters", () => {
     expect(items[0]?.distanceM).toBe(0);
   });
 });
+
+it("una biblioteca cerrada nunca se ofrece como disponible aunque su porcentaje sea cero", () => {
+  const closed = status({ final_occupancy_pct: 0, status_label: "free", is_open_now: false });
+  expect(getOccupancyLevel(closed)).toBe("closed");
+  expect(hasRoom(closed)).toBe(false);
+});
+
+it("conserva el posterior y los campos del CSV al recibir Realtime", () => {
+  const parsed = parseOccupancyStatus({ ...status(), prior_occupancy: 35,
+    bayesian_occupancy: 62, final_occupancy_pct: 62, confidence_score: .7, is_open_now: true });
+  expect(parsed).toMatchObject({ prior_occupancy: 35, bayesian_occupancy: 62,
+    confidence_score: .7, is_open_now: true });
+});

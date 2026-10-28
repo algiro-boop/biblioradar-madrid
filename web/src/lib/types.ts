@@ -1,11 +1,11 @@
-// Contrato exacto con el esquema de Supabase (Fases 1 y 2). No añadir columnas inventadas.
+// Contrato Supabase: esquema original y campos aditivos del motor CSV/Beta.
 
 export type InstitutionType = "ayuntamiento" | "comunidad" | "ucm" | "otra";
 
 export type OccupancyLabel = "free" | "moderate" | "high" | "full";
 
-/** Nivel visual: las cuatro etiquetas SQL más "unknown" cuando el porcentaje es NULL. */
-export type OccupancyLevel = OccupancyLabel | "unknown";
+/** Nivel visual: etiquetas SQL, desconocido o cerrado según is_open_now. */
+export type OccupancyLevel = OccupancyLabel | "unknown" | "closed";
 
 /** Niveles que ofrece el formulario (`submit_report` acepta además 30, el nivel heredado). */
 export type ReportValue = 20 | 40 | 75 | 90 | 100;
@@ -16,6 +16,8 @@ export type OpeningHours = {
   normalized_text: string;
   weekly: Record<string, unknown> | null;
   requires_review: boolean;
+  date_overrides?: Record<string, unknown>;
+  sunday_note?: string;
 };
 
 // `type` (no `interface`): supabase-js exige que Row sea asignable a Record<string, unknown>.
@@ -31,6 +33,8 @@ export type Library = {
   lat: number;
   lng: number;
   google_place_id: string | null;
+  is_active?: boolean;
+  historical_popularity?: { model?: string };
   opening_hours: OpeningHours;
   total_seats: number | null;
   created_at: string;
@@ -39,11 +43,15 @@ export type Library = {
 
 export type OccupancyStatus = {
   library_id: string;
+  prior_occupancy?: number | null;
+  bayesian_occupancy?: number | null;
+  confidence_score?: number | null;
+  is_open_now?: boolean | null;
   google_live_pct: number | null;
   google_hist_pct: number | null;
   predicted_base_pct: number | null;
   crowd_pct: number | null;
-  /** NULL = sin datos / cerrada. Nunca equivale a 0 % (biblioteca vacía). */
+  /** NULL = sin datos. CSV cerrado lleva 0 e is_open_now=false. */
   final_occupancy_pct: number | null;
   /** Columna generada en SQL a partir de `final_occupancy_pct`. */
   status_label: OccupancyLabel | null;

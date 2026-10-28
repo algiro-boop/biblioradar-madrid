@@ -345,7 +345,34 @@ export function serverStatusIsCurrent(status: OccupancyStatus | null, now: numbe
  */
 export function currentOccupancy(library: LibraryWithOccupancy, now: number): OccupancyStatus {
   const status = library.occupancy;
-  if (status && serverStatusIsCurrent(status, now)) return status;
+  const csvModel = library.historical_popularity?.model === "csv-v1";
+  const validUntil = Date.parse(status?.base_valid_until ?? "");
+  const current = csvModel
+    ? Number.isFinite(validUntil) && now < validUntil
+    : serverStatusIsCurrent(status, now);
+  if (status && current) return status;
+  if (csvModel) {
+    // El posterior pertenece al servidor: nunca sustituirlo por la curva genérica antigua.
+    return {
+      library_id: library.id,
+      google_live_pct: null,
+      google_hist_pct: null,
+      predicted_base_pct: null,
+      crowd_pct: null,
+      final_occupancy_pct: null,
+      prior_occupancy: null,
+      bayesian_occupancy: null,
+      confidence_score: 0,
+      is_open_now: null,
+      status_label: null,
+      base_source: "CSV pendiente de actualización",
+      primary_source: "CSV pendiente de actualización",
+      active_reports_count: 0,
+      base_observed_at: null,
+      base_valid_until: null,
+      updated_at: status?.updated_at ?? new Date(0).toISOString(),
+    };
+  }
   const openNow = libraryOpenNow(library, now);
   const pct = heuristicBase(now, false, openNow, library);
   const source =
@@ -377,6 +404,8 @@ export function currentOccupancy(library: LibraryWithOccupancy, now: number): Oc
 export function withCurrentOccupancy(libraries: LibraryWithOccupancy[], now: number): LibraryWithOccupancy[] {
   return libraries.map((library) => {
     const occupancy = currentOccupancy(library, now);
-    return occupancy === library.occupancy ? library : { ...library, occupancy, estimatedLocally: true };
+    return occupancy === library.occupancy
+      ? library
+      : { ...library, occupancy, estimatedLocally: library.historical_popularity?.model !== "csv-v1" };
   });
 }

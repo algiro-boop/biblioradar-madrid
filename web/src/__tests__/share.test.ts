@@ -96,3 +96,10 @@ describe("shareOrCopy", () => {
     await expect(shareOrCopy("hola", nav as never, false)).resolves.toBe("failed");
   });
 });
+
+it("compartir un centro cerrado con posterior cero no lo anuncia como vacío", () => {
+  const occupancy = status({ final_occupancy_pct: 0, is_open_now: false });
+  const text = shareText({ name: NAME, occupancy });
+  expect(text).toContain("está cerrada");
+  expect(text).not.toContain("0%");
+});

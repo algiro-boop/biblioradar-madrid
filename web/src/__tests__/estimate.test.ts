@@ -171,3 +171,14 @@ describe("estimación inmediata al abrir", () => {
     expect(b?.occupancy?.library_id).toBe("x");
   });
 });
+
+it("el CSV conserva el posterior vigente y nunca recurre a la curva genérica cuando caduca", () => {
+  const now = Date.parse("2026-10-26T08:10:00Z");
+  const occupancy = status({ final_occupancy_pct: 61, bayesian_occupancy: 61,
+    base_valid_until: "2026-10-26T08:30:00Z", active_reports_count: 2 });
+  const library = { ...BASE_LIBRARY, historical_popularity: { model: "csv-v1" }, occupancy };
+  expect(currentOccupancy(library, now)).toBe(occupancy);
+  const stale = currentOccupancy(library, now + 31 * 60_000);
+  expect(stale.final_occupancy_pct).toBeNull();
+  expect(stale.primary_source).toBe("CSV pendiente de actualización");
+});

@@ -347,7 +347,7 @@ def run_job(
     return updates
 
 
-def main(argv: list[str] | None = None) -> int:
+def legacy_main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dry-run", action="store_true", help="Lee y calcula, sin escrituras RPC")
     parser.add_argument("--output", type=Path, help="Guarda las bases calculadas en JSON")
@@ -375,6 +375,13 @@ def main(argv: list[str] | None = None) -> int:
     except (ValueError, KeyError, TypeError, OSError) as exc:
         LOG.error("Actualización interrumpida (%s)", type(exc).__name__)
     return 1
+
+
+def main(argv: list[str] | None = None) -> int:
+    # Compatibilidad con comandos antiguos: desde CSV-v1 nunca se inicia scraping.
+    from biblioradar.csv_job import main as csv_main
+
+    return csv_main(argv)
 
 
 if __name__ == "__main__":

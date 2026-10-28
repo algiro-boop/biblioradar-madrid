@@ -4,24 +4,25 @@ import type { LibraryWithOccupancy } from "./types";
 export const SITE_URL = "https://biblioradar-madrid.vercel.app";
 
 /** Mensaje para recomendar la app en general (botón "Compartir app" del header). */
-export const APP_SHARE_TEXT = `📡 ¿Buscas sitio para estudiar en Madrid? Mira en tiempo real el aforo de +110 bibliotecas públicas y salas de estudio en BiblioRadar: ${SITE_URL}`;
+export const APP_SHARE_TEXT = `📡 ¿Buscas sitio para estudiar en Madrid? Mira en tiempo real la ocupación de 88 bibliotecas públicas y salas de estudio en BiblioRadar: ${SITE_URL}`;
 
 /** El estado viene de un horario (revisado, de Google o publicado) que la da por cerrada. */
 function isClosed(library: Pick<LibraryWithOccupancy, "occupancy">): boolean {
   const source = library.occupancy?.primary_source ?? library.occupancy?.base_source ?? "";
-  return source.startsWith("Cerrada");
+  return library.occupancy?.is_open_now === false || source.startsWith("Cerrada");
 }
 
 /** Texto para avisar a otros del aforo. `*texto*` es negrita en WhatsApp. */
 export function shareText(library: Pick<LibraryWithOccupancy, "name" | "occupancy">): string {
   const pct = library.occupancy?.final_occupancy_pct ?? null;
+  if (isClosed(library)) {
+    return `📚 *${library.name}* está cerrada ahora mismo. Mira qué bibliotecas tienen sitio libre en Madrid: ${SITE_URL}`;
+  }
   if (pct !== null) {
     const label = LEVEL_TEXT[getOccupancyLevel(library.occupancy)].toLowerCase();
     return `📚 En *${library.name}* hay ahora mismo un *${pct}% de ocupación* (${label}). Míralo en directo en BiblioRadar: ${SITE_URL}`;
   }
-  if (isClosed(library)) {
-    return `📚 *${library.name}* está cerrada ahora mismo. Mira qué bibliotecas tienen sitio libre en Madrid: ${SITE_URL}`;
-  }
+
   // Sin porcentaje ni horario que la cierre: no se afirma que esté cerrada.
   return `📚 Mira cuánta gente hay en *${library.name}* y qué bibliotecas tienen sitio libre en Madrid: ${SITE_URL}`;
 }

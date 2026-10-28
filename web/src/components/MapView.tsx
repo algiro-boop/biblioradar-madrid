@@ -23,10 +23,10 @@ function pinIcon(level: OccupancyLevel, pct: number | null, selected: boolean, n
   const cached = iconCache.get(key);
   if (cached) return cached;
   const s = LEVEL_STYLES[level];
-  const label = pct === null ? `${name}: sin datos` : `${name}: ${pct}%, ${LEVEL_TEXT[level]}`;
+  const label = level === "closed" ? `${name}: cerrada` : pct === null ? `${name}: sin datos` : `${name}: ${pct}%, ${LEVEL_TEXT[level]}`;
   const html = `
     <div class="flex flex-col items-center transition-transform duration-150 ${selected ? "scale-125" : "hover:scale-110"}" role="img" aria-label="${escapeHtml(label)}">
-      <div class="relative z-10 flex h-8 min-w-11 items-center justify-center rounded-full px-2 text-[13px] leading-none font-bold tabular-nums shadow-md ring-2 ${selected ? "ring-slate-900" : "ring-white"} ${s.bg} ${s.text}">${formatPinText(pct)}</div>
+      <div class="relative z-10 flex h-8 min-w-11 items-center justify-center rounded-full px-2 text-[13px] leading-none font-bold tabular-nums shadow-md ring-2 ${selected ? "ring-slate-900" : "ring-white"} ${s.bg} ${s.text}">${level === "closed" ? "Cerrada" : formatPinText(pct)}</div>
       <div class="-mt-1.5 size-3 rotate-45 rounded-[2px] shadow-md ${s.bg}"></div>
     </div>`;
   const icon = L.divIcon({

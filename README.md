@@ -1,12 +1,8 @@
-# BiblioRadar Madrid · Fases 1 y 2
+# BiblioRadar Madrid
 
-Base de datos Supabase y catálogo de bibliotecas municipales. Python 3.11+, entorno y dependencias con `uv`. La Fase 2 añade motor híbrido, conectores, fusión transaccional y cron. El frontend de la Fase 3 sigue pendiente.
+La arquitectura actual usa un CSV maestro de 88 centros y un motor Beta en PostgreSQL. Next.js muestra el catálogo activo y recibe los cambios mediante Supabase Realtime. Python 3.11+ y `uv` ejecutan el mantenimiento ligero cada 15 minutos, sin scraping ni consultas de clima.
 
-## Arquitectura prevista
-
-1. Catálogo oficial → limpieza en Python → Supabase (`libraries`).
-2. Google/UCM + clima y calendario + reportes con decaimiento → `occupancy_status` (Fase 2).
-3. Fase 3: Next.js, Tailwind, React-Leaflet y PWA; lectura pública y Realtime del estado; reportes por RPC.
+**Puesta en marcha y sincronización semanal:** [CSV_BAYESIAN.md](CSV_BAYESIAN.md). Ese documento sustituye las instrucciones de ingesta y motor híbrido de las fases anteriores que se conservan debajo como referencia histórica. `python -m biblioradar.update_job` ahora ejecuta el mantenimiento CSV; los antiguos parámetros de scraping ya no se utilizan.
 
 `libraries` tiene un UUID interno estable y una clave única `(source, source_id)` para importar repetidamente sin duplicar. Cada alta crea automáticamente su fila en `occupancy_status`. La ingesta no modifica ocupaciones, `google_place_id` ni `total_seats` existentes.
 

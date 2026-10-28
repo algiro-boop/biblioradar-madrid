@@ -34,6 +34,7 @@ export function labelFromPct(pct: number | null): OccupancyLabel | null {
 }
 
 export function getOccupancyLevel(status: OccupancyStatus | null | undefined): OccupancyLevel {
+  if (status?.is_open_now === false) return "closed";
   if (!status || status.final_occupancy_pct === null) return "unknown";
   return status.status_label ?? labelFromPct(status.final_occupancy_pct) ?? "unknown";
 }
@@ -49,7 +50,9 @@ export function formatOccupancy(pct: number | null | undefined): string {
 
 export function hasRoom(status: OccupancyStatus | null | undefined): boolean {
   // NULL no es "< 70": una biblioteca sin datos nunca aparece como "con sitio".
-  return typeof status?.final_occupancy_pct === "number" && status.final_occupancy_pct < 70;
+  return status?.is_open_now !== false
+    && typeof status?.final_occupancy_pct === "number"
+    && status.final_occupancy_pct < 70;
 }
 
 export const LEVEL_TEXT: Record<OccupancyLevel, string> = {
@@ -58,6 +61,7 @@ export const LEVEL_TEXT: Record<OccupancyLevel, string> = {
   high: "Casi llena",
   full: "Llena",
   unknown: "Sin datos",
+  closed: "Cerrada",
 };
 
 /** Clases Tailwind por nivel. Literales completos para que Tailwind las detecte. */
@@ -96,6 +100,14 @@ export const LEVEL_STYLES: Record<
     ring: "ring-red-600",
     bar: "bg-red-600",
     dot: "bg-red-600",
+  },
+  closed: {
+    bg: "bg-slate-500",
+    text: "text-white",
+    soft: "bg-slate-100 text-slate-600 ring-slate-200",
+    ring: "ring-slate-400",
+    bar: "bg-slate-300",
+    dot: "bg-slate-400",
   },
   unknown: {
     bg: "bg-slate-400",
@@ -180,8 +192,13 @@ export function parseOccupancyStatus(raw: unknown): OccupancyStatus | null {
       ? (rawLabel as OccupancyLabel)
       : null;
   const reports = asFiniteNumber(r.active_reports_count);
+  const confidence = asFiniteNumber(r.confidence_score);
   return {
     library_id: r.library_id,
+    prior_occupancy: toPct(r.prior_occupancy),
+    bayesian_occupancy: toPct(r.bayesian_occupancy),
+    confidence_score: confidence !== null && confidence >= 0 && confidence <= 1 ? confidence : null,
+    is_open_now: typeof r.is_open_now === "boolean" ? r.is_open_now : null,
     google_live_pct: toPct(r.google_live_pct),
     google_hist_pct: toPct(r.google_hist_pct),
     predicted_base_pct: toPct(r.predicted_base_pct),
@@ -205,6 +222,8 @@ function parseOpeningHours(raw: unknown): OpeningHours {
     raw_text: asString(r.raw_text),
     normalized_text: asString(r.normalized_text),
     weekly: asRecord(r.weekly),
+    date_overrides: asRecord(r.date_overrides) ?? {},
+    sunday_note: asString(r.sunday_note),
     requires_review: typeof r.requires_review === "boolean" ? r.requires_review : true,
   };
 }
@@ -231,6 +250,8 @@ export function parseLibrary(raw: unknown): Library | null {
     lat,
     lng,
     google_place_id: asNullableString(r.google_place_id),
+    is_active: r.is_active !== false,
+    historical_popularity: { model: asString(asRecord(r.historical_popularity)?.model) },
     opening_hours: parseOpeningHours(r.opening_hours),
     total_seats: seats !== null && seats > 0 ? Math.floor(seats) : null,
     created_at: asString(r.created_at),

@@ -33,10 +33,10 @@ export function OccupancyPill({
   return (
     <span
       className={`inline-flex shrink-0 items-center justify-center rounded-full px-2.5 font-bold tabular-nums ${dims} ${styles.bg} ${styles.text}`}
-      aria-label={pct === null ? "Sin datos de ocupación" : `Ocupación ${pct} por ciento, ${LEVEL_TEXT[level]}`}
+      aria-label={level === "closed" ? "Biblioteca cerrada" : pct === null ? "Sin datos de ocupación" : `Ocupación ${pct} por ciento, ${LEVEL_TEXT[level]}`}
       title={LEVEL_TEXT[level]}
     >
-      {formatPinText(pct)}
+      {level === "closed" ? "Cerrada" : formatPinText(pct)}
     </span>
   );
 }

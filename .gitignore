@@ -14,3 +14,14 @@ web/.env.local
 .venv/
 node_modules/
 .next/
+
+# Perfil privado y lecturas locales del scraper visible.
+chrome_profile/
+data/gmaps-*.jsonl
+
+# Pruebas independientes: cookies y diagnósticos locales.
+chrome_profile_pruebas/
+resultados_gmaps/
+
+# Archivos locales de macOS.
+.DS_Store

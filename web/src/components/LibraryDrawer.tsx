@@ -198,21 +198,21 @@ export function LibraryDrawer({
                     <p className="text-xs font-medium tracking-wide text-slate-500 uppercase">Ocupación ahora</p>
                     <p
                       className={`mt-1 font-extrabold tabular-nums ${
-                        pct === null ? "text-2xl text-slate-400" : "text-5xl text-slate-900"
+                        pct === null || level === "closed" ? "text-2xl text-slate-400" : "text-5xl text-slate-900"
                       }`}
                     >
-                      {formatOccupancy(pct)}
+                      {level === "closed" ? "Cerrada" : formatOccupancy(pct)}
                     </p>
                   </div>
                   <span
                     className={`mb-1 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold ring-1 ring-inset ${styles.soft}`}
                   >
                     <span className={`size-2 rounded-full ${styles.dot}`} aria-hidden />
-                    {pct === null ? "Sin datos / cerrada" : LEVEL_TEXT[level]}
+                    {level === "closed" ? "Cerrada" : pct === null ? "Sin datos" : LEVEL_TEXT[level]}
                   </span>
                 </div>
                 <div className="mt-3 h-2.5 overflow-hidden rounded-full bg-slate-100" aria-hidden>
-                  {pct !== null && (
+                  {pct !== null && level !== "closed" && (
                     <div className={`h-full rounded-full ${styles.bar} transition-all`} style={{ width: `${Math.max(pct, 3)}%` }} />
                   )}
                 </div>

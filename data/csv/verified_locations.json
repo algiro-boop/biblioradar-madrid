@@ -1,0 +1,23 @@
+{
+  "Biblioteca Escuelas Pías - UNED": {
+    "lat": 40.408357684219496,
+    "lng": -3.70376556603422,
+    "district": "Centro",
+    "institution": "otra",
+    "source_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=1788"
+  },
+  "Biblioteca Histórica Marqués de Valdecilla de la UCM": {
+    "lat": 40.425564,
+    "lng": -3.707913,
+    "district": "Centro",
+    "institution": "ucm",
+    "source_url": "https://biblioagenda.ucm.es/hours"
+  },
+  "Biblioteca Central de la UNED": {
+    "lat": 40.4360996,
+    "lng": -3.7349578,
+    "district": "Moncloa-Aravaca",
+    "institution": "otra",
+    "source_url": "https://www.uned.es/universidad/biblioteca/contacto.html"
+  }
+}

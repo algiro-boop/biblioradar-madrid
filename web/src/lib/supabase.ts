@@ -44,7 +44,7 @@ export function getSupabase(): SupabaseClient<Database> {
 
 /** `SELECT *, occupancy_status(*) FROM libraries`, validado y normalizado. */
 export async function fetchLibraries(signal?: AbortSignal): Promise<LibraryWithOccupancy[]> {
-  let query = getSupabase().from("libraries").select("*, occupancy_status(*)").order("name");
+  let query = getSupabase().from("libraries").select("*, occupancy_status(*)").eq("is_active", true).order("name");
   if (signal) query = query.abortSignal(signal);
   const { data, error } = await query;
   if (error) throw new Error(error.message || "No se pudieron cargar las bibliotecas.");
