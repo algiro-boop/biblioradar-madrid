@@ -99,6 +99,8 @@ def test_postgresql_migrations_smoke_and_python_parity():
     execute((ROOT / "tests/archetype_smoke.sql").read_text())
     execute((ROOT / "tests/feedback_smoke.sql").read_text())
     execute((ROOT / "supabase/migrations/202610280006_feedback_cooldown.sql").read_text())
+    execute((ROOT / "supabase/migrations/202610290010_official_capacities.sql").read_text())
+    execute((ROOT / "tests/capacities_smoke.sql").read_text())
     sql, expected = parity_case()
     output = execute(sql)
     # jsonb_agg (PostgreSQL 16) separa los elementos con saltos de línea: decodificar el bloque

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
+<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=7" />
+	
+
+
+
+	 	
+	<title>Directorio de bibliotecas de la Comunidad de Madrid &gt; 
+             	    	    		Datos de biblioteca
+    	    </title>
+
+		
+ 		
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Language" content="es" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link href="../css/comun_defaults.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_menu.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_arboles.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_mensajes.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_paginacion.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_tooltips.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_campos.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_tabs.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_dl.css" rel="stylesheet" type="text/css" />
+<link href="../css/adicional_menu.css" rel="stylesheet" type="text/css" />
+
+
+
+
+<script type="text/javascript">
+	var root = "..";
+	var root_i18n = "..";
+</script>
+
+
+
+<script type="text/javascript" src="../js/prototype.js"></script>
+<script type="text/javascript" src="../js/window.js"></script>
+<script type="text/javascript" src="../js/botones.js"></script>
+<script type="text/javascript" src="../js/i18n.js"></script>
+<script type="text/javascript" src="../js/nodos.js"></script>
+
+<script type="text/javascript">	
+	function ocultarDetalleGrupo()
+	{
+		alAbrirCerrarDetalle(true);
+
+		var elem = $("contenedor_detalle");
+		if(elem!=null){
+			var vis = elem.style; 
+			vis.display='none';
+		}
+		$('contenido_detalle').hide();
+	}
+	function ocultarEdicionGrupo()
+	{
+		var elem = $("boton_edicion_grupo");
+		if(elem!=null){
+			var vis = elem.style; 
+			vis.display='none';
+		}
+	}
+</script>
+
+
+		<script type="text/javascript" src="../js/i18n.cmd?fichero=validacion_campos_i18n.vm"></script>
+	<script type="text/javascript" src="../js/validacion_campos.js"></script>		
+	
+	<link href="../css/registro_marc.css" rel="stylesheet" type="text/css" />
+	<link href="../css/formatos.css" rel="stylesheet" type="text/css" />
+	<link href="../css/formatos_com.css" rel="stylesheet" type="text/css" />
+
+	<script type="text/javascript" src="../js/window.js"></script>
+
+	<script type="text/javascript" src="../js/calendario_ficha.js"></script>
+	
+			</head>
+
+<body>
+	
+<div id="pagina">
+
+ <div id="public">  <div id="comunidad"> 
+<div id="pagina_contenido0">
+	<div id="pagina_contenido">
+	    		<div class="identificacion_menu">
+									
+							<a href="../seguridad/form_login.cmd?destino=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D708">Bibliotecas</a>
+					</div>		    
+
+	    <h1 id="web_route">
+	    			    	
+            	    	       		<span class="webroute_current">Datos de biblioteca</span>
+       	    	        	    </h1>
+									
+	    	    <div id="contenido">
+			<div class="vacio"></div>				
+	<div id="consulta_registro">
+		<div class="registro_acciones">
+						
+			
+					<div class="datos_estadisticos">
+
+		</div>	
+
+   				   		
+    		<div class="registro_acciones">
+					<form name="formExport" action="../bibliotecas/operacion_seleccion.cmd"  method='post' >
+	
+					<input type="hidden" name="sel708" value="on" />
+					<input type="hidden" name="destino" value="../comunidades/registro.cmd?id=708" />
+										<span class="opciones_resultados">
+						<label for="operacion">Operación: </label>
+						<select name="operacion" id="operacion">
+							<option value="bibliotecas/imprimir">Imprimir ficha</option>
+													<option value="comunidades/exportar_registros">Exportar</option>
+																								
+					
+																			<option value="comunidades/add_cesta_seleccion">Añadir a Mis Seleccionados</option>
+												</select>
+						
+		    									 					<span class="boton_aceptar">
+	    	    		<input type="submit" name="aceptar" id='boton_aceptar' class="submit_boton" onmouseover="cambiarEstilo(this,'submit_boton_over', 'submit_boton', true);" onfocus="cambiarEstilo(this,'submit_boton_over', 'submit_boton', true);" onmouseout="cambiarEstilo(this,'submit_boton_over', 'submit_boton', false);" onblur="cambiarEstilo(this,'submit_boton_over', 'submit_boton', false);" value="Aceptar" />
+    	    	</span>
+					</span>
+					</form>
+       		</div>
+		</div>
+   		<div class="registro_datos">
+			<div class="registro_com">
+	            	    	        <div class="ficha"><h2>Biblioteca Pública Municipal "José Saramago"</h2><div id="tabs_ficha"><div class="tabpanel_container"><div class="tab_panel" id="datos_basicos"><h2>Datos básicos</h2><p class="imagen_favorita"><a href="../catalogo_imagenes/grupo.cmd?path=72&amp;idRegistro=708" ><img src="../catalogo_imagenes/imagen_id.cmd?formato=jpg&altoMaximo=200&anchoMaximo=200&idImagen=1309" alt="Imagen de la biblioteca" /></a><br /><a href="../catalogo_imagenes/galeria.cmd?path=72&amp;idRegistro=708" >Galería imágenes</a></p><div class="direccion"><p class="ficha_valor"><span class="etiqueta">Dirección:  </span><span class="valor">Avenida de Monforte de Lemos, 38<br />28029 Madrid (Madrid)<br />España<br />Tel.: 915886891<br />E-mail:<a class="enlace_externo" href="mailto: bpjosesaramago@madrid.es"> bpjosesaramago@madrid.es</a> <br /><a class="enlace_externo" target="_blank" href="http://maps.google.com/maps?f=q&hl=es&geocode=&q=AVENIDA+MONFORTE+DE+LEMOS,+36,+madrid&sll=37.0625,-95.677068&sspn=31.922255,59.238281&ie=UTF8&ll=40.479386,-3.70868&spn=0.007475,0.014462&z=16&om=0">Mapa Localización</a><br /><a class="enlace_externo" target="_blank" href="http://www.madrid.es/portales/munimadrid/es/Inicio/Direcciones-y-telefonos/Biblioteca-Publica-Municipal-Jose-Saramago-%28Fuencarral-El-Pardo%29?vgnextfmt=default&vgnextoid=70d879262ef5d010VgnVCM1000000b205a0aRCRD&vgnextchannel=3a4037d159dff210VgnVCM100000171f5a0aRCRD">Sitio Web</a><br /></span></p></div><div class="separador_imagenes"></div><div class="transporte"><p class="ficha_valor"><span class="etiqueta">Transportes:  </span><span class="valor"><span class="texto_transportes"><span class="icono_transportes"><img src="../img/iconos/transporte_metro.gif" alt="metro" /> </span>Barrio del Pilar, Peñagrande</span><br /><span class="texto_transportes"><span class="icono_transportes"><img src="../img/iconos/transporte_urbano.gif" alt="urbano" /> </span>49, 83, 128, 132, 134, 137</span></span></p></div><div class="horario_accesibilidad"><p class="ficha_valor"><span class="etiqueta">Horarios:  </span><span class="valor">Horario General de apertura: L-V, 8:30 a 21:00 h. <br />Horario de verano:: L-V, 8:30 a 20:00 h. <br /> </span></p><p class="ficha_valor"><span class="etiqueta">Accesible:  </span><span class="valor"><img class="icono_accesibilidad" src="../img/iconos/accesibilidad.gif" alt="Biblioteca con accesibilidad" /> </span></p></div><div class="separador_transp_horario"></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Otros nombres:  </span><span class="valor">Biblioteca Pública Municipal La Vaguada</span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Entidad responsable:  </span><span class="valor">Ayuntamiento de Madrid. Área de Gobierno de Cultura, Turismo y Deporte</span></p></div><div class="fechas"><p class="ficha_valor"><span class="etiqueta">La Biblioteca en fechas:  </span><span class="valor">Inauguración efectiva: 05/11/1990<br />Cierre temporal desde: 01/01/2018.  Hasta: 01/01/2021</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Historia:  </span><span class="valor">Historia de la BPM José Saramago <br /><br />Las Biblioteca Municipal de la Vaguada (actualmente llamada José Saramago) se inauguró el 5 de noviembre de 1990 por el entonces alcalde de Madrid Agustín Rodríguez Sahagún. La dirección de la biblioteca, en ese momento, la asumió Montserrat Cillero Perfecto. <br /><br />La biblioteca contaba con un fondo inaugural de 11.200 libros y con motivo de la inauguración fue montada una exposición en colaboración con Ediciones B, titulada ¿Cómo se hace un libro¿. Con la apertura de esta, pasaba a ser el número 21 de la Red de Bibliotecas Municipales del Ayuntamiento de Madrid. <br /><br />El origen de la biblioteca fue el cierre de la antigua biblioteca de Peñagrande que estaba en el Centro Cultural Rafael de León. Las instalaciones eran insuficientes para el distrito de Fuencarral-El Pardo uno de los más grandes de Madrid, y gracias al proyecto del nuevo Centro Cívico de La Vaguada se subsanaban, por un lado, la falta de espacio por otro se mejoraba en ubicación al estar situada junto al Centro Comercial de La Vaguada, verdadero eje de afluencia de público. <br /><br />El edificio de la actual biblioteca forma parte de un ambicioso proyecto para el Centro Cívico de la Vaguada, diseñado en 1982 por los arquitectos Javier San José Marqués y Jordi Parcerisas Vázquez, quienes recién salidos de la Escuela conseguían ganar el concurso. La organización de los diferentes núcleos funcionales se realizó por medio de una secuencia de arcos romanos que unían entre sí el Teatro Madrid, la Biblioteca, la Piscina cubierta y el Centro de la Tercera edad. <br /><br />En el año 2002, finalizó una obra de remodelación, que había durado algo más de un año, y gracias a la cual la biblioteca duplicó su espacio. Esta mejora se realizó siendo Concejala - Presidenta del distrito Nieves Sáez de Adana. Gracias a esta ampliación se distribuyeron nuevos espacios para las salas de publicaciones periódicas y multimedia, y se consiguió independizar la sala de lectura infantil. <br /><br />La biblioteca recibe el nombre de José Saramago en el año 2011 tras el reciente fallecimiento de este ilustre escritor, Premio Nobel de Literatura. <br /><br />Desde el inicio de su andadura la biblioteca siempre ha mantenido contacto directo con las instituciones educativas del distrito, fruto de ello son las actividades programadas con colegios y otras instituciones, entre las que destacamos la asociación Argadini, Aleph-Tea, el centro de adultos José Luis San Pedro, Centro Madrid Salud Fuencarral. <br /><br />En la última década, la biblioteca ha ampliado sus actividades dirigidas a todos los sectores de la población: hora del cuento, talleres de alfabetización informacional, club de lectura, tertulias de idiomas, talleres de escritura creativas, presentaciones de libros, lecturas dramatizadas, así como otras actividades que los propios vecinos del barrio nos ofrecen o demandan. <br /><br />En el 2018 se acomete una reforma integral del edificio con mejoras como sistema de ventilación, un ascensor, cambio de ubicación de la zona infantil, así como distribución y mejora de otros espacios (sala polivalente y sala de talleres). Dichas obras se dilataron en el tiempo, solapándose con la pandemia, lo cual implicó supuso un receso en nuestra actividad diaria, pero también un nuevo paradigma en nuestra forma de trabajar (talleres online, teletrabajo y potenciación de la plataforma de libros digitales eBiblio). <br /><br />Tras la reforma finalizada en noviembre de 2021; en el año 2022 y con la nueva dirección, María José Casaseca Martín y toda la plantilla de la biblioteca, se inicia una nueva andadura, donde apostamos por hacer una biblioteca dinámica, accesible, participativa, próxima y abierta al entorno, que ha quedado reforzada con la reciente remodelación del Parque de la Vaguada. <br />El edificio de la Biblioteca es colindante a otras instituciones municipales como el Centro de Mayores "Las Arcadas", el Centro Deportivo Municipal "Mª Jesús Rosa", y el auditorio perteneciente al Centro Cultural "La Vaguada". <br /><br />Desde el año 2023 la Biblioteca José Saramago se ha convertido en la primera biblioteca especializada en lengua y literatura portuguesa de la Red Pública Municipal con el proyecto impulsado por la Embajada de Portugal en España de la mano del Ayuntamiento de Madrid.<br /><br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Ubicación:  </span><span class="valor">Madrid - Fuencarral - El Pardo - Barrio del Pilar</span></p></div><div class="administrativa"><p class="ficha_valor"><span class="etiqueta">Tipo y titularidad:  </span><span class="valor">Tipo biblioteca: Pública - Punto de servicio fijo<br />Tipo administración: Administración Local</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Datos municipales:  </span><span class="valor">Estadísticas: <a class="enlace_externo" target="_blank" href="https://gestiona.comunidad.madrid/desvan/almudena/BuscarMunicipios.icm?codFicha=1&codSolapaActiva=1">Datos estadísticos básicos</a></span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Forma de acceso:  </span><span class="valor">Acceso libre</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Red de bibliotecas:  </span><span class="valor">Bibliotecas Municipales del Ayuntamiento de Madrid</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Fecha de actualización del registro:  </span><span class="valor">27/09/2026</span></p></div></span></p></div><div class="tab_panel" id="instalaciones_servicios"><h2>Instalaciones y servicios</h2><div class="direccion"><p class="ficha_valor"><span class="etiqueta">Edificio:  </span><span class="valor">Año construcción: 1990. Superficie útil: 1.276,00 metros cuadrados. Superficie útil de uso bibliotecario: 1.070,00 metros cuadrados. <br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Instalaciones y servicios:  </span><span class="valor"><strong>Sala General (única)</strong>: Capacidad: 6. Condiciones de acceso: libre. Adapt.discapacitados: Acceso para personas con movilidad reducida: rampas accesibles. Ascensor. Préstamo de Telelupa. Bucle magnético para personas con discapacidad auditiva. Señalización Braille. Señalización con Pictogramas. Silla de ruedas. Baño adaptado.	Lector de pantalla NVDA que permite a las personas ciegas y con discapacidad visual usar ordenadores. Puestos de atención: 3.<br /><br /><strong>Sala adultos o principal</strong>: Capacidad: 92. Adapt.discapacitados: SI.<br /><br /><strong>Sala infantil</strong>: Capacidad: 50. Puestos de atención: 1.<br /><br /><strong>Hemeroteca</strong>: Capacidad: 18.<br /><br /><strong>Internet</strong>: Capacidad: 16. Adapt.discapacitados: SI.<br /><br /><strong>Sala polivalente</strong>: Adapt.discapacitados: SI. Puestos de atención: 76.<br /><br /><strong>Sala-taller</strong>: Condiciones de acceso: Bajo solicitud online. Adapt.discapacitados: Si. Puestos de atención: 30.<br /><br /><strong>Otras instalaciones</strong>: Capacidad: 5. Otra información: COMITECA.<br /><br /><strong>Audiovisuales y materiales especiales</strong>: Capacidad: 10.<br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Equipamiento:  </span><span class="valor"><strong>Ordenadores con acceso a Internet</strong>: Nº Unidades públicas: 16. <br /><br /><strong>Ordenadores con acceso a OPAC</strong>: Nº Unidades públicas: 4. <br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Servicios en red:  </span><span class="valor"> Catálogo en Internet <a class="enlace_externo" target="_blank" href=" https://gestiona.comunidad.madrid/biblio_publicas/cgi-bin/abnetopac?SUBC=BPM/BCDIR"> https://gestiona.comunidad.madrid/biblio_publicas/cgi-bin/abnetopac?SUBC=BPM/BCDIR</a><br /> Sitio web <a class="enlace_externo" target="_blank" href=" https://bibliotecas.madrid.es/portales/bibliotecas/es/Informacion-y-servicios/Biblioteca-Publica-Municipal-Jose-Saramago-Fuencarral-El-Pardo-/?vgnextfmt=default&vgnextoid=70d879262ef5d010VgnVCM1000000b205a0aRCRD&vgnextchannel=231a0b6eb5cb3510VgnVCM1000008a4a900aRCRD"> https://bibliotecas.madrid.es/portales/bibliotecas/es/Informacion-y-servicios/Biblioteca-Publica-Municipal-Jose-Saramago-Fuencarral-El-Pardo-/?vgnextfmt=default&vgnextoid=70d879262ef5d010VgnVCM1000000b205a0aRCRD&vgnextchannel=231a0b6eb5cb3510VgnVCM1000008a4a900aRCRD</a><br /> Otras <a class="enlace_externo" target="_blank" href=" https://x.com/bpmmadrid"> https://x.com/bpmmadrid</a> Descripción: X. <br /> Otras <a class="enlace_externo" target="_blank" href=" https://www.instagram.com/bpm_madrid/?hl=es"> https://www.instagram.com/bpm_madrid/?hl=es</a> Descripción: Instagram. <br /> Otras <a class="enlace_externo" target="_blank" href=" https://es-es.facebook.com/bpmmadrid"> https://es-es.facebook.com/bpmmadrid</a> Descripción: Facebook. <br /> Otras <a class="enlace_externo" target="_blank" href=" http://madrid.es/go/WhatsAppBibliotecaSaramago "> http://madrid.es/go/WhatsAppBibliotecaSaramago </a> Descripción: Canal de WhatsApp de la Biblioteca JoséSara mago . <br /> Otras <a class="enlace_externo" target="_blank" href=" https://www.youtube.com/user/bpmmadrid"> https://www.youtube.com/user/bpmmadrid</a> Descripción: Youtube. <br />Acceso a bases de datos en Internet: Si. <br />Acceso a Internet inalámbrico: Si. <br />Radiofrecuencia: No. </span></p></div></span></p></div><div class="tab_panel" id="colecciones"><h2>Colecciones</h2><div class="fondos"><p class="ficha_valor"><span class="etiqueta">Fondos:  </span><span class="valor">Total fondos biblioteca: 44.322<br />Fecha actualización de datos acumulados: 27/09/2026<br /><br />Libros y folletos: 38.185<br />DVD Vídeos: 5.290<br />Documentos sonoros (discos compactos): 721<br />Electrónicos: CD-ROM: 18<br />Electrónicos: DVD-ROM: 7<br />Otros documentos electrónicos: 1<br />Documentos cartográficos: 5<br />Publicaciones periódicas: 95</span></p></div></span></p></div><div class="tab_panel" id="identificacion"><h2>Número de registro</h2><div class="control"><p class="ficha_valor"><span class="etiqueta">Número de control:  </span><span class="valor">0107960023</span></p></div><div class="texto"><p class="ficha_valor"><span class="etiqueta">Campos texto:  </span><span class="valor">1.990 m2 (datos del Atyo.)<br />223 (puestos de lectura)<br />40,4786<br />-3,70868</span></p></div></span></p></div></div></div></div><script type="text/javascript">
+addFuncionOnLoad (function() {
+    createTabbedPanel('tabs_ficha', 'h2');
+});
+</script>
+	            			</div>
+       	</div>
+	</div>
+
+	        		        		        		    	
+			<div class="vacio"></div>
+		    	</div>
+    	
+	    </div>
+    </div>
+    
+        <div id="cabecera">
+	<div id="imagen_dcha_cabecera">
+		<img src="../img/cabecera/cabecera_dir.gif" alt="Dirección general de archivos, museos y bibliotecas. Consejería de cultura y turismo. Comunidad de Madrid"/> 
+
+	</div>	
+	
+	<div id="imagen_cabecera">
+
+	</div>	
+</div>
+<!--
+<div class="identificacion_menu">
+			
+			<a href="../seguridad/form_login.cmd?destino=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D708">Bibliotecas</a>
+	</div>
+-->    
+        <div id="menu_principal">
+    	    			        	<h1 class="menu_titulo">Menú</h1>
+		            	
+
+
+
+<div class="menu">
+						<ul class="menu_element">
+    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/busqueda.cmd">Búsqueda</a> 
+					        			        		</li>
+        	    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/busqueda_avanzada.cmd">Búsqueda Avanzada</a> 
+					        			        		</li>
+        	    	    		    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/registros.cmd">Listado Completo</a> 
+					        			        		</li>
+        	    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    	</ul>
+    	</div>
+
+                    </div>
+    
+        <div id="pie">
+    <div class="estandares">
+        <a href="http://validator.w3.org/check/referer"><img
+        src="../img/iconos_estandares/valid-xhtml10.gif" alt='Validado XHTML 1.0' /></a>
+        
+        <a href="http://jigsaw.w3.org/css-validator/"><img
+        src="../img/iconos_estandares/valid-css.gif" alt='CSS validado' /></a>
+
+		<a href="http://www.w3.org/WAI/WCAG1AA-Conformance" title='Explicación del Nivel Doble-A de Conformidad'><img 
+		src="../img/iconos_estandares/dobleA.gif" alt='Icono de conformidad con el Nivel Doble-A, de las Directrices de Accesibilidad para el Contenido Web 1.0 del W3C-WAI' /></a>
+    	
+    		        	<a href="http://www.tawdis.net/servlets/taw?url=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D708"><img src="../img/iconos_estandares/taw.gif" alt='Validado por TAW' /></a>
+    </div>
+					<script type="text/javascript">
+			ocultarDetalleGrupo();
+		</script>
+		<script type="text/javascript">
+		ocultarEdicionGrupo();
+	</script>    
+</div>
+
+ </div>  </div> </div>
+</body>
+</html>

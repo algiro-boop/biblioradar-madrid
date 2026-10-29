@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
+<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=7" />
+	
+
+
+
+	 	
+	<title>Directorio de bibliotecas de la Comunidad de Madrid &gt; 
+             	    	    		Datos de biblioteca
+    	    </title>
+
+		
+ 		
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Language" content="es" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link href="../css/comun_defaults.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_menu.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_arboles.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_mensajes.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_paginacion.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_tooltips.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_campos.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_tabs.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_dl.css" rel="stylesheet" type="text/css" />
+<link href="../css/adicional_menu.css" rel="stylesheet" type="text/css" />
+
+
+
+
+<script type="text/javascript">
+	var root = "..";
+	var root_i18n = "..";
+</script>
+
+
+
+<script type="text/javascript" src="../js/prototype.js"></script>
+<script type="text/javascript" src="../js/window.js"></script>
+<script type="text/javascript" src="../js/botones.js"></script>
+<script type="text/javascript" src="../js/i18n.js"></script>
+<script type="text/javascript" src="../js/nodos.js"></script>
+
+<script type="text/javascript">	
+	function ocultarDetalleGrupo()
+	{
+		alAbrirCerrarDetalle(true);
+
+		var elem = $("contenedor_detalle");
+		if(elem!=null){
+			var vis = elem.style; 
+			vis.display='none';
+		}
+		$('contenido_detalle').hide();
+	}
+	function ocultarEdicionGrupo()
+	{
+		var elem = $("boton_edicion_grupo");
+		if(elem!=null){
+			var vis = elem.style; 
+			vis.display='none';
+		}
+	}
+</script>
+
+
+		<script type="text/javascript" src="../js/i18n.cmd?fichero=validacion_campos_i18n.vm"></script>
+	<script type="text/javascript" src="../js/validacion_campos.js"></script>		
+	
+	<link href="../css/registro_marc.css" rel="stylesheet" type="text/css" />
+	<link href="../css/formatos.css" rel="stylesheet" type="text/css" />
+	<link href="../css/formatos_com.css" rel="stylesheet" type="text/css" />
+
+	<script type="text/javascript" src="../js/window.js"></script>
+
+	<script type="text/javascript" src="../js/calendario_ficha.js"></script>
+	
+			</head>
+
+<body>
+	
+<div id="pagina">
+
+ <div id="public">  <div id="comunidad"> 
+<div id="pagina_contenido0">
+	<div id="pagina_contenido">
+	    		<div class="identificacion_menu">
+									
+							<a href="../seguridad/form_login.cmd?destino=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D104">Bibliotecas</a>
+					</div>		    
+
+	    <h1 id="web_route">
+	    			    	
+            	    	       		<span class="webroute_current">Datos de biblioteca</span>
+       	    	        	    </h1>
+									
+	    	    <div id="contenido">
+			<div class="vacio"></div>				
+	<div id="consulta_registro">
+		<div class="registro_acciones">
+						
+			
+					<div class="datos_estadisticos">
+
+		</div>	
+
+   				   		
+    		<div class="registro_acciones">
+					<form name="formExport" action="../bibliotecas/operacion_seleccion.cmd"  method='post' >
+	
+					<input type="hidden" name="sel104" value="on" />
+					<input type="hidden" name="destino" value="../comunidades/registro.cmd?id=104" />
+										<span class="opciones_resultados">
+						<label for="operacion">Operación: </label>
+						<select name="operacion" id="operacion">
+							<option value="bibliotecas/imprimir">Imprimir ficha</option>
+													<option value="comunidades/exportar_registros">Exportar</option>
+																								
+					
+																			<option value="comunidades/add_cesta_seleccion">Añadir a Mis Seleccionados</option>
+												</select>
+						
+		    									 					<span class="boton_aceptar">
+	    	    		<input type="submit" name="aceptar" id='boton_aceptar' class="submit_boton" onmouseover="cambiarEstilo(this,'submit_boton_over', 'submit_boton', true);" onfocus="cambiarEstilo(this,'submit_boton_over', 'submit_boton', true);" onmouseout="cambiarEstilo(this,'submit_boton_over', 'submit_boton', false);" onblur="cambiarEstilo(this,'submit_boton_over', 'submit_boton', false);" value="Aceptar" />
+    	    	</span>
+					</span>
+					</form>
+       		</div>
+		</div>
+   		<div class="registro_datos">
+			<div class="registro_com">
+	            	    	        <div class="ficha"><h2>Biblioteca Municipal de Ciempozuelos "Almudena Grandes"</h2><div id="tabs_ficha"><div class="tabpanel_container"><div class="tab_panel" id="datos_basicos"><h2>Datos básicos</h2><div class="direccion"><p class="ficha_valor"><span class="etiqueta">Dirección:  </span><span class="valor">C/ Colegiata, 3<br />28350 Ciempozuelos (Madrid)<br />España<br />Tel.: 911252448<br />Fax: 918932547<br />E-mail:<a class="enlace_externo" href="mailto: biblioteca.municipal@ayto-ciempozuelos.org"> biblioteca.municipal@ayto-ciempozuelos.org</a> <br /><a class="enlace_externo" target="_blank" href="https://maps.google.es/maps?q=calle+colegiata,+3,+ciempozuelos&hl=es&ll=40.159689,-3.612742&spn=0.017416,0.032916&sll=40.396764,-3.713379&sspn=5.035807,8.942871&hnear=Calle+de+la+Colegiata,+3,+28350+Ciempozuelos,+Madrid,+Comunidad+de+Madrid&t=m&z=15">Mapa Localización</a><br /><a class="enlace_externo" target="_blank" href="https://www.bibliotecaspublicas.es/ciempozuelos">Sitio Web</a><br /></span></p></div><div class="transporte"><p class="ficha_valor"><span class="etiqueta">Transportes:  </span><span class="valor"><span class="texto_transportes"><span class="icono_transportes"><img src="../img/iconos/transporte_cercanias.gif" alt="cercanias" /> </span>RENFE Línea C-3</span><br /><span class="texto_transportes"><span class="icono_transportes"><img src="../img/iconos/transporte_urbano.gif" alt="urbano" /> </span>Línea 1 Circular</span><br /><span class="texto_transportes"><span class="icono_transportes"><img src="../img/iconos/transporte_interurbano.gif" alt="interurbano" /> </span>426 Ciempozuelos-Madrid</span></span></p></div><div class="horario_accesibilidad"><p class="ficha_valor"><span class="etiqueta">Horarios:  </span><span class="valor">Horario General de apertura : L-V Sala de Adultos y de Estudio: 9:00-21:00 h.<br />Información adicional: Días 14, 15 y 16 de septiembre de 2026 permanecerá CERRADA por festivo local. <br />Sala Infantil/Juvenil : L-V de 16:30 a 20:30 h.<br />Información adicional: Días 14, 15 y 16 de septiembre de 2026 permanecerá CERRADA por festivo local. <br /> </span></p><p class="ficha_valor"><span class="etiqueta">Accesible:  </span><span class="valor"><img class="icono_accesibilidad" src="../img/iconos/accesibilidad.gif" alt="Biblioteca con accesibilidad" /> </span></p></div><div class="separador_transp_horario"></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Otros nombres:  </span><span class="valor">Biblioteca Central de Ciempozuelos</span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Entidad responsable:  </span><span class="valor">Ayuntamiento de Ciempozuelos</span></p></div><div class="fechas"><p class="ficha_valor"><span class="etiqueta">La Biblioteca en fechas:  </span><span class="valor">Creación: 01/03/1983</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Historia:  </span><span class="valor">Se funda en el año 1983 y desde 1986 se integra con la Comunidad de Madrid, cuando ésta adquiere las competencias en Cultura. En el año 1995 cambia su ubicación al edificio de la Casa de la Cultura del municipio y en 2011 se traslada al edificio actual. En diciembre de 2021, por acuerdo plenario, adquiere el nombre de "Almudena Grandes".</span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Ubicación:  </span><span class="valor">Ciempozuelos</span></p></div><div class="administrativa"><p class="ficha_valor"><span class="etiqueta">Tipo y titularidad:  </span><span class="valor">Tipo biblioteca: Pública - Punto de servicio fijo<br />Tipo administración: Administración Local</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Datos municipales:  </span><span class="valor">Estadísticas: <a class="enlace_externo" target="_blank" href="https://gestiona.comunidad.madrid/desvan/almudena/BuscarMunicipios.icm?codFicha=1&codSolapaActiva=1">Datos estadísticos básicos</a></span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Forma de acceso:  </span><span class="valor">Acceso libre</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Fecha de actualización del registro:  </span><span class="valor">27/09/2026</span></p></div></span></p></div><div class="tab_panel" id="instalaciones_servicios"><h2>Instalaciones y servicios</h2><div class="direccion"><p class="ficha_valor"><span class="etiqueta">Edificio:  </span><span class="valor">Año construcción: 2011. Superficie útil: 1.757,00 metros cuadrados. Superficie útil de uso bibliotecario: 1.073,00 metros cuadrados. <br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Instalaciones y servicios:  </span><span class="valor"><strong>Sala infantil/juvenil</strong>: Capacidad: 72. Condiciones de acceso: Libre. Adapt.discapacitados: Si. Puestos de atención: 2. Superficie: 290 metros cuadrados. Otra información: 36 puestos de lectura corresponden a la sala de estudio y se destina a lectores de más de 14 años.<br /><br /><strong>Audiovisuales y materiales especiales</strong>: Condiciones de acceso: libre. Adapt.discapacitados: si. Otra información: Estas zonas están incluidas en las salas de adultos e infantil y juvenil.<br /><br /><strong>Internet</strong>: Capacidad: 8. Condiciones de acceso: Libre con clave. Adapt.discapacitados: Si. Puestos de atención: 3.<br /><br /><strong>Depósitos</strong>: Superficie: 170 metros cuadrados.<br /><br /><strong>Hemeroteca</strong>: Capacidad: 6. Condiciones de acceso: Libre. Puestos de atención: 0. Superficie: 43 metros cuadrados.<br /><br /><strong>Salón de actos</strong>: Capacidad: 100. Adapt.discapacitados: Si. Superficie: 92 metros cuadrados.<br /><br /><strong>Sala polivalente</strong>: Superficie: 92 metros cuadrados.<br /><br /><strong>Sala adultos o principal</strong>: Capacidad: 36. Condiciones de acceso: Libre. Adapt.discapacitados: Si. Puestos de atención: 1. Superficie: 299 metros cuadrados.<br /><br /><strong>Zona de trabajos o servicios internos</strong>: Superficie: 88 metros cuadrados.<br /><br /><strong>Fondo Local</strong>: Condiciones de acceso: Libre. Adapt.discapacitados: Si. Otra información: Esta zona está incluida en la sala de adultos.<br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Equipamiento:  </span><span class="valor"><strong>Ordenadores con acceso a Internet</strong>: Nº Unidades públicas: 8. Condición acceso: Libre. Otra Información: 10 tabletas para préstamo en sala.. <br /><br /><strong>Equipos multifunción</strong>: <br /><br /><strong>Ordenadores con acceso a OPAC</strong>: Nº Unidades públicas: 1. Condición acceso: Libre. <br /><br /><strong>Impresoras</strong>: <br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Servicios en red:  </span><span class="valor"> Catálogo en Internet <a class="enlace_externo" target="_blank" href=" https://gestiona.comunidad.madrid/biblio_publicas/cgi-bin/abnetopac?SUBC=RBMCIE/BMCIE1 "> https://gestiona.comunidad.madrid/biblio_publicas/cgi-bin/abnetopac?SUBC=RBMCIE/BMCIE1 </a><br /> Sitio web <a class="enlace_externo" target="_blank" href=" https://www.bibliotecaspublicas.es/ciempozuelos"> https://www.bibliotecaspublicas.es/ciempozuelos</a><br />Acceso a bases de datos en red local: Si. <br />Acceso a bases de datos en Internet: Si. <br />Acceso a Internet inalámbrico: Si. <br />Radiofrecuencia: Si. </span></p></div></span></p></div><div class="tab_panel" id="actividades"><h2>Actividades</h2><div class="notas"><p class="ficha_valor"><span class="etiqueta">Actividades para adultos:  </span><span class="valor"><strong>Otras actividades</strong>: Club de lectura Los lunes con Almudena. Organización: Biblioteca. Fecha inicio: 28/09/2026. Fecha finalización: 28/06/2027. <br /><br /><strong>Presentaciones de libros, encuentros con autores, etc.</strong>: Ciempozuelos entre líneas. Organización: Biblioteca. Fecha inicio: 24/04/2026. Fecha finalización: 18/12/2026. <br /><br /><strong>Exposiciones</strong>: Las Salinas Espartinas. Organización: Biblioteca. <br /><br /><strong>Cursos y talleres</strong>: Lorca, grabados poéticos. Organización: En Volandas. Fecha inicio: 20/10/2026. Fecha finalización: 20/10/2026. <br /><br /><strong>Visitas guiadas</strong>: Imprenta Municipal del Ayuntamiento de Madrid. Organización: Biblioteca. Fecha inicio: 21/10/2026. Fecha finalización: 21/10/2026. <br /></span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Actividades para niños:  </span><span class="valor"><strong>Exposiciones</strong>: 41ª Muestra del libro infantil y juvenil. Organización: Comunidad de Madrid. Fecha inicio: 17/09/2026. Fecha finalización: 23/09/2026. <br /><br /><strong>Narración de cuentos</strong>: Cuentacuentos. Organización: Biblioteca. <br /><br /><strong>Visitas guiadas</strong>: Visitas escolares. Organización: Biblioteca. <br /><br /><strong>Cursos y talleres</strong>: Talleres infantiles y familiares. Organización: Biblioteca. <br /><br /><strong>Proyecciones, audiciones</strong>: Cine. Organización: Biblioteca. <br /><br /><strong>Otras actividades</strong>: Club de Lectura Infantil Soñadores de Historias. Organización: Biblioteca. Fecha inicio: 18/09/2026. Fecha finalización: 25/06/2027. <br /><br /><strong>Cursos y talleres</strong>: Taller de escritura creativa para jóvenes. Organización: Biblioteca. Fecha inicio: 01/03/2026. Fecha finalización: 19/12/2026. <br /></span></p></div></span></p></div><div class="tab_panel" id="colecciones"><h2>Colecciones</h2><div class="fondos"><p class="ficha_valor"><span class="etiqueta">Fondos:  </span><span class="valor">Total fondos biblioteca: 36.698<br />Fecha actualización de datos acumulados: 27/09/2026<br /><br />Libros y folletos: 31.082<br />DVD Vídeos: 4.135<br />Documentos sonoros (discos compactos): 1.212<br />Electrónicos: CD-ROM: 211<br />Electrónicos: DVD-ROM: 2<br />Otros documentos electrónicos: 48<br />Publicaciones periódicas: 8</span></p></div></span></p></div><div class="tab_panel" id="identificacion"><h2>Número de registro</h2><div class="control"><p class="ficha_valor"><span class="etiqueta">Número de control:  </span><span class="valor">0404091001</span></p></div><div class="texto"><p class="ficha_valor"><span class="etiqueta">Campos texto:  </span><span class="valor"><br />Antiguo NIDEN: 2800641<br />40,1634639<br />-3,620475</span></p></div></span></p></div></div></div></div><script type="text/javascript">
+addFuncionOnLoad (function() {
+    createTabbedPanel('tabs_ficha', 'h2');
+});
+</script>
+	            			</div>
+       	</div>
+	</div>
+
+	        		        		        		    	
+			<div class="vacio"></div>
+		    	</div>
+    	
+	    </div>
+    </div>
+    
+        <div id="cabecera">
+	<div id="imagen_dcha_cabecera">
+		<img src="../img/cabecera/cabecera_dir.gif" alt="Dirección general de archivos, museos y bibliotecas. Consejería de cultura y turismo. Comunidad de Madrid"/> 
+
+	</div>	
+	
+	<div id="imagen_cabecera">
+
+	</div>	
+</div>
+<!--
+<div class="identificacion_menu">
+			
+			<a href="../seguridad/form_login.cmd?destino=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D104">Bibliotecas</a>
+	</div>
+-->    
+        <div id="menu_principal">
+    	    			        	<h1 class="menu_titulo">Menú</h1>
+		            	
+
+
+
+<div class="menu">
+						<ul class="menu_element">
+    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/busqueda.cmd">Búsqueda</a> 
+					        			        		</li>
+        	    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/busqueda_avanzada.cmd">Búsqueda Avanzada</a> 
+					        			        		</li>
+        	    	    		    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/registros.cmd">Listado Completo</a> 
+					        			        		</li>
+        	    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    	</ul>
+    	</div>
+
+                    </div>
+    
+        <div id="pie">
+    <div class="estandares">
+        <a href="http://validator.w3.org/check/referer"><img
+        src="../img/iconos_estandares/valid-xhtml10.gif" alt='Validado XHTML 1.0' /></a>
+        
+        <a href="http://jigsaw.w3.org/css-validator/"><img
+        src="../img/iconos_estandares/valid-css.gif" alt='CSS validado' /></a>
+
+		<a href="http://www.w3.org/WAI/WCAG1AA-Conformance" title='Explicación del Nivel Doble-A de Conformidad'><img 
+		src="../img/iconos_estandares/dobleA.gif" alt='Icono de conformidad con el Nivel Doble-A, de las Directrices de Accesibilidad para el Contenido Web 1.0 del W3C-WAI' /></a>
+    	
+    		        	<a href="http://www.tawdis.net/servlets/taw?url=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D104"><img src="../img/iconos_estandares/taw.gif" alt='Validado por TAW' /></a>
+    </div>
+					<script type="text/javascript">
+			ocultarDetalleGrupo();
+		</script>
+		<script type="text/javascript">
+		ocultarEdicionGrupo();
+	</script>    
+</div>
+
+ </div>  </div> </div>
+</body>
+</html>

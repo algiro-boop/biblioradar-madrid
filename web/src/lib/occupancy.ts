@@ -254,6 +254,8 @@ export function parseLibrary(raw: unknown): Library | null {
     historical_popularity: { model: asString(asRecord(r.historical_popularity)?.model) },
     opening_hours: parseOpeningHours(r.opening_hours),
     total_seats: seats !== null && seats > 0 ? Math.floor(seats) : null,
+    total_capacity: typeof r.total_capacity === "number" && Number.isSafeInteger(r.total_capacity)
+      && r.total_capacity > 0 ? r.total_capacity : null,
     created_at: asString(r.created_at),
     updated_at: asString(r.updated_at),
   };

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
+<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=7" />
+	
+
+
+
+	 	
+	<title>Directorio de bibliotecas de la Comunidad de Madrid &gt; 
+             	    	    		Datos de biblioteca
+    	    </title>
+
+		
+ 		
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Language" content="es" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link href="../css/comun_defaults.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_menu.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_arboles.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_mensajes.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_paginacion.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_tooltips.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_campos.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_tabs.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_dl.css" rel="stylesheet" type="text/css" />
+<link href="../css/adicional_menu.css" rel="stylesheet" type="text/css" />
+
+
+
+
+<script type="text/javascript">
+	var root = "..";
+	var root_i18n = "..";
+</script>
+
+
+
+<script type="text/javascript" src="../js/prototype.js"></script>
+<script type="text/javascript" src="../js/window.js"></script>
+<script type="text/javascript" src="../js/botones.js"></script>
+<script type="text/javascript" src="../js/i18n.js"></script>
+<script type="text/javascript" src="../js/nodos.js"></script>
+
+<script type="text/javascript">	
+	function ocultarDetalleGrupo()
+	{
+		alAbrirCerrarDetalle(true);
+
+		var elem = $("contenedor_detalle");
+		if(elem!=null){
+			var vis = elem.style; 
+			vis.display='none';
+		}
+		$('contenido_detalle').hide();
+	}
+	function ocultarEdicionGrupo()
+	{
+		var elem = $("boton_edicion_grupo");
+		if(elem!=null){
+			var vis = elem.style; 
+			vis.display='none';
+		}
+	}
+</script>
+
+
+		<script type="text/javascript" src="../js/i18n.cmd?fichero=validacion_campos_i18n.vm"></script>
+	<script type="text/javascript" src="../js/validacion_campos.js"></script>		
+	
+	<link href="../css/registro_marc.css" rel="stylesheet" type="text/css" />
+	<link href="../css/formatos.css" rel="stylesheet" type="text/css" />
+	<link href="../css/formatos_com.css" rel="stylesheet" type="text/css" />
+
+	<script type="text/javascript" src="../js/window.js"></script>
+
+	<script type="text/javascript" src="../js/calendario_ficha.js"></script>
+	
+			</head>
+
+<body>
+	
+<div id="pagina">
+
+ <div id="public">  <div id="comunidad"> 
+<div id="pagina_contenido0">
+	<div id="pagina_contenido">
+	    		<div class="identificacion_menu">
+									
+							<a href="../seguridad/form_login.cmd?destino=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D248">Bibliotecas</a>
+					</div>		    
+
+	    <h1 id="web_route">
+	    			    	
+            	    	       		<span class="webroute_current">Datos de biblioteca</span>
+       	    	        	    </h1>
+									
+	    	    <div id="contenido">
+			<div class="vacio"></div>				
+	<div id="consulta_registro">
+		<div class="registro_acciones">
+						
+			
+					<div class="datos_estadisticos">
+
+		</div>	
+
+   				   		
+    		<div class="registro_acciones">
+					<form name="formExport" action="../bibliotecas/operacion_seleccion.cmd"  method='post' >
+	
+					<input type="hidden" name="sel248" value="on" />
+					<input type="hidden" name="destino" value="../comunidades/registro.cmd?id=248" />
+										<span class="opciones_resultados">
+						<label for="operacion">Operación: </label>
+						<select name="operacion" id="operacion">
+							<option value="bibliotecas/imprimir">Imprimir ficha</option>
+													<option value="comunidades/exportar_registros">Exportar</option>
+																								
+					
+																			<option value="comunidades/add_cesta_seleccion">Añadir a Mis Seleccionados</option>
+												</select>
+						
+		    									 					<span class="boton_aceptar">
+	    	    		<input type="submit" name="aceptar" id='boton_aceptar' class="submit_boton" onmouseover="cambiarEstilo(this,'submit_boton_over', 'submit_boton', true);" onfocus="cambiarEstilo(this,'submit_boton_over', 'submit_boton', true);" onmouseout="cambiarEstilo(this,'submit_boton_over', 'submit_boton', false);" onblur="cambiarEstilo(this,'submit_boton_over', 'submit_boton', false);" value="Aceptar" />
+    	    	</span>
+					</span>
+					</form>
+       		</div>
+		</div>
+   		<div class="registro_datos">
+			<div class="registro_com">
+	            	    	        <div class="ficha"><h2>Biblioteca Municipal Central  "Federico García Lorca" </h2><div id="tabs_ficha"><div class="tabpanel_container"><div class="tab_panel" id="datos_basicos"><h2>Datos básicos</h2><div class="direccion"><p class="ficha_valor"><span class="etiqueta">Dirección:  </span><span class="valor">Plaza del Maestro S/N<br />28850 Torrejón de Ardoz (Madrid)<br />España<br />Tel.: 91 677 17 53, 91 677 11 71<br />E-mail:<a class="enlace_externo" href="mailto: bibliotecafgl@ayto-torrejon.es"> bibliotecafgl@ayto-torrejon.es</a> <br /><a class="enlace_externo" target="_blank" href="https://www.google.es/maps/place/Biblioteca+Central+Federico+Garc%C3%ADa+Lorca/@40.4621108,-3.463224,19z/data=!4m5!3m4!1s0x0:0x38a4743b0625b4a6!8m2!3d40.4621373!4d-3.4629598?hl=es">Mapa Localización</a><br /><a class="enlace_externo" target="_blank" href="http://www.torrejoncultural.es/index.php/bibliotecas">Sitio Web</a><br /></span></p></div><div class="transporte"><p class="ficha_valor"><span class="etiqueta">Transportes:  </span><span class="valor"><span class="texto_transportes"><span class="icono_transportes"><img src="../img/iconos/transporte_cercanias.gif" alt="cercanias" /> </span>Líneas C-2, C-7 y CIVIS</span></span></p></div><div class="horario_accesibilidad"><p class="ficha_valor"><span class="etiqueta">Horarios:  </span><span class="valor">Sala de adultos (1ª planta): De lunes a viernes: 8:30 a 20:00 h. Sábados de 10:30 a 13:45 h. Consultar sábados abiertos en la web "Torrejón Cultural"<br />Información adicional: El servicio de préstamo finalizará 15 minutos antes del cierre.  <br />Sala de audiovisuales y materiales especiales (2ª planta): De lunes a viernes: 8:30 a 20:00 h. <br />Información adicional: El servicio de préstamo finalizará 15 minutos antes del cierre.  <br />Sala infantil/juvenil (Planta baja): De lunes a viernes de 8:30 a 20:00 h. Sábados de 10:30 a 13:45. Consultar sábados abiertos en la web "Torrejón Cultural" <br />Sala de estudio (Planta baja): De lunes a domingo de 8:30 a 21:00 h. Incluidos festivos. Consultar días de cierre en la web "Torrejón Cultural" <br /> </span></p><p class="ficha_valor"><span class="etiqueta">Accesible:  </span><span class="valor"><img class="icono_accesibilidad" src="../img/iconos/accesibilidad.gif" alt="Biblioteca con accesibilidad" /> </span></p></div><div class="separador_transp_horario"></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Otros nombres:  </span><span class="valor">Biblioteca Central</span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Entidad responsable:  </span><span class="valor">Ayuntamiento de Torrejón de Ardoz. Concejalía de Cultura </span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Puntos de servicio:  </span><span class="valor">Número de puntos: 4<br />Nombre de los puntos: Biblioteca Municipal Central "Federico García Lorca"; Biblioteca Juvenil "La Isla Misteriosa" ; Biblioteca Municipal "Enrique Tierno Galván" ; Biblioteca Municipal "Gabriel Celaya"</span></p></div><div class="fechas"><p class="ficha_valor"><span class="etiqueta">La Biblioteca en fechas:  </span><span class="valor">Creación: 2003<br />Inauguración prevista: 2004<br />Inauguración efectiva: 2005</span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Ubicación:  </span><span class="valor">Torrejón de Ardoz - El Juncal</span></p></div><div class="administrativa"><p class="ficha_valor"><span class="etiqueta">Tipo y titularidad:  </span><span class="valor">Tipo biblioteca: Pública - Punto de servicio fijo<br />Tipo administración: Administración Local</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Datos municipales:  </span><span class="valor">Estadísticas: <a class="enlace_externo" target="_blank" href="https://gestiona.comunidad.madrid/desvan/almudena/BuscarMunicipios.icm?codFicha=1&codSolapaActiva=1">Datos estadísticos básicos</a></span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Forma de acceso:  </span><span class="valor">Acceso libre</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Fecha de actualización del registro:  </span><span class="valor">27/09/2026</span></p></div></span></p></div><div class="tab_panel" id="instalaciones_servicios"><h2>Instalaciones y servicios</h2><div class="direccion"><p class="ficha_valor"><span class="etiqueta">Edificio:  </span><span class="valor">Año construcción: 2003. Superficie útil: 1.841,00 metros cuadrados. Superficie útil de uso bibliotecario: 1.522,00 metros cuadrados. <br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Instalaciones y servicios:  </span><span class="valor"><strong>Sala polivalente</strong>: Coste: 0,00&euro;. Condiciones de acceso: Libre acceso. Adapt.discapacitados: No. Puestos de atención: 0. Superficie: 280 metros cuadrados. Otra información: En esta sala hay físicamente 110 puestos de consulta/estudio pero se han contabilizado en la "Sala de adultos o principal" para dar una medida más real de los puestos disponibles para adultos.
+.<br /><br /><strong>Sala adultos o principal</strong>: Capacidad: 118. Coste: 0,00&euro;. Condiciones de acceso: Libre acceso. Adapt.discapacitados: Si. Puestos de atención: 2. Superficie: 325 metros cuadrados. Otra información: En la "Sala de adultos o principal" físicamente hay 8 puestos de consulta. Se han sumado 110 puestos de consulta que físicamente están ubicados en la "Sala polivalente" (planta baja) y que en realidad se usa como sala de estudio.<br /><br /><strong>Sala infantil/juvenil</strong>: Capacidad: 88. Coste: 0,00&euro;. Condiciones de acceso: Libre acceso. Los menores de 8 años tienen que estar acompañados de un adulto. Adapt.discapacitados: Si. Puestos de atención: 2. Superficie: 234 metros cuadrados. Otra información: Puestos de consulta infantiles: 28
+Puestos de consulta juveniles:  60
+.<br /><br /><strong>Audiovisuales y materiales especiales</strong>: Capacidad: 120. Coste: 0,00&euro;. Condiciones de acceso: Libre acceso. Adapt.discapacitados: Si. Puestos de atención: 1. Superficie: 283 metros cuadrados. Otra información: En esta sala se prestan varios servicios: préstamo de audiovisuales y materiales especiales, acceso a Internet. Además, hay 120 puestos de consulta/estudio para adultos. 
+
+De los 38 metros lineales, 22 corresponden a adultos y 16 a infantil/juvenil.<br /><br /><strong>Depósitos</strong>: Capacidad: 0. Coste: 0,00&euro;. Condiciones de acceso: Acceso restringido al personal bibliiotecario. Adapt.discapacitados: Si. Puestos de atención: 0. Otra información: La zona de trabajo interno comparte espacio con el depósito de la biblioteca, por lo que la superficie es la que aparece en la ficha "Zona de trabajos o servicios internos".<br /><br /><strong>Hemeroteca</strong>: Capacidad: 6. Coste: 0,00&euro;. Condiciones de acceso: Libre acceso. Adapt.discapacitados: Si. Otra información: Este servicio se presta en la "Sala de adultos o principal" por lo que los puestos de atención a usuarios son los mismos que aparecen en dicha sala.
+Hay un espacio concreto donde colocamos los puestos de consulta y las publicaciones pero no está definida la superficie en metros cuadrados de dicho servicio.<br /><br /><strong>Internet</strong>: Capacidad: 18. Coste: 0,00&euro;. Condiciones de acceso: Poseer el carné de la biblioteca. Adapt.discapacitados: Sí. Otra información: Este servicio se presta en la sala de "Audiovisuales y materiales especiales" por lo que los puestos de atención a usuarios son los mismos que aparecen en la ficha de dicha sala.<br /><br /><strong>Zona de trabajos o servicios internos</strong>: Capacidad: 0. Coste: 0,00&euro;. Condiciones de acceso: Acceso restringido al personal bibliotecario. Adapt.discapacitados: Si. Puestos de atención: 0. Superficie: 108 metros cuadrados. Otra información: La zona de trabajo interno comparte espacio con el depósito de la biblioteca. .<br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Equipamiento:  </span><span class="valor"><strong>Ordenadores con acceso a OPAC</strong>: Nº Unidades públicas: 3. Coste: 0,00&euro;. Condición acceso: Libre acceso. <br /><br /><strong>Ordenadores con acceso a Internet</strong>: Nº Unidades públicas: 18. Coste: 0,00&euro;. Condición acceso: Para usar las unidades de uso público es necesario poseer el carné de la biblioteca. Otra Información: Además tenemos 12 tablets.. <br /><br /><strong>Lectores/reproductores de sonido</strong>: Nº Unidades públicas: 0. Condición acceso: Uso interno. <br /><br /><strong>Impresoras</strong>: Nº Unidades públicas: 0. Condición acceso: Uso interno. <br /><br /><strong>Escáneres</strong>: Nº Unidades públicas: 0. <br /><br /><strong>Lectores/reproductores de microformas</strong>: Nº Unidades públicas: 0. <br /><br /><strong>Lectores/reproductores de imagen</strong>: Nº Unidades públicas: 0. <br /><br /><strong>Equipos multifunción</strong>: Nº Unidades públicas: 0. Condición acceso: Uso interno. <br /><br /><strong>Fotocopiadoras</strong>: Nº Unidades públicas: 0. <br /><br /><strong>Lectores de CD-ROM, DVD</strong>: Nº Unidades públicas: 0. <br /><br /><strong>Regrabadoras de CD, CD-ROM, DVD</strong>: Nº Unidades públicas: 0. <br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Servicios en red:  </span><span class="valor"> Catálogo en Internet <a class="enlace_externo" target="_blank" href=" https://gestiona.comunidad.madrid/biblio_publicas/cgi-bin/abnetopac?SUBC=RBMTOR/BMTOR2"> https://gestiona.comunidad.madrid/biblio_publicas/cgi-bin/abnetopac?SUBC=RBMTOR/BMTOR2</a><br /> Sitio web <a class="enlace_externo" target="_blank" href=" http://www.torrejoncultural.es/index.php/bibliotecas"> http://www.torrejoncultural.es/index.php/bibliotecas</a><br />Acceso a bases de datos en red local: No. <br />Acceso a bases de datos en Internet: No. <br />Acceso a Internet inalámbrico: Si. <br />Radiofrecuencia: No. </span></p></div></span></p></div><div class="tab_panel" id="actividades"><h2>Actividades</h2><div class="notas"><p class="ficha_valor"><span class="etiqueta">Actividades para adultos:  </span><span class="valor"><strong>Presentaciones de libros, encuentros con autores, etc.</strong>Organización: Biblioteca. <br /><br /><strong>Exposiciones</strong>Organización: Biblioteca. <br /></span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Actividades para niños:  </span><span class="valor"><strong>Narración de cuentos</strong>Organización: Biblioteca. <br /><br /><strong>Presentaciones de libros, encuentros con autores, etc.</strong>Organización: Biblioteca. <br /><br /><strong>Exposiciones</strong>Organización: Biblioteca. <br /><br /><strong>Visitas guiadas</strong>Organización: Biblioteca. <br /><br /><strong>Cursos y talleres</strong>Organización: Biblioteca. <br /></span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Formación de usuarios:  </span><span class="valor"><strong>Opac</strong> </span></p></div></span></p></div><div class="tab_panel" id="colecciones"><h2>Colecciones</h2><div class="fondos"><p class="ficha_valor"><span class="etiqueta">Fondos:  </span><span class="valor">Total fondos biblioteca: 56.678<br />Fecha actualización de datos acumulados: 27/09/2026<br /><br />Libros y folletos: 51.805<br />DVD Vídeos: 3.701<br />Documentos sonoros (discos compactos): 879<br />Electrónicos: CD-ROM: 210<br />Electrónicos: DVD-ROM: 1<br />Otros documentos electrónicos: 57<br />Documentos cartográficos: 5<br />Publicaciones periódicas: 20</span></p></div></span></p></div><div class="tab_panel" id="identificacion"><h2>Número de registro</h2><div class="control"><p class="ficha_valor"><span class="etiqueta">Número de control:  </span><span class="valor">0314891001</span></p></div><div class="texto"><p class="ficha_valor"><span class="etiqueta">Campos texto:  </span><span class="valor"><br />Antiguo NIDEN: 2808097<br />40,4623687<br />-3,463392</span></p></div></span></p></div></div></div></div><script type="text/javascript">
+addFuncionOnLoad (function() {
+    createTabbedPanel('tabs_ficha', 'h2');
+});
+</script>
+	            			</div>
+       	</div>
+	</div>
+
+	        		        		        		    	
+			<div class="vacio"></div>
+		    	</div>
+    	
+	    </div>
+    </div>
+    
+        <div id="cabecera">
+	<div id="imagen_dcha_cabecera">
+		<img src="../img/cabecera/cabecera_dir.gif" alt="Dirección general de archivos, museos y bibliotecas. Consejería de cultura y turismo. Comunidad de Madrid"/> 
+
+	</div>	
+	
+	<div id="imagen_cabecera">
+
+	</div>	
+</div>
+<!--
+<div class="identificacion_menu">
+			
+			<a href="../seguridad/form_login.cmd?destino=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D248">Bibliotecas</a>
+	</div>
+-->    
+        <div id="menu_principal">
+    	    			        	<h1 class="menu_titulo">Menú</h1>
+		            	
+
+
+
+<div class="menu">
+						<ul class="menu_element">
+    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/busqueda.cmd">Búsqueda</a> 
+					        			        		</li>
+        	    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/busqueda_avanzada.cmd">Búsqueda Avanzada</a> 
+					        			        		</li>
+        	    	    		    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/registros.cmd">Listado Completo</a> 
+					        			        		</li>
+        	    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    	</ul>
+    	</div>
+
+                    </div>
+    
+        <div id="pie">
+    <div class="estandares">
+        <a href="http://validator.w3.org/check/referer"><img
+        src="../img/iconos_estandares/valid-xhtml10.gif" alt='Validado XHTML 1.0' /></a>
+        
+        <a href="http://jigsaw.w3.org/css-validator/"><img
+        src="../img/iconos_estandares/valid-css.gif" alt='CSS validado' /></a>
+
+		<a href="http://www.w3.org/WAI/WCAG1AA-Conformance" title='Explicación del Nivel Doble-A de Conformidad'><img 
+		src="../img/iconos_estandares/dobleA.gif" alt='Icono de conformidad con el Nivel Doble-A, de las Directrices de Accesibilidad para el Contenido Web 1.0 del W3C-WAI' /></a>
+    	
+    		        	<a href="http://www.tawdis.net/servlets/taw?url=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D248"><img src="../img/iconos_estandares/taw.gif" alt='Validado por TAW' /></a>
+    </div>
+					<script type="text/javascript">
+			ocultarDetalleGrupo();
+		</script>
+		<script type="text/javascript">
+		ocultarEdicionGrupo();
+	</script>    
+</div>
+
+ </div>  </div> </div>
+</body>
+</html>

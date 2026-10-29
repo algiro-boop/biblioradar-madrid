@@ -1,0 +1,1099 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
+<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=7" />
+	
+
+
+
+	 	
+	<title>Directorio de bibliotecas de la Comunidad de Madrid &gt; 
+             	    	    		Listado Completo
+    	    </title>
+
+		
+ 		
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Language" content="es" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link href="../css/comun_defaults.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_menu.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_arboles.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_mensajes.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_paginacion.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_tooltips.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_campos.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_tabs.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_dl.css" rel="stylesheet" type="text/css" />
+<link href="../css/adicional_menu.css" rel="stylesheet" type="text/css" />
+
+
+
+
+<script type="text/javascript">
+	var root = "..";
+	var root_i18n = "..";
+</script>
+
+
+
+<script type="text/javascript" src="../js/prototype.js"></script>
+<script type="text/javascript" src="../js/window.js"></script>
+<script type="text/javascript" src="../js/botones.js"></script>
+<script type="text/javascript" src="../js/i18n.js"></script>
+<script type="text/javascript" src="../js/nodos.js"></script>
+
+<script type="text/javascript">	
+	function ocultarDetalleGrupo()
+	{
+		alAbrirCerrarDetalle(true);
+
+		var elem = $("contenedor_detalle");
+		if(elem!=null){
+			var vis = elem.style; 
+			vis.display='none';
+		}
+		$('contenido_detalle').hide();
+	}
+	function ocultarEdicionGrupo()
+	{
+		var elem = $("boton_edicion_grupo");
+		if(elem!=null){
+			var vis = elem.style; 
+			vis.display='none';
+		}
+	}
+</script>
+
+<script type="text/javascript">
+// <![CDATA[
+function onCheck()
+{
+	document.formExport.accionSeleccion.value = 'soloseleccionados';
+}
+
+function isTodosMarcados()
+{
+   for (i=0;i<document.formExport.elements.length;i++)
+   {
+      if(document.formExport.elements[i].type == "checkbox" && document.formExport.elements[i].checked=="0")
+	      return "0";
+   }
+   return "1";
+}
+
+function marcarTodos()
+{
+   for (i=0;i<document.formExport.elements.length;i++)
+   {
+      if(document.formExport.elements[i].type == "checkbox")
+         document.formExport.elements[i].checked=1;
+   }
+	document.formExport.accionSeleccion.value = 'soloseleccionados';
+}
+
+function desmarcarTodos()
+{
+   for (i=0;i<document.formExport.elements.length;i++)
+   {
+      if(document.formExport.elements[i].type == "checkbox")
+         document.formExport.elements[i].checked=0;
+   }
+	document.formExport.accionSeleccion.value = 'todos';
+}
+
+// ]]>
+</script>
+</head>    	
+<body>
+	
+<div id="pagina">
+
+ <div id="public">  <div id="Listado Completo"> 
+<div id="pagina_contenido0">
+	<div id="pagina_contenido">
+	    		<div class="identificacion_menu">
+									
+							<a href="../seguridad/form_login.cmd?destino=..%2Fcomunidades%2Fregistros.cmd%3Fposicion%3D151">Bibliotecas</a>
+					</div>		    
+
+	    <h1 id="web_route">
+	    			    	
+            	    	       		<span class="webroute_current">Listado Completo</span>
+       	    	        	    </h1>
+									
+	    	    <div id="contenido">
+			<div class="vacio"></div>			
+	<div id="comunidades">
+						<form name="formExport" action="../bibliotecas/operacion_seleccion.cmd"  method='post' >
+	
+				<input type="hidden" name="posicionAntigua" value="151" />
+				<input type="hidden" name="destino" value="../comunidades/registros.cmd?posicion=151" />
+				<input type="hidden" name="isCesta" value="" />
+								<span class="opciones_resultados">
+					<select name="accionSeleccion" id="exportar">
+						<option value="todos">Todos</option>
+						<option value="soloseleccionados">Marcados</option>
+					</select>
+					
+					<label for="operacion">Operación: </label>
+					<select name="operacion" id="operacion">
+						<option value="bibliotecas/imprimir">Imprimir fichas</option>
+											<option value="comunidades/exportar_registros">Exportar</option>
+																								<option value="comunidades/add_cesta_seleccion">Añadir a Mis Seleccionados</option>
+												
+												
+																		
+																	</select>
+	    									 					<span class="boton_aceptar">
+	    	    		<input type="submit" name="aceptar" id='boton_aceptar' class="submit_boton" onmouseover="cambiarEstilo(this,'submit_boton_over', 'submit_boton', true);" onfocus="cambiarEstilo(this,'submit_boton_over', 'submit_boton', true);" onmouseout="cambiarEstilo(this,'submit_boton_over', 'submit_boton', false);" onblur="cambiarEstilo(this,'submit_boton_over', 'submit_boton', false);" value="Aceptar" />
+    	    	</span>
+
+					<script type="text/javascript">
+						document.write("<a href='javascript:marcarTodos();'>Marcar Todos</a>");
+						document.write(" | ");
+						document.write("<a href='javascript:desmarcarTodos();'>Desmarcar Todos</a>");
+						document.write(" ");
+					</script>
+											<a id='cesta_seleccion' href='../comunidades/ver_cesta_seleccion.cmd'>Mis Seleccionados (0) </a>
+									</span>
+			
+						    	
+
+
+
+
+
+
+
+<div class="nav_marco">
+		
+			<div class="vacio"></div>
+				<div class="nav_paginas">
+				<span class="nav_atras">
+                        		<span class="enlace_cambio">									 		<span class="boton_primero">
+	    	    	    				<a href="../comunidades/registros.cmd?posicion=1&amp;forma="     		    		class="boton_imagen" id='boton_primero'>
+    			<img name="primero_1" alt="Primero" src="../img/botones/primero.gif" /></a>
+			    	    	</span>
+</span>
+            		<span class="enlace_cambio">									 		<span class="boton_anterior">
+	    	    	    				<a href="../comunidades/registros.cmd?posicion=101&amp;forma="     		    		class="boton_imagen" id='boton_anterior'>
+    			<img name="anterior_2" alt="Anterior" src="../img/botones/anterior.gif" /></a>
+			    	    	</span>
+</span>
+            		</span>
+
+		<span class="nav_descrip">
+							151 al 200 de 889
+					</span>
+
+		<span class="nav_alante">
+                        		<span class="enlace_cambio">									 		<span class="boton_siguiente">
+	    	    	    				<a href="../comunidades/registros.cmd?posicion=201&amp;forma="     		    		class="boton_imagen" id='boton_siguiente'>
+    			<img name="siguiente_3" alt="Siguiente" src="../img/botones/siguiente.gif" /></a>
+			    	    	</span>
+</span>
+            		<span class="enlace_cambio">									 		<span class="boton_ultimo">
+	    	    	    				<a href="../comunidades/registros.cmd?posicion=851&amp;forma="     		    		class="boton_imagen" id='boton_ultimo'>
+    			<img name="ultimo_4" alt="Último" src="../img/botones/ultimo.gif" /></a>
+			    	    	</span>
+</span>
+            		</span>
+
+										    		<span class="nav_pagina_directo">
+	    				    				    				    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina1">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=1"     		class="boton_texto" id='boton_pagina1'>
+    			1</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina2">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=51"     		class="boton_texto" id='boton_pagina2'>
+    			2</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina3">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=101"     		class="boton_texto" id='boton_pagina3'>
+    			3</a>
+    	    	</span>
+</span>
+	    					    				    					    					<span class="pagina_actual">4</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina5">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=201"     		class="boton_texto" id='boton_pagina5'>
+    			5</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina6">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=251"     		class="boton_texto" id='boton_pagina6'>
+    			6</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina7">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=301"     		class="boton_texto" id='boton_pagina7'>
+    			7</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina8">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=351"     		class="boton_texto" id='boton_pagina8'>
+    			8</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina9">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=401"     		class="boton_texto" id='boton_pagina9'>
+    			9</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina10">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=451"     		class="boton_texto" id='boton_pagina10'>
+    			10</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina11">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=501"     		class="boton_texto" id='boton_pagina11'>
+    			11</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina12">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=551"     		class="boton_texto" id='boton_pagina12'>
+    			12</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina13">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=601"     		class="boton_texto" id='boton_pagina13'>
+    			13</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina14">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=651"     		class="boton_texto" id='boton_pagina14'>
+    			14</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina15">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=701"     		class="boton_texto" id='boton_pagina15'>
+    			15</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina16">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=751"     		class="boton_texto" id='boton_pagina16'>
+    			16</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina17">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=801"     		class="boton_texto" id='boton_pagina17'>
+    			17</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina18">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=851"     		class="boton_texto" id='boton_pagina18'>
+    			18</a>
+    	    	</span>
+</span>
+	    					    				    				    				    		</span>
+									</div>
+	
+				
+							   		<ol class="nav_registros"  start="151">
+		   			
+	   				   			   	
+		   		   				   	
+    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel12889" name="sel12889" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=12889">Biblioteca de la Escuela Superior de Diseño de Madrid</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel15598" name="sel15598" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=15598">Biblioteca de la Escuela Técnica Superior de Ingenieros de Armas Navales</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1481" name="sel1481" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1481">Biblioteca de la Escuela Universitaria de Enfermería de la Cruz Roja Española</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel21297" name="sel21297" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=21297">Biblioteca de la Escuela Universitaria de Fisioterapia de la ONCE</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1485" name="sel1485" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1485">Biblioteca de la Escuela Universitaria de Magisterio ESCUNI</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1486" name="sel1486" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1486">Biblioteca de la Fábrica Nacional de Moneda y Timbre - Real Casa de la Moneda</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel2025" name="sel2025" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=2025">Biblioteca de la Facultad de Ciencias de la Actividad Física y del Deporte (INEF) - Universidad Politécnica de Madrid</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1484" name="sel1484" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1484">Biblioteca de la Facultad de Enfermería y Fisioterapia "Salus Infirmorum" - Universidad Pontificia de  Salamanca</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel14376" name="sel14376" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=14376">Biblioteca de la Facultad de Humanidades y Ciencias de la Comunicación de la Universidad San Pablo-CEU. Campus Moncloa</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel23489" name="sel23489" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=23489">Biblioteca de la Federación Española de Esperanto</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel15642" name="sel15642" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=15642">Biblioteca de la Fiscalía General del Estado</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1488" name="sel1488" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1488">Biblioteca de la Fundación Antonio Maura</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1685" name="sel1685" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1685">Biblioteca de la Fundación Casa de Alba</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel22204" name="sel22204" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=22204">Biblioteca de la Fundación Centro de Poesía José Hierro</a>
+		  (Getafe) 	
+	    			
+					    			</li>
+	    		    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1495" name="sel1495" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1495">Biblioteca de la Fundación Francisco Giner de los Ríos</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1496" name="sel1496" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1496">Biblioteca de la Fundación Francisco Largo Caballero</a>
+		  (Alcalá de Henares) 	
+	    			
+					    			</li>
+	    		    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel41408" name="sel41408" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=41408">Biblioteca de la Fundación Japón</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1497" name="sel1497" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1497">Biblioteca de la Fundación Jiménez Díaz</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1498" name="sel1498" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1498">Biblioteca de la Fundación José Ortega y Gasset - Gregorio Marañón</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1499" name="sel1499" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1499">Biblioteca de la Fundación Juan March / Centro de apoyo a la investigación</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1502" name="sel1502" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1502">Biblioteca de la Fundación Lázaro Galdiano, F.S.P.</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel23455" name="sel23455" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=23455">Biblioteca de la Fundación ONCE</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1504" name="sel1504" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1504">Biblioteca de la Fundación Pablo Iglesias</a>
+		  (Alcalá de Henares) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1506" name="sel1506" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1506">Biblioteca de la Fundación Pastor de Estudios Clásicos</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1507" name="sel1507" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1507">Biblioteca de la Fundación Universitaria Española</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel15543" name="sel15543" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=15543">Biblioteca de la Oficina Española de Patentes y Marcas</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1511" name="sel1511" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1511">Biblioteca de la Real Academia de Bellas Artes de San Fernando</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1512" name="sel1512" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1512">Biblioteca de la Real Academia de Ciencias Exactas, Físicas y Naturales</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1513" name="sel1513" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1513">Biblioteca de la Real Academia de Ciencias Morales y Políticas</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel15852" name="sel15852" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=15852">Biblioteca de la Real Academia de Ciencias Veterinarias de España</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1514" name="sel1514" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1514">Biblioteca de la Real Academia de Doctores de España</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1515" name="sel1515" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1515">Biblioteca de la Real Academia de Jurisprudencia y Legislación de España</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1516" name="sel1516" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1516">Biblioteca de la Real Academia de la Historia</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1517" name="sel1517" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1517">Biblioteca de la Real Academia Española</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1518" name="sel1518" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1518">Biblioteca de la Real Academia Nacional de Farmacia</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1519" name="sel1519" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1519">Biblioteca de la Real Academia Nacional de Medicina</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1520" name="sel1520" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1520">Biblioteca de la Real Escuela Superior de Arte Dramático</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1522" name="sel1522" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1522">Biblioteca de la Real Sociedad Económica Matritense de Amigos del País</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1523" name="sel1523" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1523">Biblioteca de la Real Sociedad Fotográfica de Madrid</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1525" name="sel1525" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1525">Biblioteca de la Residencia - Casa Profesa (Madrid) de la Compañía de Jesús</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel2067" name="sel2067" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=2067">Biblioteca de la Residencia de Estudiantes - CSIC</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1528" name="sel1528" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1528">Biblioteca de la residencia para personas mayores "Doctor González Bueno". Comunidad de Madrid</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1527" name="sel1527" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1527">Biblioteca de la residencia para personas mayores Colmenar Viejo</a>
+		  (Colmenar Viejo) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1526" name="sel1526" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1526">Biblioteca de la residencia para personas mayores Francisco de Vitoria</a>
+		  (Alcalá de Henares) 	
+	    			
+					    			</li>
+	    		    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1529" name="sel1529" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1529">Biblioteca de la residencia para personas mayores Santiago Rusiñol</a>
+		  (Aranjuez) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1530" name="sel1530" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1530">Biblioteca de la Sección Española de la Asociación Internacional de Derechos de Seguros - SEAIDA</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel15628" name="sel15628" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=15628">Biblioteca de la Secretaría de Estado de Comunicación</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1462" name="sel1462" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1462">Biblioteca de la Secretaría General de Instituciones Penitenciarias</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   			   		
+					    			<li class="nav_registro_impar nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1468" name="sel1468" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1468">Biblioteca de la Secretaría General del Tesoro y Política Financiera</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					   				   	
+					    			<li class="nav_registro_par nav_registro">
+
+									
+    			    							<span class="check_registro">
+						<input type="checkbox" id="sel1532" name="sel1532" onclick="onCheck()" onchange="onCheck()" />
+		</span>
+		
+			<a class="indice_registros" href="registro.cmd?id=1532">Biblioteca de la Sociedad Española de Ornitología - SEO/BirdLife</a>
+		  (Madrid) 	
+	    			
+					    			</li>
+	    		    					    	</ol>
+		
+				<div class="nav_paginas2">
+				<span class="nav_atras">
+                        		<span class="enlace_cambio">									 		<span class="boton_primero">
+	    	    	    				<a href="../comunidades/registros.cmd?posicion=1&amp;forma="     		    		class="boton_imagen" >
+    			<img name="primero_22" alt="Primero" src="../img/botones/primero.gif" /></a>
+			    	    	</span>
+</span>
+            		<span class="enlace_cambio">									 		<span class="boton_anterior">
+	    	    	    				<a href="../comunidades/registros.cmd?posicion=101&amp;forma="     		    		class="boton_imagen" >
+    			<img name="anterior_23" alt="Anterior" src="../img/botones/anterior.gif" /></a>
+			    	    	</span>
+</span>
+            		</span>
+
+		<span class="nav_descrip">
+							151 al 200 de 889
+					</span>
+
+		<span class="nav_alante">
+                        		<span class="enlace_cambio">									 		<span class="boton_siguiente">
+	    	    	    				<a href="../comunidades/registros.cmd?posicion=201&amp;forma="     		    		class="boton_imagen" >
+    			<img name="siguiente_24" alt="Siguiente" src="../img/botones/siguiente.gif" /></a>
+			    	    	</span>
+</span>
+            		<span class="enlace_cambio">									 		<span class="boton_ultimo">
+	    	    	    				<a href="../comunidades/registros.cmd?posicion=851&amp;forma="     		    		class="boton_imagen" >
+    			<img name="ultimo_25" alt="Último" src="../img/botones/ultimo.gif" /></a>
+			    	    	</span>
+</span>
+            		</span>
+
+										    		<span class="nav_pagina_directo">
+	    				    				    				    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina1">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=1"     		class="boton_texto" >
+    			1</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina2">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=51"     		class="boton_texto" >
+    			2</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina3">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=101"     		class="boton_texto" >
+    			3</a>
+    	    	</span>
+</span>
+	    					    				    					    					<span class="pagina_actual">4</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina5">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=201"     		class="boton_texto" >
+    			5</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina6">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=251"     		class="boton_texto" >
+    			6</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina7">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=301"     		class="boton_texto" >
+    			7</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina8">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=351"     		class="boton_texto" >
+    			8</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina9">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=401"     		class="boton_texto" >
+    			9</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina10">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=451"     		class="boton_texto" >
+    			10</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina11">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=501"     		class="boton_texto" >
+    			11</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina12">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=551"     		class="boton_texto" >
+    			12</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina13">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=601"     		class="boton_texto" >
+    			13</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina14">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=651"     		class="boton_texto" >
+    			14</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina15">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=701"     		class="boton_texto" >
+    			15</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina16">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=751"     		class="boton_texto" >
+    			16</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina17">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=801"     		class="boton_texto" >
+    			17</a>
+    	    	</span>
+</span>
+	    					    				    					    	            		<span class="enlace_cambio">											<span class="boton_pagina18">
+	    	    	    	    		<a href="../comunidades/registros.cmd?posicion=851"     		class="boton_texto" >
+    			18</a>
+    	    	</span>
+</span>
+	    					    				    				    				    		</span>
+									</div>
+			<div class="vacio"></div>
+	
+		</div>
+				</form>
+    	
+	</div>
+   	        		        		        		    	
+			<div class="vacio"></div>
+		    	</div>
+    	
+	    </div>
+    </div>
+    
+        <div id="cabecera">
+	<div id="imagen_dcha_cabecera">
+		<img src="../img/cabecera/cabecera_dir.gif" alt="Dirección general de archivos, museos y bibliotecas. Consejería de cultura y turismo. Comunidad de Madrid"/> 
+
+	</div>	
+	
+	<div id="imagen_cabecera">
+
+	</div>	
+</div>
+<!--
+<div class="identificacion_menu">
+			
+			<a href="../seguridad/form_login.cmd?destino=..%2Fcomunidades%2Fregistros.cmd%3Fposicion%3D151">Bibliotecas</a>
+	</div>
+-->    
+        <div id="menu_principal">
+    	    			        	<h1 class="menu_titulo">Menú</h1>
+		            	
+
+
+
+<div class="menu">
+						<ul class="menu_element">
+    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/busqueda.cmd">Búsqueda</a> 
+					        			        		</li>
+        	    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/busqueda_avanzada.cmd">Búsqueda Avanzada</a> 
+					        			        		</li>
+        	    	    		    	    		        		        		        		        				        		                		<li class=' '>
+        			    <a href="../comunidades/registros.cmd">Listado Completo</a> 
+					        			        		</li>
+        	    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    	</ul>
+    	</div>
+
+                    </div>
+    
+        <div id="pie">
+    <div class="estandares">
+        <a href="http://validator.w3.org/check/referer"><img
+        src="../img/iconos_estandares/valid-xhtml10.gif" alt='Validado XHTML 1.0' /></a>
+        
+        <a href="http://jigsaw.w3.org/css-validator/"><img
+        src="../img/iconos_estandares/valid-css.gif" alt='CSS validado' /></a>
+
+		<a href="http://www.w3.org/WAI/WCAG1AA-Conformance" title='Explicación del Nivel Doble-A de Conformidad'><img 
+		src="../img/iconos_estandares/dobleA.gif" alt='Icono de conformidad con el Nivel Doble-A, de las Directrices de Accesibilidad para el Contenido Web 1.0 del W3C-WAI' /></a>
+    	
+    		        	<a href="http://www.tawdis.net/servlets/taw?url=..%2Fcomunidades%2Fregistros.cmd%3Fposicion%3D151"><img src="../img/iconos_estandares/taw.gif" alt='Validado por TAW' /></a>
+    </div>
+					<script type="text/javascript">
+			ocultarDetalleGrupo();
+		</script>
+		<script type="text/javascript">
+		ocultarEdicionGrupo();
+	</script>    
+</div>
+
+ </div>  </div> </div>
+</body>
+</html>

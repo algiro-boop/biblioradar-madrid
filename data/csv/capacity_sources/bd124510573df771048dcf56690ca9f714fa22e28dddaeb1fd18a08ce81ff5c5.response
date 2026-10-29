@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
+<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=7" />
+	
+
+
+
+	 	
+	<title>Directorio de bibliotecas de la Comunidad de Madrid &gt; 
+             	    	    		Datos de biblioteca
+    	    </title>
+
+		
+ 		
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Language" content="es" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link href="../css/comun_defaults.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_menu.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_arboles.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_mensajes.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_paginacion.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_tooltips.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_campos.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_tabs.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_dl.css" rel="stylesheet" type="text/css" />
+<link href="../css/adicional_menu.css" rel="stylesheet" type="text/css" />
+
+
+
+
+<script type="text/javascript">
+	var root = "..";
+	var root_i18n = "..";
+</script>
+
+
+
+<script type="text/javascript" src="../js/prototype.js"></script>
+<script type="text/javascript" src="../js/window.js"></script>
+<script type="text/javascript" src="../js/botones.js"></script>
+<script type="text/javascript" src="../js/i18n.js"></script>
+<script type="text/javascript" src="../js/nodos.js"></script>
+
+<script type="text/javascript">	
+	function ocultarDetalleGrupo()
+	{
+		alAbrirCerrarDetalle(true);
+
+		var elem = $("contenedor_detalle");
+		if(elem!=null){
+			var vis = elem.style; 
+			vis.display='none';
+		}
+		$('contenido_detalle').hide();
+	}
+	function ocultarEdicionGrupo()
+	{
+		var elem = $("boton_edicion_grupo");
+		if(elem!=null){
+			var vis = elem.style; 
+			vis.display='none';
+		}
+	}
+</script>
+
+
+		<script type="text/javascript" src="../js/i18n.cmd?fichero=validacion_campos_i18n.vm"></script>
+	<script type="text/javascript" src="../js/validacion_campos.js"></script>		
+	
+	<link href="../css/registro_marc.css" rel="stylesheet" type="text/css" />
+	<link href="../css/formatos.css" rel="stylesheet" type="text/css" />
+	<link href="../css/formatos_com.css" rel="stylesheet" type="text/css" />
+
+	<script type="text/javascript" src="../js/window.js"></script>
+
+	<script type="text/javascript" src="../js/calendario_ficha.js"></script>
+	
+			</head>
+
+<body>
+	
+<div id="pagina">
+
+ <div id="public">  <div id="comunidad"> 
+<div id="pagina_contenido0">
+	<div id="pagina_contenido">
+	    		<div class="identificacion_menu">
+									
+							<a href="../seguridad/form_login.cmd?destino=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D681">Bibliotecas</a>
+					</div>		    
+
+	    <h1 id="web_route">
+	    			    	
+            	    	       		<span class="webroute_current">Datos de biblioteca</span>
+       	    	        	    </h1>
+									
+	    	    <div id="contenido">
+			<div class="vacio"></div>				
+	<div id="consulta_registro">
+		<div class="registro_acciones">
+						
+			
+					<div class="datos_estadisticos">
+
+		</div>	
+
+   				   		
+    		<div class="registro_acciones">
+					<form name="formExport" action="../bibliotecas/operacion_seleccion.cmd"  method='post' >
+	
+					<input type="hidden" name="sel681" value="on" />
+					<input type="hidden" name="destino" value="../comunidades/registro.cmd?id=681" />
+										<span class="opciones_resultados">
+						<label for="operacion">Operación: </label>
+						<select name="operacion" id="operacion">
+							<option value="bibliotecas/imprimir">Imprimir ficha</option>
+													<option value="comunidades/exportar_registros">Exportar</option>
+																								
+					
+																			<option value="comunidades/add_cesta_seleccion">Añadir a Mis Seleccionados</option>
+												</select>
+						
+		    									 					<span class="boton_aceptar">
+	    	    		<input type="submit" name="aceptar" id='boton_aceptar' class="submit_boton" onmouseover="cambiarEstilo(this,'submit_boton_over', 'submit_boton', true);" onfocus="cambiarEstilo(this,'submit_boton_over', 'submit_boton', true);" onmouseout="cambiarEstilo(this,'submit_boton_over', 'submit_boton', false);" onblur="cambiarEstilo(this,'submit_boton_over', 'submit_boton', false);" value="Aceptar" />
+    	    	</span>
+					</span>
+					</form>
+       		</div>
+		</div>
+   		<div class="registro_datos">
+			<div class="registro_com">
+	            	    	        <div class="ficha"><h2>Biblioteca Municipal "María Moliner"</h2><div id="tabs_ficha"><div class="tabpanel_container"><div class="tab_panel" id="datos_basicos"><h2>Datos básicos</h2><p class="imagen_favorita"><a href="../catalogo_imagenes/grupo.cmd?path=45&amp;idRegistro=681" ><img src="../catalogo_imagenes/imagen_id.cmd?formato=jpg&altoMaximo=200&anchoMaximo=200&idImagen=81" alt="Imagen de la biblioteca" /></a><br /><a href="../catalogo_imagenes/galeria.cmd?path=45&amp;idRegistro=681" >Galería imágenes</a></p><div class="direccion"><p class="ficha_valor"><span class="etiqueta">Dirección:  </span><span class="valor">C/ Ávila, nº 34<br />28991 Torrejón de la Calzada (Madrid)<br />España<br />Tel.: 918166456<br />Fax: 918166454<br />E-mail:<a class="enlace_externo" href="mailto: biblioteca@aytotorrejoncalzada.org  "> biblioteca@aytotorrejoncalzada.org  </a> <br /><a class="enlace_externo" target="_blank" href="http://maps.google.es/maps?f=q&hl=es&geocode=&q=%09C%2F+%C3%81vila,+n%C2%BA+34,+Torrejon+de+la+Calzada,+madrid&sll=40.396764,-3.713379&sspn=13.782704,28.125&ie=UTF8&ll=40.20133,-3.803866&spn=0.003376,0.006866&z=17">Mapa Localización</a><br /><a class="enlace_externo" target="_blank" href="https://www.comunidad.madrid/centros/biblioteca-municipal-maria-moliner-torrejon-calzada">Sitio Web</a><br /></span></p></div><div class="separador_imagenes"></div><div class="horario_accesibilidad"><p class="ficha_valor"><span class="etiqueta">Horarios:  </span><span class="valor">Horario General de apertura: Lunes a viernes de 9 a 20h ininterrumpidamente, sábados de 9 a 14h<br />Información adicional: Horario de verano: del 1 de julio al 31 de agosto de L a V de 8.30 a 14.30. Cerrado del 1 al 15 de agosto. <br /> </span></p><p class="ficha_valor"><span class="etiqueta">Accesible:  </span><span class="valor"><img class="icono_accesibilidad" src="../img/iconos/accesibilidad.gif" alt="Biblioteca con accesibilidad" /> </span></p></div><div class="separador_transp_horario"></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Entidad responsable:  </span><span class="valor">Ayuntamiento de Torrejón de la Calzada</span></p></div><div class="fechas"><p class="ficha_valor"><span class="etiqueta">La Biblioteca en fechas:  </span><span class="valor">Creación: 2008<br />Inauguración efectiva: 06/06/2008</span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Ubicación:  </span><span class="valor">Torrejón de la Calzada</span></p></div><div class="administrativa"><p class="ficha_valor"><span class="etiqueta">Tipo y titularidad:  </span><span class="valor">Tipo biblioteca: Pública - Punto de servicio fijo<br />Tipo administración: Administración Local</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Datos municipales:  </span><span class="valor">Estadísticas: <a class="enlace_externo" target="_blank" href="https://gestiona.comunidad.madrid/desvan/almudena/BuscarMunicipios.icm?codFicha=1&codSolapaActiva=1">Datos estadísticos básicos</a></span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Forma de acceso:  </span><span class="valor">Acceso libre</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Fecha de actualización del registro:  </span><span class="valor">27/09/2026</span></p></div></span></p></div><div class="tab_panel" id="instalaciones_servicios"><h2>Instalaciones y servicios</h2><div class="direccion"><p class="ficha_valor"><span class="etiqueta">Edificio:  </span><span class="valor">Año construcción: 2008. Superficie útil: 657,00 metros cuadrados. Superficie útil de uso bibliotecario: 523,00 metros cuadrados. <br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Instalaciones y servicios:  </span><span class="valor"><strong>Internet</strong>: Capacidad: 3.<br /><br /><strong>Sala adultos o principal</strong>: Capacidad: 56. Puestos de atención: 1.<br /><br /><strong>Sala infantil/juvenil</strong>: Capacidad: 32. Puestos de atención: 1. Otra información: Disponemos de 12 silloncitos en la zona infantil.<br /><br /><strong>Depósitos</strong>: Otra información: Tenemos un pequeño depósito, que alberga los fondos de infantil/ juvenil y adulto.<br /><br /><strong>Zona de trabajos o servicios internos</strong>: Puestos de atención: 2.<br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Equipamiento:  </span><span class="valor"><strong>Ordenadores con acceso a OPAC</strong>: Nº Unidades públicas: 0. <br /><br /><strong>Ordenadores con acceso a Internet</strong>: Nº Unidades públicas: 3. <br /><br /><strong>Lectores de CD-ROM, DVD</strong>: Nº Unidades públicas: 0. <br /><br /><strong>Fotocopiadoras</strong>: Nº Unidades públicas: 0. Otra Información: Es una única máquina que imprime, fotocopia y escanea. <br /><br /><strong>Impresoras</strong>: Nº Unidades públicas: 1. Otra Información: Es una única máquina que imprime, fotocopia y escanea. 
+
+Los usuarios sólo pueden hacer uso de la impresora.
+
+Las impresiones llevan un coste de 0.10€ si son el blanco y negro y de 0.50€ si son en color. Actualmente sólo imprime en blanco y negro.. <br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Servicios en red:  </span><span class="valor"> Catálogo en Internet <a class="enlace_externo" target="_blank" href=" https://gestiona.comunidad.madrid/biblio_publicas/cgi-bin/abnetopac?SUBC=RBMTRC/BMTRC1 "> https://gestiona.comunidad.madrid/biblio_publicas/cgi-bin/abnetopac?SUBC=RBMTRC/BMTRC1 </a><br /> Otras <a class="enlace_externo" target="_blank" href=" https://www.facebook.com/maria.torrejoncalzada"> https://www.facebook.com/maria.torrejoncalzada</a> Descripción: María Moliner Biblioteca Torrejón Calzada . <br />Acceso a bases de datos en red local: No. <br />Acceso a bases de datos en Internet: Si. <br />Acceso a Internet inalámbrico: Si. </span></p></div></span></p></div><div class="tab_panel" id="actividades"><h2>Actividades</h2><div class="notas"><p class="ficha_valor"><span class="etiqueta">Actividades para adultos:  </span><span class="valor"><strong>Presentaciones de libros, encuentros con autores, etc.</strong>Organización: Biblioteca. <br /></span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Actividades para niños:  </span><span class="valor"><strong>Narración de cuentos</strong>: Cuentos infantiles. Organización: Biblioteca. <br /></span></p></div></span></p></div><div class="tab_panel" id="colecciones"><h2>Colecciones</h2><div class="fondos"><p class="ficha_valor"><span class="etiqueta">Fondos:  </span><span class="valor">Total fondos biblioteca: 15.608<br />Fecha actualización de datos acumulados: 27/09/2026<br /><br />Libros y folletos: 14.097<br />DVD Vídeos: 1.250<br />Documentos sonoros (discos compactos): 215<br />Electrónicos: CD-ROM: 41<br />Electrónicos: DVD-ROM: 4<br />Otros documentos electrónicos: 1</span></p></div></span></p></div><div class="tab_panel" id="identificacion"><h2>Número de registro</h2><div class="control"><p class="ficha_valor"><span class="etiqueta">Número de control:  </span><span class="valor">0914921001</span></p></div><div class="texto"><p class="ficha_valor"><span class="etiqueta">Campos texto:  </span><span class="valor"><br />Antiguo NIDEN: NN8519<br />40,1995<br />-3,80419</span></p></div></span></p></div></div></div></div><script type="text/javascript">
+addFuncionOnLoad (function() {
+    createTabbedPanel('tabs_ficha', 'h2');
+});
+</script>
+	            			</div>
+       	</div>
+	</div>
+
+	        		        		        		    	
+			<div class="vacio"></div>
+		    	</div>
+    	
+	    </div>
+    </div>
+    
+        <div id="cabecera">
+	<div id="imagen_dcha_cabecera">
+		<img src="../img/cabecera/cabecera_dir.gif" alt="Dirección general de archivos, museos y bibliotecas. Consejería de cultura y turismo. Comunidad de Madrid"/> 
+
+	</div>	
+	
+	<div id="imagen_cabecera">
+
+	</div>	
+</div>
+<!--
+<div class="identificacion_menu">
+			
+			<a href="../seguridad/form_login.cmd?destino=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D681">Bibliotecas</a>
+	</div>
+-->    
+        <div id="menu_principal">
+    	    			        	<h1 class="menu_titulo">Menú</h1>
+		            	
+
+
+
+<div class="menu">
+						<ul class="menu_element">
+    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/busqueda.cmd">Búsqueda</a> 
+					        			        		</li>
+        	    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/busqueda_avanzada.cmd">Búsqueda Avanzada</a> 
+					        			        		</li>
+        	    	    		    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/registros.cmd">Listado Completo</a> 
+					        			        		</li>
+        	    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    	</ul>
+    	</div>
+
+                    </div>
+    
+        <div id="pie">
+    <div class="estandares">
+        <a href="http://validator.w3.org/check/referer"><img
+        src="../img/iconos_estandares/valid-xhtml10.gif" alt='Validado XHTML 1.0' /></a>
+        
+        <a href="http://jigsaw.w3.org/css-validator/"><img
+        src="../img/iconos_estandares/valid-css.gif" alt='CSS validado' /></a>
+
+		<a href="http://www.w3.org/WAI/WCAG1AA-Conformance" title='Explicación del Nivel Doble-A de Conformidad'><img 
+		src="../img/iconos_estandares/dobleA.gif" alt='Icono de conformidad con el Nivel Doble-A, de las Directrices de Accesibilidad para el Contenido Web 1.0 del W3C-WAI' /></a>
+    	
+    		        	<a href="http://www.tawdis.net/servlets/taw?url=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D681"><img src="../img/iconos_estandares/taw.gif" alt='Validado por TAW' /></a>
+    </div>
+					<script type="text/javascript">
+			ocultarDetalleGrupo();
+		</script>
+		<script type="text/javascript">
+		ocultarEdicionGrupo();
+	</script>    
+</div>
+
+ </div>  </div> </div>
+</body>
+</html>

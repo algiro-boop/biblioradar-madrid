@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
+<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=7" />
+	
+
+
+
+	 	
+	<title>Directorio de bibliotecas de la Comunidad de Madrid &gt; 
+             	    	    		Datos de biblioteca
+    	    </title>
+
+		
+ 		
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Language" content="es" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link href="../css/comun_defaults.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_menu.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_arboles.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_mensajes.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_paginacion.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_tooltips.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_campos.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_tabs.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_dl.css" rel="stylesheet" type="text/css" />
+<link href="../css/adicional_menu.css" rel="stylesheet" type="text/css" />
+
+
+
+
+<script type="text/javascript">
+	var root = "..";
+	var root_i18n = "..";
+</script>
+
+
+
+<script type="text/javascript" src="../js/prototype.js"></script>
+<script type="text/javascript" src="../js/window.js"></script>
+<script type="text/javascript" src="../js/botones.js"></script>
+<script type="text/javascript" src="../js/i18n.js"></script>
+<script type="text/javascript" src="../js/nodos.js"></script>
+
+<script type="text/javascript">	
+	function ocultarDetalleGrupo()
+	{
+		alAbrirCerrarDetalle(true);
+
+		var elem = $("contenedor_detalle");
+		if(elem!=null){
+			var vis = elem.style; 
+			vis.display='none';
+		}
+		$('contenido_detalle').hide();
+	}
+	function ocultarEdicionGrupo()
+	{
+		var elem = $("boton_edicion_grupo");
+		if(elem!=null){
+			var vis = elem.style; 
+			vis.display='none';
+		}
+	}
+</script>
+
+
+		<script type="text/javascript" src="../js/i18n.cmd?fichero=validacion_campos_i18n.vm"></script>
+	<script type="text/javascript" src="../js/validacion_campos.js"></script>		
+	
+	<link href="../css/registro_marc.css" rel="stylesheet" type="text/css" />
+	<link href="../css/formatos.css" rel="stylesheet" type="text/css" />
+	<link href="../css/formatos_com.css" rel="stylesheet" type="text/css" />
+
+	<script type="text/javascript" src="../js/window.js"></script>
+
+	<script type="text/javascript" src="../js/calendario_ficha.js"></script>
+	
+			</head>
+
+<body>
+	
+<div id="pagina">
+
+ <div id="public">  <div id="comunidad"> 
+<div id="pagina_contenido0">
+	<div id="pagina_contenido">
+	    		<div class="identificacion_menu">
+									
+							<a href="../seguridad/form_login.cmd?destino=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D228">Bibliotecas</a>
+					</div>		    
+
+	    <h1 id="web_route">
+	    			    	
+            	    	       		<span class="webroute_current">Datos de biblioteca</span>
+       	    	        	    </h1>
+									
+	    	    <div id="contenido">
+			<div class="vacio"></div>				
+	<div id="consulta_registro">
+		<div class="registro_acciones">
+						
+			
+					<div class="datos_estadisticos">
+
+		</div>	
+
+   				   		
+    		<div class="registro_acciones">
+					<form name="formExport" action="../bibliotecas/operacion_seleccion.cmd"  method='post' >
+	
+					<input type="hidden" name="sel228" value="on" />
+					<input type="hidden" name="destino" value="../comunidades/registro.cmd?id=228" />
+										<span class="opciones_resultados">
+						<label for="operacion">Operación: </label>
+						<select name="operacion" id="operacion">
+							<option value="bibliotecas/imprimir">Imprimir ficha</option>
+													<option value="comunidades/exportar_registros">Exportar</option>
+																								
+					
+																			<option value="comunidades/add_cesta_seleccion">Añadir a Mis Seleccionados</option>
+												</select>
+						
+		    									 					<span class="boton_aceptar">
+	    	    		<input type="submit" name="aceptar" id='boton_aceptar' class="submit_boton" onmouseover="cambiarEstilo(this,'submit_boton_over', 'submit_boton', true);" onfocus="cambiarEstilo(this,'submit_boton_over', 'submit_boton', true);" onmouseout="cambiarEstilo(this,'submit_boton_over', 'submit_boton', false);" onblur="cambiarEstilo(this,'submit_boton_over', 'submit_boton', false);" value="Aceptar" />
+    	    	</span>
+					</span>
+					</form>
+       		</div>
+		</div>
+   		<div class="registro_datos">
+			<div class="registro_com">
+	            	    	        <div class="ficha"><h2>Biblioteca Municipal "Rafael Alberti" </h2><div id="tabs_ficha"><div class="tabpanel_container"><div class="tab_panel" id="datos_basicos"><h2>Datos básicos</h2><p class="imagen_favorita"><a href="../catalogo_imagenes/grupo.cmd?path=115&amp;idRegistro=228" ><img src="../catalogo_imagenes/imagen_id.cmd?formato=jpg&altoMaximo=200&anchoMaximo=200&idImagen=399" alt="Imagen de la biblioteca" /></a><br /><a href="../catalogo_imagenes/galeria.cmd?path=115&amp;idRegistro=228" >Galería imágenes</a></p><div class="direccion"><p class="ficha_valor"><span class="etiqueta">Dirección:  </span><span class="valor">Calle<br />Libertad, 1<br />28830 San Fernando de Henares (Madrid)<br />España<br />Tel.: 916717961<br />E-mail:<a class="enlace_externo" href="mailto: biblioteca@ayto-sanfernando.com"> biblioteca@ayto-sanfernando.com</a> <br /><a class="enlace_externo" target="_blank" href="http://maps.google.es/maps?hl=es&q=biblioteca+san+fernando+de+henares&ie=UTF8&ll=40.427545,-3.536782&spn=0.006926,0.013754&z=16&iwloc=A">Mapa Localización</a><br /></span></p></div><div class="separador_imagenes"></div><div class="transporte"><p class="ficha_valor"><span class="etiqueta">Transportes:  </span><span class="valor"><span class="texto_transportes"><span class="icono_transportes"><img src="../img/iconos/transporte_metro.gif" alt="metro" /> </span>Metro de Madrid. Metro Este. Línea 7. Estación: San Fernando Cerrada</span><br /><span class="texto_transportes"><span class="icono_transportes"><img src="../img/iconos/transporte_interurbano.gif" alt="interurbano" /> </span>Autobuses: 822, 281, 282, 283, 284, 285, 286, 287, 288, 289, N203</span><br /><span class="texto_transportes"><span class="icono_transportes"><img src="../img/iconos/transporte_cercanias.gif" alt="cercanias" /> </span>Estación de San Fernando. Líneas C-2, C-7 y C-8 (Cercanías Madrid)</span></span></p></div><div class="horario_accesibilidad"><p class="ficha_valor"><span class="etiqueta">Horarios:  </span><span class="valor">Sección de adultos: De lunes a viernes de 09:00 a 20:30 horas y sábados de 09:00 a 14:30 horas<br />Información adicional: Salas de estudio adultos de lunes a viernes de 09:00 a 20:30 horas y sábados de 09:00 a 14:30 horas <br />Sección infantil/juvenil: De lunes a viernes de 15:00 a 20:30 horas y sábados de 09:00 a 14:30 horas<br />Información adicional: Horario de vacaciones escolares de lunes a viernes de 09:00 a 20:30 horas y sábados de 09:00 a 14:30 horas <br />Horario de verano (Agosto): De lunes a viernes de 09:00 a 14:30 horas<br />Información adicional: Horario en Semana Santa, Navidad y Año Nuevo <br />Especial época de exámenes : De lunes a viernes de 09:00 h. a 23:45 h. Sábados y domingos de 09:00 a 20:45 h. <br /> </span></p><p class="ficha_valor"><span class="etiqueta">Accesible:  </span><span class="valor"><img class="icono_accesibilidad" src="../img/iconos/accesibilidad.gif" alt="Biblioteca con accesibilidad" /> </span></p></div><div class="separador_transp_horario"></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Otros nombres:  </span><span class="valor">Biblioteca Pública Municipal "Rafael Alberti" </span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Entidad responsable:  </span><span class="valor">Ayuntamiento del Real Sitio de San Fernando de Henares. Promoción de la Ciudad, Cultura y Archivo</span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Puntos de servicio:  </span><span class="valor">Número de puntos: 1<br />Nombre de los puntos: Biblioteca Municipal "Rafael Alberti"</span></p></div><div class="fechas"><p class="ficha_valor"><span class="etiqueta">La Biblioteca en fechas:  </span><span class="valor">Creación: 10/2003</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Historia:  </span><span class="valor">En un lugar privilegiado del pueblo, en el eje que comunicaba la antigua fábrica de tapices y las dependencias reales, se encuentra el edificio que los mayores y no tan mayores recuerdan como escuela, otros, más recientes en la localidad, lo recordamos como el anterior Ayuntamiento para pasar a ser en la actualidad la Biblioteca Municipal Rafael Alberti, situada en la calle la Libertad número 1, a medio camino entre las dos plazas más emblemáticas del real sitio, la Plaza de Fernando VI (más conocida como la Plaza del Santo) y la Plaza de España, hacia donde dirige sus ventanales el ala oeste del edificio.<br /><br />INAUGURACIÓN DE LA BIBLIOTECA CENTRAL RAFAEL ALBERTI (Pza. de España):Octubre de 2003<br />ALGUNOS DATOS DE INTERÉS<br /><br />INAUGURACIÓN DE LA PRIMERA BIBLIOTECA MUNICIPAL (Pza. 1º de mayo):<br />23 de abril de 1980<br />APERTURA AL PÚBLICO:<br />6 octubre de 1980<br />En funcionamiento hasta 1987 en que se abre la Biblioteca García Lorca.<br /><br />INAUGURACIÓN BIBLIOTECA GARCÍA LORCA:<br />16 de noviembre de 1987<br />En funcionamiento hasta 2003 en que se abre la Biblioteca Central Rafael Alberti, a donde van todos sus fondos bibliográficos<br /><br />INAUGURACIÓN DE LA BIBLIOTECA RAFAEL ALBERTI (Pza. 1º de mayo, tras la rehabilitación del edificio):<br />Inaugurada por el propio Rafael Alberti el 11 de enero de 1991<br />En funcionamiento hasta 2003 en que se abre la Biblioteca Mario Benedetti, a donde van sus fondos.<br /><br />RAFAEL ALBERTI EN SAN FERNANDO DE HENARES:<br />Pregón de Alberti en las Fiestas: 28/5/1982<br />Inauguración de la biblioteca Rafael Alberti (Pza. 1º de mayo): 11/1/1991<br /><br />BIBLIOPISCINA:<br />De 1998 a 2002, ambos inclusive. En 2003 no se celebró.<br />De 2004 hasta 2018<br /><br /><br />INAUGURACIÓN DE LA BIBLIOTECA RAFAEL ALBERTI (C/ Libertad, 1)<br />Año 2003, se traslada todo el fondo de la Biblioteca García Lorca. En funcionamiento hasta la actualidad</span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Ubicación:  </span><span class="valor">San Fernando de Henares</span></p></div><div class="administrativa"><p class="ficha_valor"><span class="etiqueta">Tipo y titularidad:  </span><span class="valor">Tipo biblioteca: Pública - Punto de servicio fijo<br />Tipo administración: Administración Local</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Datos municipales:  </span><span class="valor">Estadísticas: <a class="enlace_externo" target="_blank" href="https://gestiona.comunidad.madrid/desvan/almudena/BuscarMunicipios.icm?codFicha=1&codSolapaActiva=1">Datos estadísticos básicos</a></span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Forma de acceso:  </span><span class="valor">Acceso libre</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Fecha de actualización del registro:  </span><span class="valor">27/09/2026</span></p></div></span></p></div><div class="tab_panel" id="instalaciones_servicios"><h2>Instalaciones y servicios</h2><div class="direccion"><p class="ficha_valor"><span class="etiqueta">Edificio:  </span><span class="valor">Año construcción: 2003. Superficie útil: 2.090,00 metros cuadrados. Superficie útil de uso bibliotecario: 1.510,00 metros cuadrados. <br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Instalaciones y servicios:  </span><span class="valor"><strong>Sala adultos o principal</strong>: Capacidad: 96.<br /><br /><strong>Depósitos</strong>:<br /><br /><strong>Hemeroteca</strong>: Capacidad: 18.<br /><br /><strong>Sala polivalente</strong>: Capacidad: 40.<br /><br /><strong>Internet</strong>: Capacidad: 10.<br /><br /><strong>Otras instalaciones</strong>: Capacidad: 74. Otra información: Se trata de dos salas sin contemplar  en las opciones: Sala bebeteca:30 puestos. Sala de estudio adultos II: 44.<br /><br /><strong>Ordenadores multimedia</strong>: Capacidad: 5.<br /><br /><strong>Sala infantil/juvenil</strong>: Capacidad: 81.<br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Equipamiento:  </span><span class="valor"><strong>Ordenadores con acceso a OPAC</strong>: Nº Unidades públicas: 1. <br /><br /><strong>Ordenadores con acceso a Internet</strong>: Nº Unidades públicas: 10. Condición acceso: Carnet de usuario. <br /><br /><strong>Escáneres</strong>: <br /><br /><strong>Impresoras</strong>: <br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Servicios en red:  </span><span class="valor"> Catálogo en Internet <a class="enlace_externo" target="_blank" href=" https://gestiona.comunidad.madrid/biblio_publicas/cgi-bin/abnetopac?SUBC=RBMSFH/BMSFH1 "> https://gestiona.comunidad.madrid/biblio_publicas/cgi-bin/abnetopac?SUBC=RBMSFH/BMSFH1 </a> Descripción: https://gestiona.comunidad.madrid/biblio_publicas/cgi-bin/abnetopac/OcBBCnPprNYxsRcfDASOuCtfRsR/NT1. <br />Acceso a bases de datos en red local: No. <br />Acceso a bases de datos en Internet: No. <br />Acceso a Internet inalámbrico: No. <br />Radiofrecuencia: No. </span></p></div></span></p></div><div class="tab_panel" id="actividades"><h2>Actividades</h2><div class="notas"><p class="ficha_valor"><span class="etiqueta">Actividades para adultos:  </span><span class="valor"><strong>Presentaciones de libros, encuentros con autores, etc.</strong>: Encuentros con autores/as. Organización: Biblioteca. <br /><br /><strong>Cursos y talleres</strong>: Club de lectura. Organización: Biblioteca. <br /><br /><strong>Exposiciones</strong>: Muestras bibliográficas. Organización: Biblioteca. <br /><br /><strong>Concursos</strong>: Certamen literario "Manuel Vázquez Montalbán". Organización: Biblioteca. <br /><br /><strong>Otras actividades</strong>: Ampliación del horario de estudio. Organización: Biblioteca. <br /><br /><strong>Visitas guiadas</strong>: Conoce tu biblioteca. Organización: Biblioteca. <br /></span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Actividades para niños:  </span><span class="valor"><strong>Cursos y talleres</strong>: Taller de lectura y escritura creativa infantil. Organización: Biblioteca. <br /><br /><strong>Narración de cuentos</strong>: Cuentos y títeres. Organización: Biblioteca. <br /><br /><strong>Exposiciones</strong>: Muestras bibliográficas. Organización: Biblioteca. <br /><br /><strong>Concursos</strong>: Relatarte. Organización: Biblioteca / Concejalía de Juventud. <br /><br /><strong>Visitas guiadas</strong>: Conoce tu biblioteca. Organización: Biblioteca / Centros educativos. <br /><br /><strong>Presentaciones de libros, encuentros con autores, etc.</strong>: Encuentros con autores/as. Organización: Biblioteca. <br /></span></p></div></span></p></div><div class="tab_panel" id="colecciones"><h2>Colecciones</h2><div class="fondos"><p class="ficha_valor"><span class="etiqueta">Fondos:  </span><span class="valor">Total fondos biblioteca: 73.140<br />Fecha actualización de datos acumulados: 27/09/2026<br /><br />Libros y folletos: 66.574<br />Vídeos: 46<br />DVD Vídeos: 4.648<br />Documentos sonoros (discos compactos): 1.264<br />Electrónicos: CD-ROM: 475<br />Electrónicos: DVD-ROM: 25<br />Carteles, fotografías, etc.: 65<br />Documentos cartográficos: 17<br />Publicaciones periódicas: 26</span></p></div></span></p></div><div class="tab_panel" id="identificacion"><h2>Número de registro</h2><div class="control"><p class="ficha_valor"><span class="etiqueta">Número de control:  </span><span class="valor">0313001001</span></p></div><div class="texto"><p class="ficha_valor"><span class="etiqueta">Campos texto:  </span><span class="valor"><br />Antiguo NIDEN: 2807948<br />40,42527<br />-3,5335999999999785</span></p></div></span></p></div></div></div></div><script type="text/javascript">
+addFuncionOnLoad (function() {
+    createTabbedPanel('tabs_ficha', 'h2');
+});
+</script>
+	            			</div>
+       	</div>
+	</div>
+
+	        		        		        		    	
+			<div class="vacio"></div>
+		    	</div>
+    	
+	    </div>
+    </div>
+    
+        <div id="cabecera">
+	<div id="imagen_dcha_cabecera">
+		<img src="../img/cabecera/cabecera_dir.gif" alt="Dirección general de archivos, museos y bibliotecas. Consejería de cultura y turismo. Comunidad de Madrid"/> 
+
+	</div>	
+	
+	<div id="imagen_cabecera">
+
+	</div>	
+</div>
+<!--
+<div class="identificacion_menu">
+			
+			<a href="../seguridad/form_login.cmd?destino=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D228">Bibliotecas</a>
+	</div>
+-->    
+        <div id="menu_principal">
+    	    			        	<h1 class="menu_titulo">Menú</h1>
+		            	
+
+
+
+<div class="menu">
+						<ul class="menu_element">
+    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/busqueda.cmd">Búsqueda</a> 
+					        			        		</li>
+        	    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/busqueda_avanzada.cmd">Búsqueda Avanzada</a> 
+					        			        		</li>
+        	    	    		    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/registros.cmd">Listado Completo</a> 
+					        			        		</li>
+        	    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    	</ul>
+    	</div>
+
+                    </div>
+    
+        <div id="pie">
+    <div class="estandares">
+        <a href="http://validator.w3.org/check/referer"><img
+        src="../img/iconos_estandares/valid-xhtml10.gif" alt='Validado XHTML 1.0' /></a>
+        
+        <a href="http://jigsaw.w3.org/css-validator/"><img
+        src="../img/iconos_estandares/valid-css.gif" alt='CSS validado' /></a>
+
+		<a href="http://www.w3.org/WAI/WCAG1AA-Conformance" title='Explicación del Nivel Doble-A de Conformidad'><img 
+		src="../img/iconos_estandares/dobleA.gif" alt='Icono de conformidad con el Nivel Doble-A, de las Directrices de Accesibilidad para el Contenido Web 1.0 del W3C-WAI' /></a>
+    	
+    		        	<a href="http://www.tawdis.net/servlets/taw?url=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D228"><img src="../img/iconos_estandares/taw.gif" alt='Validado por TAW' /></a>
+    </div>
+					<script type="text/javascript">
+			ocultarDetalleGrupo();
+		</script>
+		<script type="text/javascript">
+		ocultarEdicionGrupo();
+	</script>    
+</div>
+
+ </div>  </div> </div>
+</body>
+</html>

@@ -1,0 +1,2009 @@
+{
+	"@context": {
+		"c": "http://www.w3.org/2002/12/cal#",
+		"dcterms": "http://purl.org/dc/terms/",
+		"geo": "http://www.w3.org/2003/01/geo/wgs84_pos#",
+		"loc": "http://purl.org/ctic/infraestructuras/localizacion#",
+		"org": "http://purl.org/ctic/infraestructuras/organizacion#",
+		"vcard": "http://www.w3.org/2006/vcard/ns#",
+		"schema": "https://schema.org/",
+		"title": "vcard:fn",
+		"id": "dcterms:identifier",
+		"relation": "dcterms:relation",
+		"references": "dcterms:references",
+		"address": "vcard:adr",
+		"area": "loc:barrio",
+		"district": "loc:distrito",
+		"locality": "vcard:locality",
+		"postal-code": "vcard:postal-code",
+		"street-address": "vcard:street-address",
+		"location": "vcard:geo",
+		"latitude": "geo:lat",
+		"longitude": "geo:long",
+		"organization": "vcard:org",
+		"organization-desc": "dcterms:description",
+		"accesibility": "org:accesibilidad",
+		"services": "org:servicios",
+		"schedule": "org:horario",
+		"organization-name": "vcard:organization-name",
+		"description": "c:summary",
+		"link": "c:url",
+		"uid": "c:uid",
+		"dtstart": "c:dtstart",
+		"dtend": "c:dtend",
+		"time": "c:time",
+		"excluded-days": "c:exdate",
+		"event-location": "c:location",
+		"free": "schema:free",
+		"price": "c:resource",
+		"recurrence": "c:rrule",
+		"days": "c:byday",
+		"frequency": "c:freq",
+		"interval": "c:interval",
+		"audience": "dc:audience"
+	},
+	"@graph": [
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/11576332-aula-estudio-manoteras-sala-estudio-hortaleza-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "11576332",
+		"title": "Aula de estudio de Manoteras. Sala de estudio (Hortaleza)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=27ada5bf3137e710VgnVCM1000001d4a900aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Hortaleza"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Hortaleza/Barrio/ApostolSantiago"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28033",
+			"street-address": "CALLE CUEVAS DEL ALMANZORA 187"
+		},
+		"location": {
+			"latitude": 40.477775164880356,
+			"longitude": -3.6583397911756297
+		},
+		"organization": {
+			"organization-desc": "  Metro: Manoteras (línea 4)",
+			"accesibility": "1",
+			"schedule": "De lunes a domingo, de 9 a 14 y de 15 a 21 horas.  Cerrado 1, 5 y 6 de enero, 2 de mayo y 31 de diciembre.",
+			"services": "Aforo: 60 plazas Acceso a ordenadores Wifi",
+			"organization-name": "Aula de estudio de Manoteras. Sala de estudio (Hortaleza)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/1958-centro-cultural-san-juan-bautista-ciudad-lineal-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "1958",
+		"title": "Centro Cultural San Juan Bautista (Ciudad Lineal)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=618b1e79ee71c010VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/CiudadLineal"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/CiudadLineal/Barrio/SanJuanBautista"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28043",
+			"street-address": "CALLE SAN NEMESIO 4"
+		},
+		"location": {
+			"latitude": 40.45224710166,
+			"longitude": -3.658029027767765
+		},
+		"organization": {
+			"organization-desc": "  Metro: Avenida de la Paz (línea 4)",
+			"accesibility": "1",
+			"schedule": "Horario del centro:   De lunes a sábado, de 9 a 22 horas.  Julio: de lunes a viernes, de 9 a 15 horas.  Domingos, festivos y agosto cerrado.   Horario de secretaría:   De lunes a jueves, de 9:30 a 14 horas y de 15 a 18 horas. Viernes, de 9:30 a 14:30. Julio: de lunes a viernes, de 9 a 14 horas.  Fuera de este horario el centro permanecerá abierto durante la celebración de las actividades que se programen.",
+			"services": "Sala de exposiciones Sala de lectura y estudio Salón de actos / auditorio (aforo 277) 8 Aulas Zona wifi",
+			"organization-name": "Centro Cultural San Juan Bautista (Ciudad Lineal)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/12383033-centro-intergeneracional-ouka-leele-centro-ocio-asesoramiento-juvenil-2-planta-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/OficinasInformacionJuvenil",
+		"id": "12383033",
+		"title": "Centro Intergeneracional Ouka Leele.
+Centro de Ocio y Asesoramiento Juvenil - 2 planta.",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=9721133100fbf810VgnVCM1000001d4a900aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Arganzuela"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Arganzuela/Barrio/Legazpi"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28045",
+			"street-address": "CALLE BRONCE, 16 (Entrada por la calle Sodio, 16) "
+		},
+		"location": {
+			"latitude": 40.389367699255175,
+			"longitude": -3.6884383126394686
+		},
+		"organization": {
+			"organization-desc": "Mira la programación mensual de cada uno de los centros de ocio y asesoramiento juvenil, encontrarás talleres, teatro, actividades, cesiones de espacios para tu música o tus ensayos, exposiciones; además Wifi gratuito, oficinas de información juvenil y un montón de cosas interesantes. Un lugar de encuentro orientado a impulsar el bienestar, la participación activa y el ocio saludable de los jóvenes del distrito. En la planta 2 del Centro Intergeneracional Ouka Leele, el Centro de ocio y asesoramiento juvenil ofrece una variada oferta de talleres, teatro, actividades, cesiones de espacios para tu música o tus ensayos, exposiciones; además Wifi gratuito, oficina de información juvenil y un montón de cosas interesantes. Esta programación se complementa con encuentros intergeneracionales que promueven el intercambio de vivencias, el respeto entre generaciones y la colaboración entre personas de distintas edades, contribuyendo al fortalecimiento del tejido social.  Información sobre las actividades y cesión de espacios   Correo: oukaleele@coajmadrid.es   Teléfono (dinamización):  913 809 582  Móvil/Whatsapp: 660 338 938 Consulta la programación aquí  Metro: Legazpi (líneas 3 y 6) y Planetario (línea 6) Bus: 148, 156, 62 T32 N13",
+			"accesibility": "1",
+			"schedule": "Sala de estudios:   De lunes a viernes de 9 a 15 h y de 16 a 21:45 h. Sábados, domingos: de 10 a 15 h y de 16 a 21:45 h.   Información, contacto y reserva de espacios: de lunes a domingo de 10 a 22 horas Dinamización: de lunes a domingo de 10 a 22 horas",
+			"services": "Programación mensual de actividades gratuitas en www.coajmadrid.es (salidas a la naturaleza, culturales, concursos, torneos, actividades deportivas, artísticas, musicales...)   Zona de dinamización (ping pong, futbolín, juegos de mesa, diana, play...)  Sala de estudios de acceso libre hasta completar aforo.  Cesión de espacios para ensayos y promoción artística (con reserva previa).",
+			"organization-name": "Centro Intergeneracional Ouka Leele.
+Centro de Ocio y Asesoramiento Juvenil - 2 planta."
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/12004930-espacio-lectura-dolores-catarineu-moncloa-aravaca-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "12004930",
+		"title": "Espacio de lectura Dolores Catarineu  (Moncloa-Aravaca)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=fbff57ae976e7810VgnVCM2000001f4a900aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Moncloa-Aravaca"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Moncloa-Aravaca/Barrio/Aravaca"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28023",
+			"street-address": "CALLE CAROLI 1"
+		},
+		"location": {
+			"latitude": 40.45874611322162,
+			"longitude": -3.7847137684669288
+		},
+		"organization": {
+			"organization-desc": "  Consultar los siguientes enlaces",
+			"accesibility": "1",
+			"schedule": "Horario del centro:    De lunes a a domingo, de 9 a 21 horas. Días 25 de diciembre y 1 y 6 enero, cerrado. Días 24 y 31 de diciembre, de 9 a 14 horas.   Horario especial exámenes:   Del 8 de enero al 8 de febrero, de lunes a domingo, de 9:00 a 01:00 h a.m..",
+			"services": "Aforo: 32 personas Zona wifi",
+			"organization-name": "Espacio de lectura Dolores Catarineu  (Moncloa-Aravaca)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/12813557-plaza-lugar-poetas-moncloa-aravaca-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "12813557",
+		"title": "Plaza Lugar Poetas (Moncloa-Aravaca)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=76e8a277ed0b7910VgnVCM2000001f4a900aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Distrito"
+			},
+			"locality": "MADRID",			
+			"postal-code": "",
+			"street-address": "CALLE ANTONIO MACHADO 22"
+		},
+		"location": {
+			"latitude": 40.46644791330993,
+			"longitude": -3.7190034169332566
+		},
+		"organization": {
+			"organization-desc": "  ",
+			"accesibility": "1",
+			"schedule": "Al aire libre",
+			"services": "No dispone de WiFi Aforo aproximado 500",
+			"organization-name": "Plaza Lugar Poetas (Moncloa-Aravaca)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/12678028-sala-estudio-centro-intergeneracional-rio-esmeralda.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "12678028",
+		"title": "Sala de Estudio del Centro Intergeneracional Río Esmeralda",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=111c07fbb41d4910VgnVCM1000001d4a900aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/PuenteDeVallecas"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/PuenteDeVallecas/Barrio/Portazgo"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28018",
+			"street-address": "CALLE LAGO MARACAIBO 8"
+		},
+		"location": {
+			"latitude": 40.383202672832304,
+			"longitude": -3.6520212485606334
+		},
+		"organization": {
+			"organization-desc": "En el Centro Intergeneracional Río Esmeralda se ha creado un nuevo espacio para el estudio. Un lugar tranquilo y cómodo para estudiar, trabajar en proyectos o preparar exámenes.  Metro: Alto del Arenal (Línea 1) y Buenos Aires (Línea 1)",
+			"accesibility": "1",
+			"schedule": "Sábados y domingos de 10 a 13 horas y de 16 a 20 horas, hasta completar aforo.",
+			"services": "Acceso a internet Mesas de trabajo",
+			"organization-name": "Sala de Estudio del Centro Intergeneracional Río Esmeralda"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/8637537-sala-estudio-centro-sociocultural-clara-campoamor-retiro-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "8637537",
+		"title": "Sala de Estudio del Centro Sociocultural Clara Campoamor (Retiro)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=ad345442c6452510VgnVCM2000000c205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Retiro"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Retiro/Barrio/Pacifico"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28007",
+			"street-address": "PLAZA DAOIZ Y VELARDE 1"
+		},
+		"location": {
+			"latitude": 40.40232608747992,
+			"longitude": -3.6774411939274305
+		},
+		"organization": {
+			"organization-desc": " Acceso por plaza de Daoíz y Velarde. Metro: Pacífico (línea 1 y 6)",
+			"accesibility": "1,4,5",
+			"schedule": "De lunes a viernes de 9:00 a 21:00 horas. Sábados, domingos y festivos de 10:00 a 21:00 horas. 24 y 31 de diciembre de 10:00 a 14:00 horas. 1 y 6 de enero, 1 de mayo y 25 de diciembre, cerrado.",
+			"services": "Sala Dulce Chacón (1&amp;ordf; planta): 20 puestos (Esta sala no podrá usarse como sala de estudio cuando esté ocupada por cesiones/actividades socioculturales)     Sala de estudio Gloria Fuertes (2&amp;ordf; planta): 24 puestos .  Sala Las Sinsombrero (2&amp;ordf; y 3&amp;ordf; planta): 24 puestos (Esta sala no podrá usarse como sala de estudio cuando esté ocupada por cesiones/actividades socioculturales). Zona wifi",
+			"organization-name": "Sala de Estudio del Centro Sociocultural Clara Campoamor (Retiro)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/11067471-sala-lectura-leon-felipe.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "11067471",
+		"title": "Sala de Lectura León Felipe",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=bf1c78610b88e610VgnVCM2000001f4a900aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Villaverde"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Villaverde/Barrio/LosRosales"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28021",
+			"street-address": "Calle Encarnación Oviol 47"
+		},
+		"location": {
+			"latitude": 40.35075302554859,
+			"longitude": -3.6871905881900373
+		},
+		"organization": {
+			"organization-desc": "Sala de lectura y biblioteca  ",
+			"accesibility": "0",
+			"schedule": "Horario de la Sala : 9:30 - 21:00 h de lunes a sábado, incluso festivos, salvo 24, 25 y 31 de diciembre y 1 y 6 de enero.  Horario préstamo y devoluciones: 15:30 - 20:30 h   En agosto cierra la sala para estudio y lectura pero no el servicio de préstamo y devoluciones.   Puedes contactar con la sala de lectura en el siguiente correo:  salalectura@madrid.es  Por teléfono: 658199508.",
+			"services": "",
+			"organization-name": "Sala de Lectura León Felipe"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/4813751-sala-estudio-alfonso-xii-fuencarral-pardo-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "4813751",
+		"title": "Sala de estudio Alfonso XII (Fuencarral - El Pardo)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=2e7a8917a2058110VgnVCM2000000c205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Fuencarral-ElPardo"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Fuencarral-ElPardo/Barrio/ElPardo"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28048",
+			"street-address": "CALLE MIRA EL RIO 4"
+		},
+		"location": {
+			"latitude": 40.519673311658686,
+			"longitude": -3.7779055687726535
+		},
+		"organization": {
+			"organization-desc": "  Autobuses EMT: 164 y 179.",
+			"accesibility": "1",
+			"schedule": "De lunes a viernes de 8:30 a 21:00 horas.   Sábados y domingos de 9:30 a 20:00 horas.   Cerrado: 1 de enero, 6 de enero y 25 de diciembre.   Horario especial hasta las 14:00 h: 5 de enero, 24 de diciembre y 31 diciembre.   Julio y Agosto: De lunes a viernes, de 8:30 a 21:00 horas. Sábados y domingos, de 9:30 a 20:00 h.",
+			"services": "Aforo: 18 puestos.     El acceso a los puesto se hará por riguroso orden de llegada. Transcurrido 30 minutos desde el abandono del puesto, de estudio, éste podrá ser ocupado por otra persona. Está prohibido comer, cambiarse de puesto o mover el mobiliario de la sala. Se solicita guardar silencio y atender las indicaciones del personal del Centro Cultural. El incumplimiento de estas normas podrá suponer la denegación de la utilización de la sala.    Wifi disponible.",
+			"organization-name": "Sala de estudio Alfonso XII (Fuencarral - El Pardo)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/4813737-sala-estudio-alfredo-kraus-fuencarral-pardo-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "4813737",
+		"title": "Sala de estudio Alfredo Kraus (Fuencarral - El Pardo)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=2ec62928b1058110VgnVCM2000000c205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Fuencarral-ElPardo"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Fuencarral-ElPardo/Barrio/Mirasierra"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28035",
+			"street-address": "GLORIETA PRADERA DE VAQUERIZAS 9"
+		},
+		"location": {
+			"latitude": 40.49082275610172,
+			"longitude": -3.7216054330053647
+		},
+		"organization": {
+			"organization-desc": "  Autobuses: 49 y 64.   Metro: Mirasierra (línea 9)",
+			"accesibility": "1",
+			"schedule": "De lunes a viernes, de 9:00 a 14:00  y de 16 a 21 horas.   Sábados, de 9:30 a 13:45 y de 16 a 20:45 horas.  Julio y Agosto: De lunes a viernes, de 9:00 a 14:00 y de 16:30 a 21:00 horas. Sábados, de 9:30 a 13:45 y de 16:00 a 20:45 horas.",
+			"services": "Aforo: 85 puestos.    El acceso a los puesto se hará por riguroso orden de llegada. Transcurrido 30 minutos desde el abandono del puesto, de estudio, éste podrá ser ocupado por otra persona. Está prohibido comer, cambiarse de puesto o mover el mobiliario de la sala. Se solicita guardar silencio y atender las indicaciones del personal del Centro Cultural. El incumplimiento de estas normas podrá suponer la denegación de la utilización de la sala.    Wifi disponible.",
+			"organization-name": "Sala de estudio Alfredo Kraus (Fuencarral - El Pardo)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/8041076-sala-estudio-almirante-churruca-latina-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "8041076",
+		"title": "Sala de estudio Almirante Churruca (Latina)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=3ab67c6cd874d410VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Latina"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Latina/Barrio/LasAguilas"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28024",
+			"street-address": "CALLE FUENTE DEL TIRO 72 PLANTA 1.ª"
+		},
+		"location": {
+			"latitude": 40.382992678408066,
+			"longitude": -3.7800773802118117
+		},
+		"organization": {
+			"organization-desc": "  Metro: Aviación Española (línea 10).  Cercanías RENFE:   Las Águilas (línea C5).",
+			"accesibility": "1",
+			"schedule": "Horario del centro:    De lunes a viernes, de 9 a 21:30 horas. Sábados, de 9 a 13:30 horas. Verano: de lunes a viernes, de 9 a 20:30 horas. Domingos, festivos y tres primeras semanas de agosto, cerrado.",
+			"services": "Puestos de lectura: 120.  WIFI.",
+			"organization-name": "Sala de estudio Almirante Churruca (Latina)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/50067417-sala-estudio-antonio-lopez-chamartin-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "50067417",
+		"title": "Sala de estudio Antonio López (Chamartín)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=6c14ecf8a4089910VgnVCM200000f921e388RCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Chamartin"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Chamartin/Barrio/CiudadJardin"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28036",
+			"street-address": "CALLE PASTORA IMPERIO 4"
+		},
+		"location": {
+			"latitude": 40.444902405213526,
+			"longitude": -3.6780788363404526
+		},
+		"organization": {
+			"organization-desc": "  Metro: Bambú (línea 1)",
+			"accesibility": "1,5",
+			"schedule": "De lunes a domingo, 9 a 21 horas.  Cerrado: Sábados, domingos, festivos y durante el mes de agosto.",
+			"services": "Puestos de lectura: 74 Zona wifi",
+			"organization-name": "Sala de estudio Antonio López (Chamartín)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/4815112-sala-estudio-carril-conde-hortaleza-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "4815112",
+		"title": "Sala de estudio Carril del Conde (Hortaleza)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=cdc10e4d44558110VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Hortaleza"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Hortaleza/Barrio/Canillas"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28043",
+			"street-address": "CALLE CARRIL DEL CONDE 57 esquina a calle Santa Natalia, 2"
+		},
+		"location": {
+			"latitude": 40.46089499555313,
+			"longitude": -3.654366821391548
+		},
+		"organization": {
+			"organization-desc": "  Metro: Arturo Soria (línea 4)",
+			"accesibility": "1",
+			"schedule": "De lunes a domingo y festivos, de 9 a 22 horas.  24 y 31 de diciembre, de 9 a 15 horas. Ampliación horaria hasta las 00 horas, del 23 de abril al 30 de junio y del 11 de noviembre al 23 de diciembre.  25 de diciembre y 1 de enero, cerrado.",
+			"services": "Puestos de lectura: 196 Wifi",
+			"organization-name": "Sala de estudio Carril del Conde (Hortaleza)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/11187846-sala-estudio-centro-cultural-san-juan-bautista-ciudad-lineal-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "11187846",
+		"title": "Sala de estudio Centro Cultural San Juan Bautista (Ciudad Lineal)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=e10cd76f718a2710VgnVCM1000001d4a900aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/CiudadLineal"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/CiudadLineal/Barrio/SanJuanBautista"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28043",
+			"street-address": "CALLE SAN NEMESIO 4"
+		},
+		"location": {
+			"latitude": 40.45224710166,
+			"longitude": -3.658029027767765
+		},
+		"organization": {
+			"organization-desc": "  Metro: Avenida de la Paz (línea 4)",
+			"accesibility": "1",
+			"schedule": "Horario del centro:    De lunes a sábado, de 9 a 22 horas.  Julio: de lunes a viernes, de 9 a 15 horas. Domingos, festivos y agosto cerrado.  Fuera de este horario el centro permanecerá abierto durante la celebración de las actividades que se programen",
+			"services": "Puestos de lectura: 16 Zona wifi",
+			"organization-name": "Sala de estudio Centro Cultural San Juan Bautista (Ciudad Lineal)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/4812338-sala-estudio-centro-dotacional-integrado-arganzuela-angel-rio.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "4812338",
+		"title": "Sala de estudio Centro Dotacional Integrado Arganzuela Ángel del Río",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=217024521f048110VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Arganzuela"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Arganzuela/Barrio/PalosFrontera"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28045",
+			"street-address": "CALLE CANARIAS 17"
+		},
+		"location": {
+			"latitude": 40.40242416544921,
+			"longitude": -3.6954440062549017
+		},
+		"organization": {
+			"organization-desc": "  Metro: Palos de la Frontera (línea 3)  Cercanías RENFE: Delicias (líneas C1, C7, C10)",
+			"accesibility": "1",
+			"schedule": "Horario del centro:   De lunes a sábado, de 9 a 21 horas. Domingos, festivos, agosto y 24 y 31 de diciembre, cerrado.",
+			"services": "Puestos de lectura (aforo máximo): 171 personas. Zona wifi.",
+			"organization-name": "Sala de estudio Centro Dotacional Integrado Arganzuela Ángel del Río"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/4815363-sala-estudio-centro-juvenil-sitio-mi-recreo-villa-vallecas-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "4815363",
+		"title": "Sala de estudio Centro Juvenil El Sitio de mi Recreo (Villa de Vallecas)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=af2192cfd9558110VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/VillaDeVallecas"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/VillaDeVallecas/Barrio/SantaEugenia"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28031",
+			"street-address": "CALLE REAL DE ARGANDA 39"
+		},
+		"location": {
+			"latitude": 40.37953682427198,
+			"longitude": -3.616901585603186
+		},
+		"organization": {
+			"organization-desc": "Edad de 14 a 30 años. Puestos de lectura: 40 Metro: Villa de Vallecas (línea 1) Bus: 58",
+			"accesibility": "0",
+			"schedule": "Consultar telefonicamente",
+			"services": "",
+			"organization-name": "Sala de estudio Centro Juvenil El Sitio de mi Recreo (Villa de Vallecas)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/11187831-sala-estudio-centro-sociocultural-ciudad-lineal-ciudad-lineal-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "11187831",
+		"title": "Sala de estudio Centro Sociocultural Ciudad Lineal (Ciudad Lineal)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=a179d76f718a2710VgnVCM1000001d4a900aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/CiudadLineal"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/CiudadLineal/Barrio/Ventas"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28017",
+			"street-address": "CALLE POETA BLAS DE OTERO 81"
+		},
+		"location": {
+			"latitude": 40.42285715768873,
+			"longitude": -3.651680076113881
+		},
+		"organization": {
+			"organization-desc": "  Consulta los siguientes enlaces",
+			"accesibility": "1",
+			"schedule": "Horario del centro:   De lunes a viernes, de 9 a 13:45 y de 14:15 a 20:30. Julio: de lunes a viernes, de 9 a 13:45 horas. Sábados, domingos, festivos y agosto cerrado.    Fuera de este horario el centro permanecerá abierto durante la celebración de las actividades que se programen",
+			"services": "Puestos de lectura: 12 Zona wifi",
+			"organization-name": "Sala de estudio Centro Sociocultural Ciudad Lineal (Ciudad Lineal)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/10510680-sala-estudio-centro-sociocultural-greco-latina-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "10510680",
+		"title": "Sala de estudio Centro Sociocultural El Greco (Latina)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=bbad79e15d7ee510VgnVCM2000001f4a900aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Latina"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Latina/Barrio/Lucero"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28011",
+			"street-address": "CALLE EL GRECO 29"
+		},
+		"location": {
+			"latitude": 40.40836421799463,
+			"longitude": -3.7444454382160957
+		},
+		"organization": {
+			"organization-desc": "  Metro: Lucero (línea 6), Batán (línea 10).",
+			"accesibility": "1",
+			"schedule": "Horario de funcionamiento del centro:   De lunes a viernes, de 9 a 21:30 horas. Sábados, de 9 a 13:30 horas. Verano: de julio a septiembre, de lunes a viernes, de 9 a 21 horas. Domingos, festivos y las tres primeras semanas de agosto cerrado.",
+			"services": "Puestos de lectura: 20. Zona WIFI.",
+			"organization-name": "Sala de estudio Centro Sociocultural El Greco (Latina)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/4815051-sala-estudio-centro-sociocultural-moratalaz.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "4815051",
+		"title": "Sala de estudio Centro Sociocultural Moratalaz",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=32c2b51383558110VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Moratalaz"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Moratalaz/Barrio/Fontarron"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28030",
+			"street-address": "CALLE FUENTE CARRANTONA 1"
+		},
+		"location": {
+			"latitude": 40.39683839662965,
+			"longitude": -3.639160629981131
+		},
+		"organization": {
+			"organization-desc": "  Metro: Pavones (línea 9)",
+			"accesibility": "1,5",
+			"schedule": "Horario del centro (excepto julio y agosto)  De lunes a viernes, de 9 a 13:50 y de 15:05 a 20:50 horas. Sábados, de 10 a 13:50 y de 16 a 21:50 horas. Domingos, de 10 a 13:50 y de 16:30 a 20:20 horas. Festivos, de 10 a 13:50 horas.   Horario de verano: consulta información en documentación asociada.",
+			"services": "Puestos de lectura: 65 Zona wifi.   SAV  Servicio de Orientación de Vivienda. Los lunes, miércoles y viernes de 9 a 14 horas, todas las semanas del año sin interrupción. Despachos 10 y 11 (primera planta). Teléfono: 900 814 815. Web: transforma.madris.es y soj.icam.es (puedes consultar el folleto en Información relacionada).",
+			"organization-name": "Sala de estudio Centro Sociocultural Moratalaz"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/8026323-sala-estudio-centro-sociocultural-siena-ciudad-lineal-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "8026323",
+		"title": "Sala de estudio Centro Sociocultural Siena (Ciudad Lineal)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=e4e458caf0f1d410VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/CiudadLineal"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/CiudadLineal/Barrio/Quintana"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28027",
+			"street-address": "CALLE SIENA 52"
+		},
+		"location": {
+			"latitude": 40.433168908505294,
+			"longitude": -3.651871341017642
+		},
+		"organization": {
+			"organization-desc": "  Metro: Quintana (línea 5)",
+			"accesibility": "0",
+			"schedule": "Horario del centro:    De lunes a viernes, de 9 a 21 horas. Sábados, domingos, festivos y agosto cerrado.   Horario durante la Campaña de Apoyo al Estudiante:    Enero-febrero, mayo-junio y septiembre: de lunes a domingo, incluídos festivos de 9 a 0 horas",
+			"services": "Puestos de lectura: 24 Zona wifi",
+			"organization-name": "Sala de estudio Centro Sociocultural Siena (Ciudad Lineal)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/4814996-sala-estudio-centro-sociocultural-talleres-creatividad-puente-vallecas-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "4814996",
+		"title": "Sala de estudio Centro Sociocultural Talleres de Creatividad (Puente de Vallecas)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=ada6f5fea2558110VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/PuenteDeVallecas"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/PuenteDeVallecas/Barrio/SanDiego"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28053",
+			"street-address": "CALLE SIERRA CARBONERA 74"
+		},
+		"location": {
+			"latitude": 40.39010138870244,
+			"longitude": -3.6653235716960015
+		},
+		"organization": {
+			"organization-desc": " Puestos de lectura: 22 Zona wifi. Metro: Nueva Numancia, Portazgo (línea 1)",
+			"accesibility": "0",
+			"schedule": "Jueves y viernes, de 13:30 a 17 horas. Julio, Semana Santa y Navidad, de lunes a viernes de 9 a 13:45 horas. Sábados, domingos, festivos y agosto, cerrado.",
+			"services": "",
+			"organization-name": "Sala de estudio Centro Sociocultural Talleres de Creatividad (Puente de Vallecas)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/5709413-sala-estudio-centro-cultural-torito-moratalaz-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "5709413",
+		"title": "Sala de estudio Centro cultural El Torito (Moratalaz)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=3874efd1977f8210VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Moratalaz"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Moratalaz/Barrio/Vinateros"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28030",
+			"street-address": "AVENIDA MORATALAZ 130"
+		},
+		"location": {
+			"latitude": 40.40610655994401,
+			"longitude": -3.646521482592748
+		},
+		"organization": {
+			"organization-desc": "  Metro: Artilleros (línea 9)",
+			"accesibility": "1",
+			"schedule": "Horario del centro:   De lunes a viernes, de 9 a 13 horas y de 15 a 21:30 horas. Sábados de 10 a 13:30 horas y de 16 a 21:30 horas. Julio, de lunes a viernes, de 9 a 13 horas. Sábados y domingos, cerrado. Domingos, festivos y agosto cerrado.",
+			"services": "Puestos de lectura: 21 Zona wifi",
+			"organization-name": "Sala de estudio Centro cultural El Torito (Moratalaz)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/8000760-sala-estudio-centro-cultural-lope-vega-puente-vallecas-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "8000760",
+		"title": "Sala de estudio Centro cultural Lope de Vega (Puente de Vallecas)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=a190e189b66dc410VgnVCM2000000c205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/PuenteDeVallecas"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/PuenteDeVallecas/Barrio/Entrevias"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28053",
+			"street-address": "CALLE CONCEJO DE TEVERGA 1"
+		},
+		"location": {
+			"latitude": 40.386296991431074,
+			"longitude": -3.671858416387963
+		},
+		"organization": {
+			"organization-desc": "  Cercanías Renfe: Asamblea de Madrid-Entrevías (línea C2).",
+			"accesibility": "1",
+			"schedule": "Horario del centro:    De lunes a viernes, de 9 a 21:30 horas. Julio: de lunes a viernes, de 9 a 14 horas. Sábados, domingos, festivos y agosto, cerrado.",
+			"services": "Puestos de lectura: 50 Zona wifi",
+			"organization-name": "Sala de estudio Centro cultural Lope de Vega (Puente de Vallecas)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/4816516-sala-estudio-centro-cultural-quinta-berro-rafael-altamira-salamanca-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "4816516",
+		"title": "Sala de estudio Centro cultural Quinta del Berro - Rafael Altamira (Salamanca)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=1947371b6e958110VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Salamanca"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Salamanca/Barrio/FuenteBerro"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28028",
+			"street-address": "CALLE ENRIQUE D'ALMONTE 1"
+		},
+		"location": {
+			"latitude": 40.42206923419431,
+			"longitude": -3.6629608041639368
+		},
+		"organization": {
+			"organization-desc": "  Consulta los siguientes enlaces",
+			"accesibility": "1",
+			"schedule": "De lunes a domingo, de 8 a 21:30 horas.  Festivos cerrado.",
+			"services": "Puestos de lectura: 24 Wiffi",
+			"organization-name": "Sala de estudio Centro cultural Quinta del Berro - Rafael Altamira (Salamanca)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/8071924-sala-estudio-ciudad-pegaso-san-blas-canillejas-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "8071924",
+		"title": "Sala de estudio Ciudad Pegaso (San Blas - Canillejas)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=df3576e159ead410VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/SanBlas-Canillejas"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/SanBlas-Canillejas/Barrio/Rejas"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28022",
+			"street-address": "AVENIDA SEPTIMA 11"
+		},
+		"location": {
+			"latitude": 40.44844757572015,
+			"longitude": -3.598099871155595
+		},
+		"organization": {
+			"organization-desc": " Puestos de lectura: 50 Zona wifi Consultar los siguientes enlaces:",
+			"accesibility": "1",
+			"schedule": "Lunes a domingo, de 9:30 a 14:30 y de 16:30 a 21:30 horas. 24, 31 de diciembre y 1 de enero, cerrado.",
+			"services": "Puestos de lectura: 50 Zona wifi",
+			"organization-name": "Sala de estudio Ciudad Pegaso (San Blas - Canillejas)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/11875008-sala-estudio-corin-tellado-moncloa-aravaca-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "11875008",
+		"title": "Sala de estudio Corín Tellado  (Moncloa-Aravaca)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=97903bb468515810VgnVCM1000001d4a900aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Moncloa-Aravaca"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Moncloa-Aravaca/Barrio/CasaCampo"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28008",
+			"street-address": "CALLE SANTA POLA 22"
+		},
+		"location": {
+			"latitude": 40.432243310641894,
+			"longitude": -3.7366613378902462
+		},
+		"organization": {
+			"organization-desc": "  Consultar los siguientes enlaces",
+			"accesibility": "1",
+			"schedule": "Horario del centro:   De lunes a domingo de 9 a 21 horas. Días de cierre: 1 de mayo; 24, 25 y 31 de diciembre; 1 y 6 de enero.   Horario Bibliored:   De lunes a viernes de 15:30 a 20:30 horas.",
+			"services": "Puestos de lectura: 50 Zona wifi",
+			"organization-name": "Sala de estudio Corín Tellado  (Moncloa-Aravaca)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/4815414-sala-estudio-madrono-vicalvaro-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "4815414",
+		"title": "Sala de estudio El Madroño (Vicálvaro)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=62c0c0e48a558110VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Vicalvaro"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Vicalvaro/Barrio/CascoHVicalvaro"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28032",
+			"street-address": "CALLE VILLARDONDIEGO 36"
+		},
+		"location": {
+			"latitude": 40.40529229274289,
+			"longitude": -3.6086152959929514
+		},
+		"organization": {
+			"organization-desc": "  Metro: Vicálvaro (línea 9)",
+			"accesibility": "1",
+			"schedule": "Sábados, domingos y festivos de 09:00 a 20:30 horas. 24, 25,31 de diciembre y 1, 6 de enero, cerrada.",
+			"services": "Puestos de lectura: 32 Zona wifi",
+			"organization-name": "Sala de estudio El Madroño (Vicálvaro)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/5753713-sala-estudio-fernando-lazaro-carreter-carabanchel-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "5753713",
+		"title": "Sala de estudio Fernando Lázaro Carreter (Carabanchel)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=b0bb1c35f67a9210VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Carabanchel"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Carabanchel/Barrio/Opanel"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28019",
+			"street-address": "CALLE VERDAD 29"
+		},
+		"location": {
+			"latitude": 40.39164455403764,
+			"longitude": -3.717137582860074
+		},
+		"organization": {
+			"organization-desc": "  Bus: 116  Metro: Marqués de Vadillo (línea 5), Plaza Elíptica (línea 6 y 11)",
+			"accesibility": "1",
+			"schedule": "Horario del centro:   De lunes a viernes, de 9 a 21 horas. Sábados de 10 a 13:30 y de 16:30 a 21 horas.  Festivos y agosto cerrado.",
+			"services": "Puestos de lectura: 25 Zona wifi",
+			"organization-name": "Sala de estudio Fernando Lázaro Carreter (Carabanchel)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/5753557-sala-estudio-fernando-vizcaino-casas-chamberi-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "5753557",
+		"title": "Sala de estudio Fernando Vizcaíno Casas (Chamberí)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=08a9964bd47a9210VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Chamberi"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Chamberi/Barrio/Arapiles"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28015",
+			"street-address": "CALLE BLASCO DE GARAY 40"
+		},
+		"location": {
+			"latitude": 40.43384489097444,
+			"longitude": -3.71143798482586
+		},
+		"organization": {
+			"organization-desc": " Acceso por orden de llegada hasta completar aforo. Metro: Moncloa (líneas 3, 6) , Quevedo (línea 2)",
+			"accesibility": "1",
+			"schedule": "De lunes a domingo, de 8:30 a 21:30 horas. 24 y 31 de diciembre horario especial, de 8:30 a 15 horas. Cerrada los días 25 de diciembre y 1 y 6 de enero.",
+			"services": "Puestos de lectura: 170 Zona wifi",
+			"organization-name": "Sala de estudio Fernando Vizcaíno Casas (Chamberí)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/6924985-sala-estudio-francisco-jose-gonzalez-tejera-hortaleza-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "6924985",
+		"title": "Sala de estudio Francisco José González Tejera (Hortaleza)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=dd6f094110a5e310VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Hortaleza"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Hortaleza/Barrio/PinarRey"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28033",
+			"street-address": "CALLE SANTA VIRGILIA 15"
+		},
+		"location": {
+			"latitude": 40.47682410775741,
+			"longitude": -3.6420497457238
+		},
+		"organization": {
+			"organization-desc": "Sala de estudio y lectura.  Metro: Parque de Santa María (línea 4)",
+			"accesibility": "1",
+			"schedule": "De lunes a domingo y festivos, de 9 a 22 horas.  24 y 31 de diciembre, de 9 a 15 horas. Ampliación horaria hasta las 00 horas, del 23 de abril al 30 de junio y del 11 de noviembre al 23 de diciembre.  25 de diciembre y 1 de enero, cerrado.",
+			"services": "Puestos de lectura: 50 plazas. Wifi.",
+			"organization-name": "Sala de estudio Francisco José González Tejera (Hortaleza)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/8071938-sala-estudio-jose-luis-lopez-vazquez-san-blas-canillejas-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "8071938",
+		"title": "Sala de estudio José Luis López Vázquez (San Blas - Canillejas)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=9db676e159ead410VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/SanBlas-Canillejas"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/SanBlas-Canillejas/Barrio/Rejas"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28022",
+			"street-address": "CALLE FEBRERO 4 PLANTA En la 2ª Planta del edificio"
+		},
+		"location": {
+			"latitude": 40.446826729909155,
+			"longitude": -3.5727382893523254
+		},
+		"organization": {
+			"organization-desc": "  Consultar los siguientes enlaces:",
+			"accesibility": "2",
+			"schedule": "Lunes a domingo y festivos, de 9 a 13:30 horas y de 15 a 21:30 horas. 24, 25, 31 de diciembre y 1 de enero, cerrado.",
+			"services": "Puestos de lectura: 152 Zona wifi",
+			"organization-name": "Sala de estudio José Luis López Vázquez (San Blas - Canillejas)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/4813757-sala-estudio-julio-cortazar-moncloa-aravaca-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "4813757",
+		"title": "Sala de estudio Julio Cortázar (Moncloa-Aravaca)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=53918917a2058110VgnVCM2000000c205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Moncloa-Aravaca"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Moncloa-Aravaca/Barrio/Valdezarza"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28035",
+			"street-address": "CALLE ANTONIO MACHADO 20"
+		},
+		"location": {
+			"latitude": 40.46678417843686,
+			"longitude": -3.7195598670929315
+		},
+		"organization": {
+			"organization-desc": " Puestos de lectura: 115 Zona wifi Metro: Valdezarza (línea 7) y Antonio Machado (línea 7).",
+			"accesibility": "1",
+			"schedule": "Horario del centro:   De lunes a domingo de 9 a 21 horas. De 9 a 14 horas los días 24 y 31 de diciembre.  Cerrada: 25 de diciembre, 1 y 6 de enero y 15 de agosto.    Horario especial exámenes:   Del 8 de enero al 8 de febrero, de lunes a domingo, de 9 a 1 hora am.",
+			"services": "",
+			"organization-name": "Sala de estudio Julio Cortázar (Moncloa-Aravaca)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/4815257-sala-estudio-rosales.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "4815257",
+		"title": "Sala de estudio Los Rosales",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=1bcbc1e158558110VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Villaverde"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Villaverde/Barrio/Butarque"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28021",
+			"street-address": "AVENIDA LOS ROSALES 133"
+		},
+		"location": {
+			"latitude": 40.35074797433515,
+			"longitude": -3.6773064421969233
+		},
+		"organization": {
+			"organization-desc": "  Bus: 85 Renfe: Villaverde Bajo",
+			"accesibility": "1",
+			"schedule": "Consultar telefónicamente.",
+			"services": "Puestos de lectura: 32",
+			"organization-name": "Sala de estudio Los Rosales"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/6468021-sala-estudio-luis-garcia-berlanga-tetuan-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "6468021",
+		"title": "Sala de estudio Luis García Berlanga (Tetuán)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=f5abe23a26bd7310VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Tetuan"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Tetuan/Barrio/Almenara"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28029",
+			"street-address": "CALLE VI&amp;Ntilde;A VIRGEN 2"
+		},
+		"location": {
+			"latitude": 40.4652835428932,
+			"longitude": -3.694060048143814
+		},
+		"organization": {
+			"organization-desc": "  Metro: Valdeacederas (línea 1)",
+			"accesibility": "1",
+			"schedule": "De lunes a domingo y festivos, de 9 a 21 horas.  Horario ampliado de 21:00 a 01:00 h, sábados, domingos y festivos, del 7 de enero al 6 de febrero, y del 13 de mayo al 4 de julio.   24 y 31 de diciembre, de 9 a 15 horas.   25 de diciembre y 1 y 6 de enero, cerrado.",
+			"services": "Puestos de lectura: 105 (73 en la planta baja y 32 en la primera planta) Zona wifi",
+			"organization-name": "Sala de estudio Luis García Berlanga (Tetuán)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/4812602-sala-estudio-luis-gonzaga-chamartin-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "4812602",
+		"title": "Sala de estudio Luis Gonzaga (Chamartín)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=e653d0a471148110VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Chamartin"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Chamartin/Barrio/CiudadJardin"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28002",
+			"street-address": "CALLE PRINCIPE DE VERGARA 142"
+		},
+		"location": {
+			"latitude": 40.444902405213526,
+			"longitude": -3.6780788363404526
+		},
+		"organization": {
+			"organization-desc": "  Metro: Cruz del Rayo (línea 9)",
+			"accesibility": "1",
+			"schedule": "De lunes a domingo, 9 a 21:30 horas.  Cerrado: festivos y del 1 al 24 de agosto.",
+			"services": "Puestos de lectura: 96 (reducido 32) Zona wifi",
+			"organization-name": "Sala de estudio Luis Gonzaga (Chamartín)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/4815260-sala-estudio-marconi.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "4815260",
+		"title": "Sala de estudio Marconi",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=fcffc1e158558110VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Villaverde"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Villaverde/Barrio/SanAndres"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28021",
+			"street-address": "ACCESO COLONIA MARCONI 4"
+		},
+		"location": {
+			"latitude": 40.334751832113774,
+			"longitude": -3.700809560921597
+		},
+		"organization": {
+			"organization-desc": "  Bus: 79",
+			"accesibility": "0",
+			"schedule": "Consultar telefónicamente.",
+			"services": "Puestos de lectura: 16",
+			"organization-name": "Sala de estudio Marconi"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/5753637-sala-estudio-montecarmelo-fuencarral-pardo-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "5753637",
+		"title": "Sala de estudio Montecarmelo (Fuencarral - El Pardo)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=ae87964bd47a9210VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Fuencarral-ElPardo"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Fuencarral-ElPardo/Barrio/ElGoloso"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28049",
+			"street-address": "Avenida Santuario de Valverde. 114 Carretera M-607 km 13-L10. Acceso a través del PAU Montecarmelo"
+		},
+		"location": {
+			"latitude": 40.51635495615339,
+			"longitude": -3.685946562681175
+		},
+		"organization": {
+			"organization-desc": "  Autobuses EMT: 134 y 178. Interurbano 712, 713 y 716.   Metro: Montecarmelo (línea 10) (20 minutos a pie).",
+			"accesibility": "1",
+			"schedule": "De lunes a viernes, de 8:30 a 14:30 horas y de 16:00 a 21:00 horas.   Sábados, de 9:00 a 14:30 horas y de 16:00 a 20:45 horas.   Domingos y festivos, de 10:00 a 14:30 horas.   Cerrado: 1 de enero, 6 de enero y 25 de diciembre.  Julio y Agosto:   De lunes a viernes, de 8:30 a 14:30 y de 16:00 a 21:00 horas.   Sábados, de 9:00 a 14:00 y de 16:30 a 20:45 horas.   Domingos y festivos de julio, de 10:00 a 14:30 horas.   Domingos y festivos de agosto: cerrado.",
+			"services": "Aforo: 24 puestos.    El acceso a los puesto se hará por riguroso orden de llegada. Transcurrido 30 minutos desde el abandono del puesto, de estudio, éste podrá ser ocupado por otra persona. Está prohibido comer, cambiarse de puesto o mover el mobiliario de la sala. Se solicita guardar silencio y atender las indicaciones del personal del Centro Cultural. El incumplimiento de estas normas podrá suponer la denegación de la utilización de la sala.    Wifi disponible.",
+			"organization-name": "Sala de estudio Montecarmelo (Fuencarral - El Pardo)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/10751094-sala-estudio-motilla-palancar-hortaleza-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "10751094",
+		"title": "Sala de estudio Motilla del Palancar (Hortaleza)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=f2114531d18a4610VgnVCM1000001d4a900aRCRD",		
+		"address": {
+			"locality": "MADRID",			
+			"postal-code": "",
+			"street-address": "CALLE MOTILLA DEL PALANCAR 13 PLANTA local bajo"
+		},
+		"location": {
+			"latitude": 40.46532067984838,
+			"longitude": -3.633321598436636
+		},
+		"organization": {
+			"organization-desc": "  Metro: Canillas (línea 4)",
+			"accesibility": "0",
+			"schedule": "De lunes a domingo y festivos, de 9 a 22 horas.  24 y 31 de diciembre, de 9 a 15 horas. Ampliación horaria hasta las 00 horas, del 23 de abril al 30 de junio y del 11 de noviembre al 23 de diciembre.  25 de diciembre y 1 de enero, cerrado.",
+			"services": "Puestos de lectura: 60 plazas. Wifi.",
+			"organization-name": "Sala de estudio Motilla del Palancar (Hortaleza)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/4814223-sala-estudio-oporto-carabanchel-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "4814223",
+		"title": "Sala de estudio Oporto (Carabanchel)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=0295d1a2d9058110VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Carabanchel"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Carabanchel/Barrio/Opanel"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28019",
+			"street-address": "AVENIDA OPORTO 78"
+		},
+		"location": {
+			"latitude": 40.38682740756541,
+			"longitude": -3.7277493066262406
+		},
+		"organization": {
+			"organization-desc": "  Metro: Oporto (líneas 5, 6) , Opañel (línea 6)",
+			"accesibility": "1",
+			"schedule": "Horario del centro:   De lunes a sábado, de 8:30 a 21:30 horas. Domingos, de 11:30 a 14:30 horas.  Festivos y agosto cerrado.  Fuera de este horario el centro permanecerá abierto durante la celebración de las actividades que se programen.",
+			"services": "Puestos de lectura: 48 Zona wifi.",
+			"organization-name": "Sala de estudio Oporto (Carabanchel)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/5753811-sala-estudio-san-cristobal.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "5753811",
+		"title": "Sala de estudio San Cristóbal",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=4ae90a3bb87a9210VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Villaverde"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Villaverde/Barrio/SanCristobal"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28021",
+			"street-address": "PLAZA PINAZO 9"
+		},
+		"location": {
+			"latitude": 40.34267317099495,
+			"longitude": -3.6914487380508842
+		},
+		"organization": {
+			"organization-desc": "  Metro: Villaverde Alto (línea 3) Bus: 59, 79",
+			"accesibility": "1",
+			"schedule": "Consultar telefónicamente.",
+			"services": "Puestos de lectura: 40",
+			"organization-name": "Sala de estudio San Cristóbal"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/6478893-sala-estudio-sanchinarro-hortaleza-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "6478893",
+		"title": "Sala de estudio Sanchinarro (Hortaleza)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=459b10e528908310VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Hortaleza"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Hortaleza/Barrio/Valdefuentes"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28050",
+			"street-address": "CALLE PRINCESA DE EBOLI 29"
+		},
+		"location": {
+			"latitude": 40.49042200599307,
+			"longitude": -3.6553467891079854
+		},
+		"organization": {
+			"organization-desc": "  Metro Ligero: Blasco Ibáñez",
+			"accesibility": "1",
+			"schedule": "De lunes a viernes de 9 a 22 horas. Fines de semana y festivos, de 10 a 22 horas.  24 y 31 de diciembre, de 8:30 a 15 horas. Ampliación horaria hasta las 00 horas, del 23 de abril al 30 de junio y del 11 de noviembre al 23 de diciembre.  25 de diciembre y 1 de enero, cerrado.",
+			"services": "Puestos de lectura: 172 plazas. Wifi.",
+			"organization-name": "Sala de estudio Sanchinarro (Hortaleza)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/4815268-sala-estudio-santa-petronila.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "4815268",
+		"title": "Sala de estudio Santa Petronila",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=5b65c1e158558110VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Villaverde"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Villaverde/Barrio/LosRosales"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28021",
+			"street-address": "CALLE MARIA MARTINEZ OVIOL 12"
+		},
+		"location": {
+			"latitude": 40.35087114162283,
+			"longitude": -3.691508909255186
+		},
+		"organization": {
+			"organization-desc": "  Metro: Villaverde Bajo Cruce (línea 3)  Bus: 59, 79, 85 Renfe: Villaverde Bajo",
+			"accesibility": "1",
+			"schedule": "Consultar telefónicamente.",
+			"services": "Puestos de lectura: 15",
+			"organization-name": "Sala de estudio Santa Petronila"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/4815389-sala-estudio-valdebernardo-vicalvaro-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "4815389",
+		"title": "Sala de estudio Valdebernardo (Vicálvaro)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=1dc9c0e48a558110VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Vicalvaro"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Vicalvaro/Barrio/Valdebernardo"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28032",
+			"street-address": "BULEVAR INDALECIO PRIETO 21"
+		},
+		"location": {
+			"latitude": 40.399832138328044,
+			"longitude": -3.6212720265227873
+		},
+		"organization": {
+			"organization-desc": "  Metro: Valdebernardo (línea 9)",
+			"accesibility": "1",
+			"schedule": "Sábados, domingos y festivos de 9:00 a 20:30. Agosto, 24, 25, 31 de diciembre y 1, 6 de enero, cerrado.",
+			"services": "Dos salas de estudio. Puestos de lectura: 60. Zona wifi.",
+			"organization-name": "Sala de estudio Valdebernardo (Vicálvaro)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/11745306-sala-estudio-villa-prado-arganzuela.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "11745306",
+		"title": "Sala de estudio Villa del Prado de Arganzuela",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=c9825ecb8b782810VgnVCM1000001d4a900aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Arganzuela"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Arganzuela/Barrio/Delicias"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28045",
+			"street-address": "CALLE VILLA DEL PRADO 27"
+		},
+		"location": {
+			"latitude": 40.39951850544056,
+			"longitude": -3.6865740180088986
+		},
+		"organization": {
+			"organization-desc": "  Metro: Delicias (línea 3).  Cercanías RENFE: Delicias (líneas C1 y C10).",
+			"accesibility": "1",
+			"schedule": "Horario del centro:   De lunes a domingo, de 8 a 21 horas.  Cerrado 24, 25 y 31 de diciembre y 1 de enero.",
+			"services": "Puestos de lectura (aforo máximo): 50 personas. Sala con mesa con 6 asientos para reuniones o grupos de trabajo.",
+			"organization-name": "Sala de estudio Villa del Prado de Arganzuela"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/50444471-sala-estudio-centro-cultural-alfonso-ussia-hortaleza-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "50444471",
+		"title": "Sala de estudio del Centro Cultural Alfonso Ussía (Hortaleza)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=2707a2e757511a10VgnVCM100000891ecb1aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Hortaleza"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Hortaleza/Barrio/Valdefuentes"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28055",
+			"street-address": "CALLE JORDI SOLE TURA 34 Acceso por Calle Gustavo Pérez Puig, 87"
+		},
+		"location": {
+			"latitude": 40.49322972246395,
+			"longitude": -3.6078058002606808
+		},
+		"organization": {
+			"organization-desc": "Sala de estudio y lectura.  Consulte los siguientes enlaces:",
+			"accesibility": "1",
+			"schedule": "De lunes a domingo y festivos, de 9 a 22 horas.  24 y 31 de diciembre, de 9 a 15 horas. 25 de diciembre y 1 de enero, cerrado.",
+			"services": "Puestos de lectura: 100 plazas. Wifi.",
+			"organization-name": "Sala de estudio del Centro Cultural Alfonso Ussía (Hortaleza)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/11681766-sala-estudio-centro-cultural-galileo-chamberi-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "11681766",
+		"title": "Sala de estudio del Centro Cultural Galileo (Chamberí)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=15431d402a8a0810VgnVCM1000001d4a900aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Chamberi"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Chamberi/Barrio/Arapiles"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28015",
+			"street-address": "CALLE GALILEO 39"
+		},
+		"location": {
+			"latitude": 40.433719454283505,
+			"longitude": -3.7104468992841753
+		},
+		"organization": {
+			"organization-desc": "  Metro: Quevedo (línea 2)",
+			"accesibility": "1",
+			"schedule": "De lunes a domingo, de 8 a 21 horas.  Cerrado:  1 y 6 de enero. 1 y 2 de mayo. 15 de agosto. 12 de octubre. 25 de diciembre.",
+			"services": "Puestos de lectura: 53 Wifi",
+			"organization-name": "Sala de estudio del Centro Cultural Galileo (Chamberí)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/10107814-sala-estudio-lectura-arquitecto-juan-herrera-latina-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "10107814",
+		"title": "Sala de estudio y lectura Arquitecto Juan de Herrera (Latina)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=6a6c61366ded5510VgnVCM1000001d4a900aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Latina"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Latina/Barrio/PuertaAngel"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28011",
+			"street-address": "CALLE MARIA DEL CARMEN 65"
+		},
+		"location": {
+			"latitude": 40.406490364981074,
+			"longitude": -3.7327211933664923
+		},
+		"organization": {
+			"organization-desc": "  Metro: Alto de Extremadura (línea 6).",
+			"accesibility": "1",
+			"schedule": "Horario de funcionamiento del centro:   Lunes a viernes de 9 a 21:30 horas. Sábados de 10 a 13:30 horas. Sala de lectura abierta de 9:30 a 21 horas.   Horario de verano:   De julio a septiembre de 9 a 21 horas, de lunes a viernes (cerrado del 1 al 25 agosto) Sala de lectura abierta de 9:30 a 20 horas.",
+			"services": "Puestos de lectura: 20. Zona WIFI.",
+			"organization-name": "Sala de estudio y lectura Arquitecto Juan de Herrera (Latina)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/10107379-sala-estudio-lectura-cayetano-pando-latina-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "10107379",
+		"title": "Sala de estudio y lectura Cayetano Pando (Latina)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=f565aea7089d5510VgnVCM1000001d4a900aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Latina"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Latina/Barrio/Lucero"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28047",
+			"street-address": "CALLE CAYETANO PANDO 8"
+		},
+		"location": {
+			"latitude": 40.40281371620686,
+			"longitude": -3.746531777787898
+		},
+		"organization": {
+			"organization-desc": "  Metro: Lucero y Laguna (línea 6).  Cercanías RENFE: Laguna (línea C5).",
+			"accesibility": "0",
+			"schedule": "Cerrada del 15 de julio al 18 de agosto.    Horario:   De lunes a viernes, de 8 a 22 horas. Sábados, de 9 a 14 horas.",
+			"services": "Puestos de lectura: 40.",
+			"organization-name": "Sala de estudio y lectura Cayetano Pando (Latina)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/10107362-sala-estudio-lectura-cebreros-latina-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "10107362",
+		"title": "Sala de estudio y lectura Cebreros (Latina)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=7d52aea7089d5510VgnVCM1000001d4a900aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Latina"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Latina/Barrio/Lucero"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28011",
+			"street-address": "CALLE CEBREROS 66"
+		},
+		"location": {
+			"latitude": 40.40514111907651,
+			"longitude": -3.7484679433606063
+		},
+		"organization": {
+			"organization-desc": "  Metro: Lucero (línea 6), Batán (línea 10).",
+			"accesibility": "0",
+			"schedule": "Cerrada del 15 de julio al 16 de agosto.    Horario:   Lunes a viernes, de 8 a 22 horas.  Sábados, de 9 a 14 horas.",
+			"services": "Puestos de lectura: 63.",
+			"organization-name": "Sala de estudio y lectura Cebreros (Latina)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/8041433-sala-estudio-lectura-centro-sociocultural-latina.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "8041433",
+		"title": "Sala de estudio y lectura Centro Sociocultural Latina",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=9a9e1f61dd74d410VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Latina"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Latina/Barrio/LasAguilas"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28044",
+			"street-address": "CALLE RODRIGO DE ARANA 50"
+		},
+		"location": {
+			"latitude": 40.3796456555054,
+			"longitude": -3.7659493469010017
+		},
+		"organization": {
+			"organization-desc": "  Cercanías RENFE : Maestra Justa Freire-Polideportivo Aluche (línea C5) (antigua estación de Fanjul).",
+			"accesibility": "1",
+			"schedule": "Horario de verano:    Cerrado del 1 al 25 de agosto.   Julio, agosto y septiembre, de 9 a 21 horas.   En horario de funcionamiento del centro:  Lunes a viernes, de 9 a 21:30 horas. Sábados, de 9 a 13:30 horas.",
+			"services": "Puestos de lectura: 44. Zona WIFI.",
+			"organization-name": "Sala de estudio y lectura Centro Sociocultural Latina"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/12103923-sala-estudio-lectura-centro-sociocultural-teresa-calcuta-barajas-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "12103923",
+		"title": "Sala de estudio y lectura Centro Sociocultural Teresa de Calcuta (Barajas)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=986e63409e1ba810VgnVCM1000001d4a900aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Barajas"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Barajas/Barrio/AlamedaOsuna"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28042",
+			"street-address": "PLAZA NAVIO 4"
+		},
+		"location": {
+			"latitude": 40.455320740232835,
+			"longitude": -3.5876301858469386
+		},
+		"organization": {
+			"organization-desc": "  Metro: Alameda de Osuna (línea 5)",
+			"accesibility": "1",
+			"schedule": "Horario del centro:   De lunes a viernes, de 8:30 a 21:30 horas. Sábados, de 10 a 14 y de 16 a 21 horas. Domingos y festivos, de 10 a 14 y de 16 a 20 horas. Julio y agosto: de lunes a viernes, de 8:30 a 21:30 horas. Sábados, domingos y festivos de 10 a 14 horas.  24 y 31 de diciembre, de 10 a 13 horas.  25 de diciembre, 1 y 6 de enero, cerrado.",
+			"services": "Puestos de lectura: 24 Zona wifi",
+			"organization-name": "Sala de estudio y lectura Centro Sociocultural Teresa de Calcuta (Barajas)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/10107702-sala-estudio-lectura-escritor-pedro-repide-latina-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "10107702",
+		"title": "Sala de estudio y lectura Escritor Pedro de Répide (Latina)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=5e0861366ded5510VgnVCM1000001d4a900aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Latina"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Latina/Barrio/PuertaAngel"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28011",
+			"street-address": "CALLE MARIA DEL CARMEN 65"
+		},
+		"location": {
+			"latitude": 40.406490364981074,
+			"longitude": -3.7327211933664923
+		},
+		"organization": {
+			"organization-desc": "  Metro: Alto de Extremadura (línea 6).",
+			"accesibility": "1",
+			"schedule": "Horario del centro:   De lunes a viernes, de 9:30 a 21 horas. Sábados, de 10 a 13 horas. Verano: de lunes a viernes, de 9:30 a 20 horas. Domingos, festivos y tres primeras semanas de agosto cerrado.",
+			"services": "Puestos de lectura: 16. Zona WIFI.",
+			"organization-name": "Sala de estudio y lectura Escritor Pedro de Répide (Latina)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/12205090-sala-estudio-lectura-fuente-san-pedro-valderrivas.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "12205090",
+		"title": "Sala de estudio y lectura Fuente de San Pedro - Valderrivas",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=be775171e2b1c810VgnVCM2000001f4a900aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Vicalvaro"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Vicalvaro/Barrio/Valderrivas"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28032",
+			"street-address": "CALLE TITANIO 5"
+		},
+		"location": {
+			"latitude": 40.40218085880392,
+			"longitude": -3.60141148450391
+		},
+		"organization": {
+			"organization-desc": "  Consulta los siguientes enlaces:",
+			"accesibility": "1",
+			"schedule": "De lunes a viernes de 9 a 21:30 horas. Sábados, domingos y festivos de 9 a 20:30 horas.  Horario ininterrumpido. 24, 25, 31 de diciembre y 1, 6 de enero, cerrado.",
+			"services": "Puestos de lectura: 64 Zona wifi",
+			"organization-name": "Sala de estudio y lectura Fuente de San Pedro - Valderrivas"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/8041409-sala-estudio-lectura-jose-luis-sampedro-latina-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "8041409",
+		"title": "Sala de estudio y lectura José Luis Sampedro (Latina)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=a3e91f61dd74d410VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Latina"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Latina/Barrio/Lucero"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28047",
+			"street-address": "CALLE CASTROSERNA 4"
+		},
+		"location": {
+			"latitude": 40.40179182285599,
+			"longitude": -3.7491601722547996
+		},
+		"organization": {
+			"organization-desc": "  Metro: Laguna y Lucero (línea 6).  Cercanías RENFE: Laguna (línea C5).",
+			"accesibility": "1",
+			"schedule": "Horario del centro:   De lunes a viernes, de 9 a 21:30 horas. Sábados, de 9 a 13:30 horas. Verano: de lunes a viernes, de 9 a 20:30 horas. Domingos, festivos y tres primeras semanas de agosto cerrado.",
+			"services": "Puestos de lectura: 54. Zona WIFI.",
+			"organization-name": "Sala de estudio y lectura José Luis Sampedro (Latina)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/10107309-sala-estudio-lectura-maqueda-latina-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "10107309",
+		"title": "Sala de estudio y lectura Maqueda (Latina)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=afacaea7089d5510VgnVCM1000001d4a900aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Latina"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Latina/Barrio/Aluche"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28024",
+			"street-address": "CALLE MAQUEDA 5"
+		},
+		"location": {
+			"latitude": 40.39468264667264,
+			"longitude": -3.7646257427725063
+		},
+		"organization": {
+			"organization-desc": "  Metro: Campamento y Empalme (línea 5)",
+			"accesibility": "1",
+			"schedule": "Horario del centro:    De lunes a viernes, de 8 a 22 horas. Sábados, de 9 a 14 horas. Verano: cerrado del 15 de julio al 16 de agosto.",
+			"services": "Puestos de lectura: 68.",
+			"organization-name": "Sala de estudio y lectura Maqueda (Latina)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/8041448-sala-estudio-lectura-miguel-hernandez-latina-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "8041448",
+		"title": "Sala de estudio y lectura Miguel Hernández (Latina)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=b3431f61dd74d410VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Latina"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Latina/Barrio/LasAguilas"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28044",
+			"street-address": "CALLE SERRADILLA 13"
+		},
+		"location": {
+			"latitude": 40.378853797128336,
+			"longitude": -3.7819616113032115
+		},
+		"organization": {
+			"organization-desc": "  Cercanías RENFE:  Las Aguilas (línea C5).",
+			"accesibility": "1",
+			"schedule": "Horario del centro:   De lunes a viernes, de 9 a 21:30 horas. Sábados, de 9 a 13:30 horas. Verano: de lunes a viernes, de 9 a 21 horas. Domingos, festivos y tres primeras semanas de agosto cerrado.",
+			"services": "Puestos de lectura: 42.",
+			"organization-name": "Sala de estudio y lectura Miguel Hernández (Latina)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/10107172-sala-estudio-lectura-paseo-extremadura-latina-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "10107172",
+		"title": "Sala de estudio y lectura Paseo de Extremadura (Latina)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=ae857f23530d5510VgnVCM2000001f4a900aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Latina"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Latina/Barrio/PuertaAngel"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28011",
+			"street-address": "PASEO EXTREMADURA 128"
+		},
+		"location": {
+			"latitude": 40.411114989849736,
+			"longitude": -3.735811892940939
+		},
+		"organization": {
+			"organization-desc": "  Metro: Alto de Extremadura (línea 6).",
+			"accesibility": "0",
+			"schedule": "Cerrada del 15 de julio al 16 de agosto.    Horario:   Lunes a viernes, de 8 a 22 horas.  Sábados, de 9 a 14 horas.",
+			"services": "Puestos de lectura: 48.",
+			"organization-name": "Sala de estudio y lectura Paseo de Extremadura (Latina)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/8041514-sala-estudio-lectura-sara-montiel-latina-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "8041514",
+		"title": "Sala de estudio y lectura Sara Montiel (Latina)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=2cfd68daae74d410VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Latina"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Latina/Barrio/Campamento"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28024",
+			"street-address": "CARRETERA BOADILLA DEL MONTE 40"
+		},
+		"location": {
+			"latitude": 40.39950355569066,
+			"longitude": -3.775020201264123
+		},
+		"organization": {
+			"organization-desc": "  Metro: Colonia Jardín (líneas 10, Metro Ligero 2 y Metro Ligero 3).",
+			"accesibility": "1",
+			"schedule": "Horario del centro:   Lunes a viernes, de 9 a 21:30 horas. Sábados, de 9 a 13:30 horas. Verano: julio, agosto y septiembre, de 9 a 21 horas. Domingos, festivos y las tres primeras semanas de agosto, cerrado.",
+			"services": "Puestos de lectura: 54. Zona WIFI.",
+			"organization-name": "Sala de estudio y lectura Sara Montiel (Latina)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/7989332-sala-estudio-lectura-centro-cultural-californias-retiro-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "7989332",
+		"title": "Sala de estudio y lectura del Centro Cultural Las Californias (Retiro)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=1626bbe4eb1cc410VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Retiro"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Retiro/Barrio/Adelfas"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28007",
+			"street-address": "CALLE LUIS PEIDRO 2"
+		},
+		"location": {
+			"latitude": 40.3970232448735,
+			"longitude": -3.673525754770304
+		},
+		"organization": {
+			"organization-desc": "  Metro: Puente de Vallecas (línea 1) , Mendez Álvaro (línea 6)  Cercanías RENFE:  Mendez Álvaro Estación Sur (líneas C1, C5, C7, C10, Regional)",
+			"accesibility": "1,4",
+			"schedule": "Aforo de 55 personas. De lunes a viernes: 9 a 14 y de 16 a 22 horas. Sábados: de 10 a 14 y de 16 a 21 horas.  Cerrado los días: domingos, festivos, 24, 25 y 31 de diciembre.",
+			"services": "Puestos de lectura: En días laborales 36 puestos de estudio y el sábado 55.",
+			"organization-name": "Sala de estudio y lectura del Centro Cultural Las Californias (Retiro)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/4815242-sala-estudio-agata.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "4815242",
+		"title": "Sala de estudio Ágata",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=8a760c4d87558110VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Villaverde"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Villaverde/Barrio/SanAndres"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28021",
+			"street-address": "CALLE DOCTOR MARTIN AREVALO 2"
+		},
+		"location": {
+			"latitude": 40.34636268334182,
+			"longitude": -3.708524395897377
+		},
+		"organization": {
+			"organization-desc": "  Bus: 22, 79, 86, 130, 131",
+			"accesibility": "1",
+			"schedule": "Consultar telefónicamente.",
+			"services": "Puestos de lectura: 25",
+			"organization-name": "Sala de estudio Ágata"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/12684456-sala-estudios-casita-reloj-salamanca-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "12684456",
+		"title": "Sala de estudios Casita del Reloj (Salamanca)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=85cc4780d35f4910VgnVCM1000001d4a900aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Distrito"
+			},
+			"locality": "MADRID",			
+			"postal-code": "",
+			"street-address": "PARQUE QUINTA FUENTE DEL BERRO "
+		},
+		"location": {
+			"latitude": 40.42476290600173,
+			"longitude": -3.6608579170962035
+		},
+		"organization": {
+			"organization-desc": "  Consulta los siguientes enlaces",
+			"accesibility": "1",
+			"schedule": "De lunes a domingo de 9 a 21:30 horas. Festivos cerrado.",
+			"services": "Puestos de lectura: 19 Wiffi",
+			"organization-name": "Sala de estudios Casita del Reloj (Salamanca)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/12014804-sala-estudios-espacio-cultural-nunez-balboa-40-salamanca-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "12014804",
+		"title": "Sala de estudios Espacio Cultural Núñez de Balboa, 40 (Salamanca)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=a2e4bc30bbd28810VgnVCM2000001f4a900aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Salamanca"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Salamanca/Barrio/Recoletos"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28001",
+			"street-address": "CALLE NUÑEZ DE BALBOA 40"
+		},
+		"location": {
+			"latitude": 40.426826159507435,
+			"longitude": -3.6825349481985135
+		},
+		"organization": {
+			"organization-desc": "  Metro: Velázquez (línea 4), Serrano (línea 4)",
+			"accesibility": "1",
+			"schedule": "Horario del centro:   De lunes a domingo, de 7:30 a 21:45 horas. Festivos cerrado.",
+			"services": "N&amp;ordm; de puestos: 57 plazas Wifi",
+			"organization-name": "Sala de estudios Espacio Cultural Núñez de Balboa, 40 (Salamanca)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/4814317-sala-lectura-centro-sociocultural-canovas-castillo-usera-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "4814317",
+		"title": "Sala de lectura Centro sociocultural Cánovas del Castillo (Usera)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=b10c750b1c058110VgnVCM2000000c205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Usera"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Usera/Barrio/Almendrales"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28026",
+			"street-address": "CALLE JULIO AGUIRRE 10"
+		},
+		"location": {
+			"latitude": 40.38627312379031,
+			"longitude": -3.700074755609488
+		},
+		"organization": {
+			"organization-desc": "  Metro: Almendrales (línea 3).",
+			"accesibility": "1,4",
+			"schedule": "De lunes a viernes de 9 a 14 y de 15 a 21:30. Sábados de 9 a 14 horas. Domingos, festivos y agosto cerrado.",
+			"services": "Puestos de lectura: 20. Zona wifi.",
+			"organization-name": "Sala de lectura Centro sociocultural Cánovas del Castillo (Usera)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/4815493-sala-lectura-pilares-barajas-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "4815493",
+		"title": "Sala de lectura Pilares (Barajas)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=747e48136c558110VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Barajas"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Barajas/Barrio/CascoHBarajas"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28042",
+			"street-address": "CALLE LOS PILARES 3"
+		},
+		"location": {
+			"latitude": 40.47505259096345,
+			"longitude": -3.5777887189944315
+		},
+		"organization": {
+			"organization-desc": "  Metro: Barajas (línea 8)",
+			"accesibility": "1",
+			"schedule": "De lunes a viernes, de 8 a  21 horas, ininterrumpidamente",
+			"services": "Puestos de lectura: 72 Wifi",
+			"organization-name": "Sala de lectura Pilares (Barajas)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/11947734-sala-trabajo-lectura-centro-cultural-emilia-pardo-bazan.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "11947734",
+		"title": "Sala de trabajo y lectura Centro Cultural Emilia Pardo Bazán",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=fa9a1901ba1a6810VgnVCM1000001d4a900aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Salamanca"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Salamanca/Barrio/Recoletos"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28001",
+			"street-address": "CALLE GOYA 1 PLANTA Subterráneo"
+		},
+		"location": {
+			"latitude": 40.42585800515975,
+			"longitude": -3.689601594290468
+		},
+		"organization": {
+			"organization-desc": "  Metro: Colón (línea 4), Serrano (línea 4)  Aparcamiento: Colón (2), Plaza de Colón",
+			"accesibility": "1",
+			"schedule": "De lunes a domingo, de 7:30  a 21:45 horas. Festivos cerrado.",
+			"services": "Número de plazas: 57 Zona wifi Máquinas de café y refrescos",
+			"organization-name": "Sala de trabajo y lectura Centro Cultural Emilia Pardo Bazán"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/5753771-salas-estudio-centro-cultural-pozo-tio-raimundo-puente-vallecas-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "5753771",
+		"title": "Salas de estudio Centro Cultural Pozo del tío Raimundo (Puente de Vallecas)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=9a831c35f67a9210VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/PuenteDeVallecas"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/PuenteDeVallecas/Barrio/Entrevias"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28053",
+			"street-address": "AVENIDA GLORIETAS 19"
+		},
+		"location": {
+			"latitude": 40.37381624358889,
+			"longitude": -3.6599325731670977
+		},
+		"organization": {
+			"organization-desc": "  Cercanías Renfe: El Pozo (línea C2)",
+			"accesibility": "1",
+			"schedule": "De lunes a viernes, de 8:30 a 21:30 horas. Sábados, de 10 a 13:45 y de 16 a 19 horas. Domingos y festivos, de 10 a 13:45 horas.",
+			"services": "Puestos de lectura: 10 Zona wifi",
+			"organization-name": "Salas de estudio Centro Cultural Pozo del tío Raimundo (Puente de Vallecas)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/7988710-salas-estudio-centro-cultural-mercado-ibiza-retiro-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "7988710",
+		"title": "Salas de estudio Centro cultural Mercado de Ibiza (Retiro)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=ddfec642771cc410VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Retiro"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/Retiro/Barrio/Ibiza"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28009",
+			"street-address": "CALLE IBIZA 8 PLANTA 1ª"
+		},
+		"location": {
+			"latitude": 40.41817872037522,
+			"longitude": -3.677376337125393
+		},
+		"organization": {
+			"organization-desc": "  Metro: Ibiza (línea 9)",
+			"accesibility": "1",
+			"schedule": "De lunes a viernes, de 9 a 14 y de 16:30 a 20:30 horas. Sábados de 9 a 14 horas. Domingos, festivos, agostro y los días: 24 y 31 de diciembre, cerrada.",
+			"services": "Puestos de lectura: 30 y 50  Zona wifi",
+			"organization-name": "Salas de estudio Centro cultural Mercado de Ibiza (Retiro)"
+		}
+	},
+	{
+		"@id": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/8071910-salas-estudio-miguel-cervantes-san-blas-canillejas-.json",
+		"@type": "https://datos.madrid.es/egob/kos/entidadesYorganismos/SalasEstudioLectura",
+		"id": "8071910",
+		"title": "Salas de estudio Miguel de Cervantes (San Blas - Canillejas)",
+		"relation": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=4ef476e159ead410VgnVCM1000000b205a0aRCRD",		
+		"address": {
+			"district": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/SanBlas-Canillejas"
+			},
+			"area": {
+				"@id": "https://datos.madrid.es/egob/kos/Provincia/Madrid/Municipio/Madrid/Distrito/SanBlas-Canillejas/Barrio/Canillejas"
+			},
+			"locality": "MADRID",			
+			"postal-code": "28022",
+			"street-address": "CALLE ALIAGA 5"
+		},
+		"location": {
+			"latitude": 40.4366557020283,
+			"longitude": -3.6113517282299217
+		},
+		"organization": {
+			"organization-desc": "  Consultar los siguientes enlaces:",
+			"accesibility": "1",
+			"schedule": "De lunes a viernes, de 10 a 21 horas. Sábado, domingo y festivos, de 10 a 14:30 y de 16:30 a 20 horas. 24, 25, 31 de diciembre y 1 de enero, cerrado.",
+			"services": "Puestos de lectura: 126 Zona wifi",
+			"organization-name": "Salas de estudio Miguel de Cervantes (San Blas - Canillejas)"
+		}
+	}	  
+  ]
+}

@@ -5,6 +5,7 @@ import type { LibraryListItem } from "@/lib/filters";
 import { formatDistance } from "@/lib/geo";
 import { formatRelativeTime, hasRoom } from "@/lib/occupancy";
 import { InstitutionBadge, LevelText, OccupancyPill } from "./Badges";
+import { CapacityText } from "./CapacityText";
 
 function SkeletonCard() {
   return (
@@ -110,6 +111,7 @@ export function LibraryList({
                   </span>
                   <span className="mt-1.5 flex flex-wrap items-center gap-1.5">
                     <LevelText status={library.occupancy} />
+                    <CapacityText library={library} className="text-xs font-medium text-slate-600" />
                     {library.occupancy?.final_occupancy_pct != null && (
                       <span className="text-[11px] text-slate-400">
                         {library.estimatedLocally ? "estimación horaria" : formatRelativeTime(library.occupancy.updated_at, now)}

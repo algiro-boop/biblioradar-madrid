@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
+<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=7" />
+	
+
+
+
+	 	
+	<title>Directorio de bibliotecas de la Comunidad de Madrid &gt; 
+             	    	    		Datos de biblioteca
+    	    </title>
+
+		
+ 		
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Language" content="es" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link href="../css/comun_defaults.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_menu.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_arboles.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_mensajes.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_paginacion.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_tooltips.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_campos.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_tabs.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_dl.css" rel="stylesheet" type="text/css" />
+<link href="../css/adicional_menu.css" rel="stylesheet" type="text/css" />
+
+
+
+
+<script type="text/javascript">
+	var root = "..";
+	var root_i18n = "..";
+</script>
+
+
+
+<script type="text/javascript" src="../js/prototype.js"></script>
+<script type="text/javascript" src="../js/window.js"></script>
+<script type="text/javascript" src="../js/botones.js"></script>
+<script type="text/javascript" src="../js/i18n.js"></script>
+<script type="text/javascript" src="../js/nodos.js"></script>
+
+<script type="text/javascript">	
+	function ocultarDetalleGrupo()
+	{
+		alAbrirCerrarDetalle(true);
+
+		var elem = $("contenedor_detalle");
+		if(elem!=null){
+			var vis = elem.style; 
+			vis.display='none';
+		}
+		$('contenido_detalle').hide();
+	}
+	function ocultarEdicionGrupo()
+	{
+		var elem = $("boton_edicion_grupo");
+		if(elem!=null){
+			var vis = elem.style; 
+			vis.display='none';
+		}
+	}
+</script>
+
+
+		<script type="text/javascript" src="../js/i18n.cmd?fichero=validacion_campos_i18n.vm"></script>
+	<script type="text/javascript" src="../js/validacion_campos.js"></script>		
+	
+	<link href="../css/registro_marc.css" rel="stylesheet" type="text/css" />
+	<link href="../css/formatos.css" rel="stylesheet" type="text/css" />
+	<link href="../css/formatos_com.css" rel="stylesheet" type="text/css" />
+
+	<script type="text/javascript" src="../js/window.js"></script>
+
+	<script type="text/javascript" src="../js/calendario_ficha.js"></script>
+	
+			</head>
+
+<body>
+	
+<div id="pagina">
+
+ <div id="public">  <div id="comunidad"> 
+<div id="pagina_contenido0">
+	<div id="pagina_contenido">
+	    		<div class="identificacion_menu">
+									
+							<a href="../seguridad/form_login.cmd?destino=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D51">Bibliotecas</a>
+					</div>		    
+
+	    <h1 id="web_route">
+	    			    	
+            	    	       		<span class="webroute_current">Datos de biblioteca</span>
+       	    	        	    </h1>
+									
+	    	    <div id="contenido">
+			<div class="vacio"></div>				
+	<div id="consulta_registro">
+		<div class="registro_acciones">
+						
+			
+					<div class="datos_estadisticos">
+
+		</div>	
+
+   				   		
+    		<div class="registro_acciones">
+					<form name="formExport" action="../bibliotecas/operacion_seleccion.cmd"  method='post' >
+	
+					<input type="hidden" name="sel51" value="on" />
+					<input type="hidden" name="destino" value="../comunidades/registro.cmd?id=51" />
+										<span class="opciones_resultados">
+						<label for="operacion">Operación: </label>
+						<select name="operacion" id="operacion">
+							<option value="bibliotecas/imprimir">Imprimir ficha</option>
+													<option value="comunidades/exportar_registros">Exportar</option>
+																								
+					
+																			<option value="comunidades/add_cesta_seleccion">Añadir a Mis Seleccionados</option>
+												</select>
+						
+		    									 					<span class="boton_aceptar">
+	    	    		<input type="submit" name="aceptar" id='boton_aceptar' class="submit_boton" onmouseover="cambiarEstilo(this,'submit_boton_over', 'submit_boton', true);" onfocus="cambiarEstilo(this,'submit_boton_over', 'submit_boton', true);" onmouseout="cambiarEstilo(this,'submit_boton_over', 'submit_boton', false);" onblur="cambiarEstilo(this,'submit_boton_over', 'submit_boton', false);" value="Aceptar" />
+    	    	</span>
+					</span>
+					</form>
+       		</div>
+		</div>
+   		<div class="registro_datos">
+			<div class="registro_com">
+	            	    	        <div class="ficha"><h2>Biblioteca Pública Latina "Antonio Mingote"</h2><div id="tabs_ficha"><div class="tabpanel_container"><div class="tab_panel" id="datos_basicos"><h2>Datos básicos</h2><p class="imagen_favorita"><a href="../catalogo_imagenes/grupo.cmd?path=37&amp;idRegistro=51" ><img src="../catalogo_imagenes/imagen_id.cmd?formato=jpg&altoMaximo=200&anchoMaximo=200&idImagen=199" alt="Imagen de la biblioteca" /></a><br /><a href="../catalogo_imagenes/galeria.cmd?path=37&amp;idRegistro=51" >Galería imágenes</a></p><div class="direccion"><p class="ficha_valor"><span class="etiqueta">Dirección:  </span><span class="valor">C/ Rafael Finat, 51<br />28044 Madrid (Madrid)<br />España<br />Tel.: 915093625<br />E-mail:<a class="enlace_externo" href="mailto: bib.latina@madrid.org"> bib.latina@madrid.org</a> <br /><a class="enlace_externo" target="_blank" href="http://maps.google.es/maps?f=q&hl=es&q=rafael+finat,+51,+28034,+Madrid,+Madrid,+Comunidad+de+Madrid,+Espa%C3%B1a&ie=UTF8&z=17&ll=40.380519,-3.768461&spn=0.004372,0.012102&om=1&iwloc=A">Mapa Localización</a><br /><a class="enlace_externo" target="_blank" href="https://www.comunidad.madrid/centros/biblioteca-antonio-mingote">Sitio Web</a><br /></span></p></div><div class="separador_imagenes"></div><div class="transporte"><p class="ficha_valor"><span class="etiqueta">Transportes:  </span><span class="valor"><span class="texto_transportes"><span class="icono_transportes"><img src="../img/iconos/transporte_metro.gif" alt="metro" /> </span>Aluche</span><br /><span class="texto_transportes"><span class="icono_transportes"><img src="../img/iconos/transporte_cercanias.gif" alt="cercanias" /> </span>Maestra Justa Freire-Polideportivo Aluche</span><br /><span class="texto_transportes"><span class="icono_transportes"><img src="../img/iconos/transporte_urbano.gif" alt="urbano" /> </span>17, 34, 39, 138, 139</span></span></p></div><div class="horario_accesibilidad"><p class="ficha_valor"><span class="etiqueta">Horarios:  </span><span class="valor">DE LUNES A VIERNES: 9:00 a 21:00 h y SÁBADOS: 09.00 a 14.00 h. <br />Todos los días los servicios de préstamo y acceso a internet finalizarán 15 minutos antes del cierre.  <br />DÍAS DE CIERRE DE LA BIBLIOTECA (2026): SÁBADOS: 4 de abril; 16 de mayo; todos los sábados de julio, agosto y septiembre.;26 de diciembre; DOMINGOS: todos; FESTIVOS:1 de enero; 6 de enero: 2 y 3 de abril; 1, 2 y 15 mayo; 12 octubre; 2 y 9 de noviembre; 7,8 y 25 de diciembre. OTROS: 24 y 31 de diciembre. <br /> </span></p><p class="ficha_valor"><span class="etiqueta">Accesible:  </span><span class="valor"><img class="icono_accesibilidad" src="../img/iconos/accesibilidad.gif" alt="Biblioteca con accesibilidad" /> </span></p></div><div class="separador_transp_horario"></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Otros nombres:  </span><span class="valor">Biblioteca Pública Latina</span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Entidad responsable:  </span><span class="valor">Consejería de Cultura, Turismo y Deporte. Dirección General de Patrimonio Cultural y Oficina del Español. Subdirección General del Libro</span></p></div><div class="fechas"><p class="ficha_valor"><span class="etiqueta">La Biblioteca en fechas:  </span><span class="valor">Creación: 1997</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Historia:  </span><span class="valor">Inaugurada el 19 de febrero de 1997. Diseñada por el arquitecto Francisco Rodriguez <br />Partearroyo, vino a sustituir a la antigua Biblioteca Pública de Aluche, que ni por<br /> el volúmen de sus fondos, ni por su ubicación, en un piso de reducidas dimensiones, resultaba adecuada <br />para cubrir las necesidades de la población del entorno.<br /><br /><br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Ubicación:  </span><span class="valor">Madrid - Latina</span></p></div><div class="administrativa"><p class="ficha_valor"><span class="etiqueta">Tipo y titularidad:  </span><span class="valor">Tipo biblioteca: Pública - Punto de servicio fijo<br />Tipo administración: Administración Autonómica</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Datos municipales:  </span><span class="valor">Estadísticas: <a class="enlace_externo" target="_blank" href="https://gestiona.comunidad.madrid/desvan/almudena/BuscarMunicipios.icm?codFicha=1&codSolapaActiva=1">Datos estadísticos básicos</a></span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Forma de acceso:  </span><span class="valor">Acceso libre</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Red de bibliotecas:  </span><span class="valor">Bibliotecas Públicas de la Comunidad de Madrid</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Fecha de actualización del registro:  </span><span class="valor">27/09/2026</span></p></div></span></p></div><div class="tab_panel" id="instalaciones_servicios"><h2>Instalaciones y servicios</h2><div class="direccion"><p class="ficha_valor"><span class="etiqueta">Edificio:  </span><span class="valor">Superficie útil: 3.298,00 metros cuadrados. Superficie útil de uso bibliotecario: 2.638,00 metros cuadrados. <br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Instalaciones y servicios:  </span><span class="valor"><strong>Sala adultos o principal</strong>: Capacidad: 108. Puestos de atención: 6.<br /><br /><strong>Internet</strong>: Capacidad: 18.<br /><br /><strong>Salón de actos</strong>: Capacidad: 130.<br /><br /><strong>Sala infantil/juvenil</strong>: Capacidad: 49. Puestos de atención: 1. Otra información: El Auxiliar de Bibliotecas atiende las informaciones de los usuarios y cuando necesita ayuda recurre a los ayudantes de la sala general.<br /><br /><strong>Hemeroteca</strong>: Capacidad: 27.<br /><br /><strong>Sala-taller</strong>: Capacidad: 12. Otra información: EN ESTE TALLER HAY DVD.<br /><br /><strong>Otras instalaciones</strong>: Capacidad: 24. Otra información: 16 puestos de lectura informal y 10 de comiteca.<br /><br /><strong>Depósitos</strong>:<br /><br /><strong>Audiovisuales y materiales especiales</strong>: Capacidad: 2.<br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Equipamiento:  </span><span class="valor"><strong>Ordenadores con acceso a OPAC</strong>: Nº Unidades públicas: 6. <br /><br /><strong>Ordenadores con acceso a Internet</strong>: Nº Unidades públicas: 18. <br /><br /><strong>Escáneres</strong>: Otra Información: 1 es para las reclamaciones. <br /><br /><strong>Fotocopiadoras</strong>: Nº Unidades públicas: 1. <br /><br /><strong>Impresoras</strong>: Otra Información: 2 impresoras son de Repu ( para dar los puestos de internet). <br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Servicios en red:  </span><span class="valor"> Sitio web <a class="enlace_externo" target="_blank" href=" https://www.comunidad.madrid/centros/biblioteca-antonio-mingote"> https://www.comunidad.madrid/centros/biblioteca-antonio-mingote</a> Descripción: Portal del Lector. <br /> Catálogo en Internet <a class="enlace_externo" target="_blank" href=" https://gestiona.comunidad.madrid/biblio_publicas/cgi-bin/abnetopac?SUBC=BPM/BP10"> https://gestiona.comunidad.madrid/biblio_publicas/cgi-bin/abnetopac?SUBC=BPM/BP10</a><br /> <a class="enlace_externo" target="_blank" href="https://www.comunidad.madrid/portal-lector/comunicacion/actividades?f%5B0%5D=biblioteca%3ABiblioteca%20P%C3%BAblica%20Antonio%20Mingote%20%28Latina%29">https://www.comunidad.madrid/portal-lector/comunicacion/actividades?f%5B0%5D=biblioteca%3ABiblioteca%20P%C3%BAblica%20Antonio%20Mingote%20%28Latina%29</a> Descripción: Agenda de actividades. <br /> Otras <a class="enlace_externo" target="_blank" href=" https://www.instagram.com/libroscmadrid"> https://www.instagram.com/libroscmadrid</a> Descripción: Instagram. <br /> Otras <a class="enlace_externo" target="_blank" href=" https://x.com/LibrosCMadrid   "> https://x.com/LibrosCMadrid   </a> Descripción: X. <br />Acceso a Internet inalámbrico: Si. </span></p></div></span></p></div><div class="tab_panel" id="colecciones"><h2>Colecciones</h2><div class="fondos"><p class="ficha_valor"><span class="etiqueta">Fondos:  </span><span class="valor">Total fondos biblioteca: 131.330<br />Fecha actualización de datos acumulados: 27/09/2026<br /><br />Libros y folletos: 112.892<br />Vídeos: 3<br />DVD Vídeos: 11.098<br />Documentos sonoros (discos compactos): 5.842<br />Documentos sonoros (casetes y vinilos): 5<br />Electrónicos: CD-ROM: 562<br />Electrónicos: DVD-ROM: 211<br />Otros documentos electrónicos: 4<br />Carteles, fotografías, etc.: 6<br />Música impresa: 2<br />Documentos cartográficos: 609<br />Publicaciones periódicas: 96</span></p></div></span></p></div><div class="tab_panel" id="identificacion"><h2>Número de registro</h2><div class="control"><p class="ficha_valor"><span class="etiqueta">Número de control:  </span><span class="valor">0107960001</span></p></div><div class="texto"><p class="ficha_valor"><span class="etiqueta">Campos texto:  </span><span class="valor">3.351,00 m2 (datos de Proyectos y Obras)<br />40,3794763<br />-3,769469</span></p></div></span></p></div></div></div></div><script type="text/javascript">
+addFuncionOnLoad (function() {
+    createTabbedPanel('tabs_ficha', 'h2');
+});
+</script>
+	            			</div>
+       	</div>
+	</div>
+
+	        		        		        		    	
+			<div class="vacio"></div>
+		    	</div>
+    	
+	    </div>
+    </div>
+    
+        <div id="cabecera">
+	<div id="imagen_dcha_cabecera">
+		<img src="../img/cabecera/cabecera_dir.gif" alt="Dirección general de archivos, museos y bibliotecas. Consejería de cultura y turismo. Comunidad de Madrid"/> 
+
+	</div>	
+	
+	<div id="imagen_cabecera">
+
+	</div>	
+</div>
+<!--
+<div class="identificacion_menu">
+			
+			<a href="../seguridad/form_login.cmd?destino=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D51">Bibliotecas</a>
+	</div>
+-->    
+        <div id="menu_principal">
+    	    			        	<h1 class="menu_titulo">Menú</h1>
+		            	
+
+
+
+<div class="menu">
+						<ul class="menu_element">
+    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/busqueda.cmd">Búsqueda</a> 
+					        			        		</li>
+        	    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/busqueda_avanzada.cmd">Búsqueda Avanzada</a> 
+					        			        		</li>
+        	    	    		    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/registros.cmd">Listado Completo</a> 
+					        			        		</li>
+        	    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    	</ul>
+    	</div>
+
+                    </div>
+    
+        <div id="pie">
+    <div class="estandares">
+        <a href="http://validator.w3.org/check/referer"><img
+        src="../img/iconos_estandares/valid-xhtml10.gif" alt='Validado XHTML 1.0' /></a>
+        
+        <a href="http://jigsaw.w3.org/css-validator/"><img
+        src="../img/iconos_estandares/valid-css.gif" alt='CSS validado' /></a>
+
+		<a href="http://www.w3.org/WAI/WCAG1AA-Conformance" title='Explicación del Nivel Doble-A de Conformidad'><img 
+		src="../img/iconos_estandares/dobleA.gif" alt='Icono de conformidad con el Nivel Doble-A, de las Directrices de Accesibilidad para el Contenido Web 1.0 del W3C-WAI' /></a>
+    	
+    		        	<a href="http://www.tawdis.net/servlets/taw?url=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D51"><img src="../img/iconos_estandares/taw.gif" alt='Validado por TAW' /></a>
+    </div>
+					<script type="text/javascript">
+			ocultarDetalleGrupo();
+		</script>
+		<script type="text/javascript">
+		ocultarEdicionGrupo();
+	</script>    
+</div>
+
+ </div>  </div> </div>
+</body>
+</html>

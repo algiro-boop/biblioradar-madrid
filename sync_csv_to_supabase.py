@@ -366,6 +366,36 @@ def apply_opening_exceptions(rows: list[dict], exceptions: dict) -> None:
         row["opening_hours"]["date_overrides"].update(validated.get(row["name"], {}))
 
 
+def apply_verified_capacities(rows: list[dict], audit: list[dict]) -> None:
+    """Exact name coverage; unknown capacities always overwrite earlier values with null."""
+    if not isinstance(audit, list) or any(
+        not isinstance(item, dict)
+        or not isinstance(item.get("name"), str)
+        or "capacity" not in item
+        for item in audit
+    ):
+        raise ValueError("Auditoría de capacidades inválida")
+    indexed = {item["name"]: item for item in audit}
+    if len(indexed) != len(audit) or set(indexed) != {row["name"] for row in rows}:
+        raise ValueError(
+            "La auditoría debe cubrir exactamente los nombres del catálogo, sin duplicados"
+        )
+    for item in audit:
+        capacity = item["capacity"]
+        if capacity is not None and (
+            type(capacity) is not int
+            or not 0 < capacity <= 2147483647
+            or item.get("reason") != "verified_explicit_total"
+            or not isinstance(item.get("raw_evidence_text"), str)
+            or not item["raw_evidence_text"].strip()
+            or not isinstance(item.get("source_url"), str)
+            or not item["source_url"].startswith("https://")
+        ):
+            raise ValueError(f"Capacidad sin evidencia oficial verificada: {item['name']}")
+    for row in rows:
+        row["total_capacity"] = indexed[row["name"]]["capacity"]
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("csv", type=Path)
@@ -407,11 +437,27 @@ def main(argv: list[str] | None = None) -> int:
         default=Path(__file__).resolve().parent / "data/csv/curve_provenance.json",
         help="Procedencia de las curvas estimadas por referencia",
     )
+    parser.add_argument(
+        "--capacities-audit",
+        type=Path,
+        default=Path(__file__).resolve().parent / "data/csv/verified_capacities_audit.json",
+        help="Auditoría oficial obligatoria; sin capacidad verificada se sincroniza null",
+    )
     args = parser.parse_args(argv)
     try:
         if args.expected_rows < 88:
             raise ValueError("El catálogo completo debe contener al menos 88 centros")
         rows = read_csv(args.csv, expected_rows=args.expected_rows)
+        capacities = json.loads(args.capacities_audit.read_text())
+        apply_verified_capacities(rows, capacities)
+        from scripts.verify_official_capacities import verify_evidence
+
+        source_manifest = json.loads(args.capacities_audit.with_suffix(".sources.json").read_text())
+        verify_evidence(
+            capacities,
+            source_manifest["downloads"],
+            args.capacities_audit.parent / "capacity_sources",
+        )
         apply_opening_exceptions(rows, json.loads(args.opening_exceptions.read_text()))
         apply_curve_provenance(rows, json.loads(args.curve_provenance.read_text()))
         client = None
@@ -434,7 +480,7 @@ def main(argv: list[str] | None = None) -> int:
             while True:
                 page = (
                     client.table("libraries")
-                    .select("id,name,address,lat,lng")
+                    .select("id,name,address,lat,lng,total_capacity")
                     .order("id")
                     .range(len(catalog), len(catalog) + 499)
                     .execute()
@@ -466,6 +512,11 @@ def main(argv: list[str] | None = None) -> int:
                 row["opening_hours"]["holidays"] = holidays
         plan = {
             "csv_sha256": hashlib.sha256(args.csv.read_bytes()).hexdigest(),
+            "capacities_audit_sha256": hashlib.sha256(
+                args.capacities_audit.read_bytes()
+            ).hexdigest(),
+            "verified_capacities": sum(row["total_capacity"] is not None for row in resolved),
+            "null_capacities": sum(row["total_capacity"] is None for row in resolved),
             "created_at": datetime.now(timezone.utc).isoformat(),
             "matched": len(resolved),
             "new_ids": sorted(new_ids),
@@ -497,6 +548,21 @@ def main(argv: list[str] | None = None) -> int:
                 )
                 .execute()
                 .data
+            )
+            stored = (
+                client.table("libraries")
+                .select("id,total_capacity")
+                .eq("is_active", True)
+                .execute()
+                .data
+            )
+            expected = {row["id"]: row["total_capacity"] for row in resolved}
+            if {row["id"]: row["total_capacity"] for row in stored} != expected:
+                raise ValueError(
+                    "Las capacidades almacenadas no coinciden exactamente con la auditoría"
+                )
+            print(
+                f"Capacidades verificadas en Supabase: {plan['verified_capacities']} enteros, {plan['null_capacities']} null"
             )
         else:
             print("Simulación: no se ha modificado Supabase. Usa --apply tras revisar el plan.")

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
+<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=7" />
+	
+
+
+
+	 	
+	<title>Directorio de bibliotecas de la Comunidad de Madrid &gt; 
+             	    	    		Datos de biblioteca
+    	    </title>
+
+		
+ 		
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Language" content="es" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link href="../css/comun_defaults.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_menu.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_arboles.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_mensajes.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_paginacion.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_tooltips.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_campos.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_tabs.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_dl.css" rel="stylesheet" type="text/css" />
+<link href="../css/adicional_menu.css" rel="stylesheet" type="text/css" />
+
+
+
+
+<script type="text/javascript">
+	var root = "..";
+	var root_i18n = "..";
+</script>
+
+
+
+<script type="text/javascript" src="../js/prototype.js"></script>
+<script type="text/javascript" src="../js/window.js"></script>
+<script type="text/javascript" src="../js/botones.js"></script>
+<script type="text/javascript" src="../js/i18n.js"></script>
+<script type="text/javascript" src="../js/nodos.js"></script>
+
+<script type="text/javascript">	
+	function ocultarDetalleGrupo()
+	{
+		alAbrirCerrarDetalle(true);
+
+		var elem = $("contenedor_detalle");
+		if(elem!=null){
+			var vis = elem.style; 
+			vis.display='none';
+		}
+		$('contenido_detalle').hide();
+	}
+	function ocultarEdicionGrupo()
+	{
+		var elem = $("boton_edicion_grupo");
+		if(elem!=null){
+			var vis = elem.style; 
+			vis.display='none';
+		}
+	}
+</script>
+
+
+		<script type="text/javascript" src="../js/i18n.cmd?fichero=validacion_campos_i18n.vm"></script>
+	<script type="text/javascript" src="../js/validacion_campos.js"></script>		
+	
+	<link href="../css/registro_marc.css" rel="stylesheet" type="text/css" />
+	<link href="../css/formatos.css" rel="stylesheet" type="text/css" />
+	<link href="../css/formatos_com.css" rel="stylesheet" type="text/css" />
+
+	<script type="text/javascript" src="../js/window.js"></script>
+
+	<script type="text/javascript" src="../js/calendario_ficha.js"></script>
+	
+			</head>
+
+<body>
+	
+<div id="pagina">
+
+ <div id="public">  <div id="comunidad"> 
+<div id="pagina_contenido0">
+	<div id="pagina_contenido">
+	    		<div class="identificacion_menu">
+									
+							<a href="../seguridad/form_login.cmd?destino=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D462">Bibliotecas</a>
+					</div>		    
+
+	    <h1 id="web_route">
+	    			    	
+            	    	       		<span class="webroute_current">Datos de biblioteca</span>
+       	    	        	    </h1>
+									
+	    	    <div id="contenido">
+			<div class="vacio"></div>				
+	<div id="consulta_registro">
+		<div class="registro_acciones">
+						
+			
+					<div class="datos_estadisticos">
+
+		</div>	
+
+   				   		
+    		<div class="registro_acciones">
+					<form name="formExport" action="../bibliotecas/operacion_seleccion.cmd"  method='post' >
+	
+					<input type="hidden" name="sel462" value="on" />
+					<input type="hidden" name="destino" value="../comunidades/registro.cmd?id=462" />
+										<span class="opciones_resultados">
+						<label for="operacion">Operación: </label>
+						<select name="operacion" id="operacion">
+							<option value="bibliotecas/imprimir">Imprimir ficha</option>
+													<option value="comunidades/exportar_registros">Exportar</option>
+																								
+					
+																			<option value="comunidades/add_cesta_seleccion">Añadir a Mis Seleccionados</option>
+												</select>
+						
+		    									 					<span class="boton_aceptar">
+	    	    		<input type="submit" name="aceptar" id='boton_aceptar' class="submit_boton" onmouseover="cambiarEstilo(this,'submit_boton_over', 'submit_boton', true);" onfocus="cambiarEstilo(this,'submit_boton_over', 'submit_boton', true);" onmouseout="cambiarEstilo(this,'submit_boton_over', 'submit_boton', false);" onblur="cambiarEstilo(this,'submit_boton_over', 'submit_boton', false);" value="Aceptar" />
+    	    	</span>
+					</span>
+					</form>
+       		</div>
+		</div>
+   		<div class="registro_datos">
+			<div class="registro_com">
+	            	    	        <div class="ficha"><h2>Biblioteca Pública Villa de Vallecas "Luis Martín Santos"</h2><div id="tabs_ficha"><div class="tabpanel_container"><div class="tab_panel" id="datos_basicos"><h2>Datos básicos</h2><p class="imagen_favorita"><a href="../catalogo_imagenes/grupo.cmd?path=41&amp;idRegistro=462" ><img src="../catalogo_imagenes/imagen_id.cmd?formato=jpg&altoMaximo=200&anchoMaximo=200&idImagen=140" alt="Imagen de la biblioteca" /></a><br /><a href="../catalogo_imagenes/galeria.cmd?path=41&amp;idRegistro=462" >Galería imágenes</a></p><div class="direccion"><p class="ficha_valor"><span class="etiqueta">Dirección:  </span><span class="valor">Plaza Antonio María Segovia, nº 2, local 10<br />28031 Madrid (Madrid)<br />España<br />Tel.: 912760231<br />E-mail:<a class="enlace_externo" href="mailto: bib.villavallecas@madrid.org"> bib.villavallecas@madrid.org</a> <br /><a class="enlace_externo" target="_blank" href="https://www.google.es/maps/place/Biblioteca+P%C3%BAblica+Villa+de+Vallecas+'Luis+Mart%C3%ADn+Santos'/@40.380945,-3.6161797,17z/data=!3m1!4b1!4m5!3m4!1s0xd422504903ff4db:0x2e624d7c12098e42!8m2!3d40.3809409!4d-3.613991?hl=es">Mapa Localización</a><br /><a class="enlace_externo" target="_blank" href="https://www.comunidad.madrid/centros/biblioteca-luis-martin-santos">Sitio Web</a><br /></span></p></div><div class="separador_imagenes"></div><div class="transporte"><p class="ficha_valor"><span class="etiqueta">Transportes:  </span><span class="valor"><span class="texto_transportes"><span class="icono_transportes"><img src="../img/iconos/transporte_metro.gif" alt="metro" /> </span>Villa de Vallecas</span><br /><span class="texto_transportes"><span class="icono_transportes"><img src="../img/iconos/transporte_cercanias.gif" alt="cercanias" /> </span>Santa Eugenia C1, C2, C7</span><br /><span class="texto_transportes"><span class="icono_transportes"><img src="../img/iconos/transporte_urbano.gif" alt="urbano" /> </span>58</span></span></p></div><div class="horario_accesibilidad"><p class="ficha_valor"><span class="etiqueta">Horarios:  </span><span class="valor">DE LUNES A VIERNES:: 9:00 a 21:00 h. <br />FINES DE SEMANA Y FESTIVOS:: 11:00 a 19:00 h. <br />Todos los días los servicios de préstamo y acceso a internet finalizarán 15 minutos antes del cierre. <br />DIAS DE CIERRE DE LA BIBLIOTECA (2026): 1 y 6 de enero; 1 de mayo; fines de semana y festivos del mes de agosto; 24, 25 y 31 de diciembre. <br /> </span></p><p class="ficha_valor"><span class="etiqueta">Accesible:  </span><span class="valor"><img class="icono_accesibilidad" src="../img/iconos/accesibilidad.gif" alt="Biblioteca con accesibilidad" /> </span></p></div><div class="separador_transp_horario"></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Otros nombres:  </span><span class="valor">Arquitectos: Mario Sanjuán Calle,Ïbán Carpintero López y Ángel Sevillano Martín</span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Entidad responsable:  </span><span class="valor">Consejería de Cultura, Turismo y Deporte. Dirección General de Patrimonio Cultural y Oficina del Español. Subdirección General del Libro</span></p></div><div class="fechas"><p class="ficha_valor"><span class="etiqueta">La Biblioteca en fechas:  </span><span class="valor">Creación: 2008<br />Inauguración efectiva: 21 de julio de 2008</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Historia:  </span><span class="valor">La biblioteca se abrió el 21 de julio de 2008<br />Destacar el sistema de autopréstamo y devolución a través de RFID(Radiofrecuencia e identificación).</span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Ubicación:  </span><span class="valor">Madrid - Villa de Vallecas - Vallecas</span></p></div><div class="administrativa"><p class="ficha_valor"><span class="etiqueta">Tipo y titularidad:  </span><span class="valor">Tipo biblioteca: Pública - Punto de servicio fijo<br />Tipo administración: Administración Autonómica</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Datos municipales:  </span><span class="valor">Estadísticas: <a class="enlace_externo" target="_blank" href="https://gestiona.comunidad.madrid/desvan/almudena/BuscarMunicipios.icm?codFicha=1&codSolapaActiva=1">Datos estadísticos básicos</a></span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Forma de acceso:  </span><span class="valor">Acceso libre</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Red de bibliotecas:  </span><span class="valor">Bibliotecas Públicas de la Comunidad de Madrid</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Fecha de actualización del registro:  </span><span class="valor">27/09/2026</span></p></div></span></p></div><div class="tab_panel" id="instalaciones_servicios"><h2>Instalaciones y servicios</h2><div class="direccion"><p class="ficha_valor"><span class="etiqueta">Edificio:  </span><span class="valor">Año construcción: 2007. Superficie útil: 3.328,00 metros cuadrados. Superficie útil de uso bibliotecario: 2.662,00 metros cuadrados. <br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Instalaciones y servicios:  </span><span class="valor"><strong>Sala adultos o principal</strong>: Capacidad: 103. Condiciones de acceso: libre. Puestos de atención: 3. Superficie: 880 metros cuadrados.<br /><br /><strong>Sala infantil/juvenil</strong>: Capacidad: 48. Condiciones de acceso: libre. Puestos de atención: 3. Superficie: 456 metros cuadrados. Otra información: Bebeteca.<br /><br /><strong>Internet</strong>: Capacidad: 31. Puestos de atención: 3. Otra información: Puestos repartidos en las diferentes salas de la biblioteca.<br /><br /><strong>Hemeroteca</strong>: Capacidad: 12. Condiciones de acceso: libre. Puestos de atención: 0. Superficie: 153 metros cuadrados.<br /><br /><strong>Depósitos</strong>: Superficie: 241 metros cuadrados.<br /><br /><strong>Zona de trabajos o servicios internos</strong>: Capacidad: 5. Superficie: 48 metros cuadrados.<br /><br /><strong>Sala polivalente</strong>: Capacidad: 30. Superficie: 53 metros cuadrados. Otra información: Sala de audiovisuales y aula de formación.<br /><br /><strong>Sala-taller</strong>: Capacidad: 15. Superficie: 31 metros cuadrados.<br /><br /><strong>Otras instalaciones</strong>: Puestos de atención: 3. Superficie: 248 metros cuadrados. Otra información: Vestíbulo.<br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Equipamiento:  </span><span class="valor"><strong>Ordenadores con acceso a OPAC</strong>: Nº Unidades públicas: 6. <br /><br /><strong>Ordenadores con acceso a Internet</strong>: Nº Unidades públicas: 31. <br /><br /><strong>Lectores de CD-ROM, DVD</strong>: Nº Unidades públicas: 28. <br /><br /><strong>Escáneres</strong>: <br /><br /><strong>Fotocopiadoras</strong>: <br /><br /><strong>Impresoras</strong>: <br /><br /><strong>Lectores/reproductores de imagen</strong>: Nº Unidades públicas: 2. Otra Información: TV y lector/ reproductor de DVD y Blu-Ray. <br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Servicios en red:  </span><span class="valor"> Sitio web <a class="enlace_externo" target="_blank" href=" https://www.comunidad.madrid/centros/biblioteca-luis-martin-santos"> https://www.comunidad.madrid/centros/biblioteca-luis-martin-santos</a> Descripción: Portal del Lector. <br /> Catálogo en Internet <a class="enlace_externo" target="_blank" href=" https://gestiona.comunidad.madrid/biblio_publicas/cgi-bin/abnetopac?SUBC=BPM/BP20"> https://gestiona.comunidad.madrid/biblio_publicas/cgi-bin/abnetopac?SUBC=BPM/BP20</a><br /> <a class="enlace_externo" target="_blank" href="https://www.comunidad.madrid/portal-lector/comunicacion/actividades?f%5B0%5D=biblioteca%3ABiblioteca%20P%C3%BAblica%20Luis%20Mart%C3%ADn-Santos%20%28Villa%20de%20Vallecas%29">https://www.comunidad.madrid/portal-lector/comunicacion/actividades?f%5B0%5D=biblioteca%3ABiblioteca%20P%C3%BAblica%20Luis%20Mart%C3%ADn-Santos%20%28Villa%20de%20Vallecas%29</a> Descripción: Agenda de actividades. <br /> Otras <a class="enlace_externo" target="_blank" href=" https://www.instagram.com/libroscmadrid"> https://www.instagram.com/libroscmadrid</a> Descripción: Instagram. <br /> Otras <a class="enlace_externo" target="_blank" href=" https://x.com/LibrosCMadrid"> https://x.com/LibrosCMadrid</a> Descripción: X. <br />Acceso a Internet inalámbrico: Si. <br />Radiofrecuencia: Si. </span></p></div></span></p></div><div class="tab_panel" id="actividades"><h2>Actividades</h2><div class="notas"><p class="ficha_valor"><span class="etiqueta">Actividades para adultos:  </span><span class="valor"><strong>Cursos y talleres</strong>: Club de Lectura. Organización: Biblioteca. Fecha inicio: 15/01/2023. Fecha finalización: 30/03/2023. <br /><br /><strong>Cursos y talleres</strong>: Taller de Escritura. Organización: Biblioteca. Fecha inicio: 15/01/2023. Fecha finalización: 30/03/2023. <br /></span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Actividades para niños:  </span><span class="valor"><strong>Narración de cuentos</strong>: Cuentos infantiles. Organización: Biblioteca. <br /></span></p></div></span></p></div><div class="tab_panel" id="colecciones"><h2>Colecciones</h2><div class="fondos"><p class="ficha_valor"><span class="etiqueta">Fondos:  </span><span class="valor">Total fondos biblioteca: 99.541<br />Fecha actualización de datos acumulados: 27/09/2026<br /><br />Libros y folletos: 83.849<br />Documentos sonoros (discos compactos): 5.646<br />Documentos sonoros (casetes y vinilos): 4<br />Electrónicos: CD-ROM: 321<br />Electrónicos: DVD-ROM: 43<br />Otros documentos electrónicos: 2<br />DVD Vídeos: 9.193<br />Documentos cartográficos: 382<br />Música impresa: 1<br />Otros tipos no incluidos: 6<br />Publicaciones periódicas: 94</span></p></div></span></p></div><div class="tab_panel" id="identificacion"><h2>Número de registro</h2><div class="control"><p class="ficha_valor"><span class="etiqueta">Número de control:  </span><span class="valor">0107960016</span></p></div><div class="texto"><p class="ficha_valor"><span class="etiqueta">Campos texto:  </span><span class="valor">3.697,42 m2 (Datos de Proyectos y Obras)<br />40,3808328<br />-3,613299</span></p></div></span></p></div></div></div></div><script type="text/javascript">
+addFuncionOnLoad (function() {
+    createTabbedPanel('tabs_ficha', 'h2');
+});
+</script>
+	            			</div>
+       	</div>
+	</div>
+
+	        		        		        		    	
+			<div class="vacio"></div>
+		    	</div>
+    	
+	    </div>
+    </div>
+    
+        <div id="cabecera">
+	<div id="imagen_dcha_cabecera">
+		<img src="../img/cabecera/cabecera_dir.gif" alt="Dirección general de archivos, museos y bibliotecas. Consejería de cultura y turismo. Comunidad de Madrid"/> 
+
+	</div>	
+	
+	<div id="imagen_cabecera">
+
+	</div>	
+</div>
+<!--
+<div class="identificacion_menu">
+			
+			<a href="../seguridad/form_login.cmd?destino=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D462">Bibliotecas</a>
+	</div>
+-->    
+        <div id="menu_principal">
+    	    			        	<h1 class="menu_titulo">Menú</h1>
+		            	
+
+
+
+<div class="menu">
+						<ul class="menu_element">
+    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/busqueda.cmd">Búsqueda</a> 
+					        			        		</li>
+        	    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/busqueda_avanzada.cmd">Búsqueda Avanzada</a> 
+					        			        		</li>
+        	    	    		    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/registros.cmd">Listado Completo</a> 
+					        			        		</li>
+        	    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    	</ul>
+    	</div>
+
+                    </div>
+    
+        <div id="pie">
+    <div class="estandares">
+        <a href="http://validator.w3.org/check/referer"><img
+        src="../img/iconos_estandares/valid-xhtml10.gif" alt='Validado XHTML 1.0' /></a>
+        
+        <a href="http://jigsaw.w3.org/css-validator/"><img
+        src="../img/iconos_estandares/valid-css.gif" alt='CSS validado' /></a>
+
+		<a href="http://www.w3.org/WAI/WCAG1AA-Conformance" title='Explicación del Nivel Doble-A de Conformidad'><img 
+		src="../img/iconos_estandares/dobleA.gif" alt='Icono de conformidad con el Nivel Doble-A, de las Directrices de Accesibilidad para el Contenido Web 1.0 del W3C-WAI' /></a>
+    	
+    		        	<a href="http://www.tawdis.net/servlets/taw?url=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D462"><img src="../img/iconos_estandares/taw.gif" alt='Validado por TAW' /></a>
+    </div>
+					<script type="text/javascript">
+			ocultarDetalleGrupo();
+		</script>
+		<script type="text/javascript">
+		ocultarEdicionGrupo();
+	</script>    
+</div>
+
+ </div>  </div> </div>
+</body>
+</html>

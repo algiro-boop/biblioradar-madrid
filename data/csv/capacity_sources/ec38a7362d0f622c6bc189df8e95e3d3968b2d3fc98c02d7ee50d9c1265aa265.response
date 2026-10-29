@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
+<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=7" />
+	
+
+
+
+	 	
+	<title>Directorio de bibliotecas de la Comunidad de Madrid &gt; 
+             	    	    		Datos de biblioteca
+    	    </title>
+
+		
+ 		
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Language" content="es" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link href="../css/comun_defaults.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_menu.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_arboles.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_mensajes.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_paginacion.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_tooltips.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_campos.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_tabs.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_dl.css" rel="stylesheet" type="text/css" />
+<link href="../css/adicional_menu.css" rel="stylesheet" type="text/css" />
+
+
+
+
+<script type="text/javascript">
+	var root = "..";
+	var root_i18n = "..";
+</script>
+
+
+
+<script type="text/javascript" src="../js/prototype.js"></script>
+<script type="text/javascript" src="../js/window.js"></script>
+<script type="text/javascript" src="../js/botones.js"></script>
+<script type="text/javascript" src="../js/i18n.js"></script>
+<script type="text/javascript" src="../js/nodos.js"></script>
+
+<script type="text/javascript">	
+	function ocultarDetalleGrupo()
+	{
+		alAbrirCerrarDetalle(true);
+
+		var elem = $("contenedor_detalle");
+		if(elem!=null){
+			var vis = elem.style; 
+			vis.display='none';
+		}
+		$('contenido_detalle').hide();
+	}
+	function ocultarEdicionGrupo()
+	{
+		var elem = $("boton_edicion_grupo");
+		if(elem!=null){
+			var vis = elem.style; 
+			vis.display='none';
+		}
+	}
+</script>
+
+
+		<script type="text/javascript" src="../js/i18n.cmd?fichero=validacion_campos_i18n.vm"></script>
+	<script type="text/javascript" src="../js/validacion_campos.js"></script>		
+	
+	<link href="../css/registro_marc.css" rel="stylesheet" type="text/css" />
+	<link href="../css/formatos.css" rel="stylesheet" type="text/css" />
+	<link href="../css/formatos_com.css" rel="stylesheet" type="text/css" />
+
+	<script type="text/javascript" src="../js/window.js"></script>
+
+	<script type="text/javascript" src="../js/calendario_ficha.js"></script>
+	
+			</head>
+
+<body>
+	
+<div id="pagina">
+
+ <div id="public">  <div id="comunidad"> 
+<div id="pagina_contenido0">
+	<div id="pagina_contenido">
+	    		<div class="identificacion_menu">
+									
+							<a href="../seguridad/form_login.cmd?destino=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D263">Bibliotecas</a>
+					</div>		    
+
+	    <h1 id="web_route">
+	    			    	
+            	    	       		<span class="webroute_current">Datos de biblioteca</span>
+       	    	        	    </h1>
+									
+	    	    <div id="contenido">
+			<div class="vacio"></div>				
+	<div id="consulta_registro">
+		<div class="registro_acciones">
+						
+			
+					<div class="datos_estadisticos">
+
+		</div>	
+
+   				   		
+    		<div class="registro_acciones">
+					<form name="formExport" action="../bibliotecas/operacion_seleccion.cmd"  method='post' >
+	
+					<input type="hidden" name="sel263" value="on" />
+					<input type="hidden" name="destino" value="../comunidades/registro.cmd?id=263" />
+										<span class="opciones_resultados">
+						<label for="operacion">Operación: </label>
+						<select name="operacion" id="operacion">
+							<option value="bibliotecas/imprimir">Imprimir ficha</option>
+													<option value="comunidades/exportar_registros">Exportar</option>
+																								
+					
+																			<option value="comunidades/add_cesta_seleccion">Añadir a Mis Seleccionados</option>
+												</select>
+						
+		    									 					<span class="boton_aceptar">
+	    	    		<input type="submit" name="aceptar" id='boton_aceptar' class="submit_boton" onmouseover="cambiarEstilo(this,'submit_boton_over', 'submit_boton', true);" onfocus="cambiarEstilo(this,'submit_boton_over', 'submit_boton', true);" onmouseout="cambiarEstilo(this,'submit_boton_over', 'submit_boton', false);" onblur="cambiarEstilo(this,'submit_boton_over', 'submit_boton', false);" value="Aceptar" />
+    	    	</span>
+					</span>
+					</form>
+       		</div>
+		</div>
+   		<div class="registro_datos">
+			<div class="registro_com">
+	            	    	        <div class="ficha"><h2>Biblioteca Municipal "María Moliner" </h2><div id="tabs_ficha"><div class="tabpanel_container"><div class="tab_panel" id="datos_basicos"><h2>Datos básicos</h2><p class="imagen_favorita"><a href="../catalogo_imagenes/galeria.cmd?path=162&amp;idRegistro=263" >Galería imágenes</a></p><div class="direccion"><p class="ficha_valor"><span class="etiqueta">Dirección:  </span><span class="valor">Plaza del Perú, 13<br />28891 Velilla de San Antonio (Madrid)<br />España<br />Tel.: 916609233<br />Fax: 916608062 (Ayto)<br />E-mail:<a class="enlace_externo" href="mailto: biblioteca@ayto-velilla.es"> biblioteca@ayto-velilla.es</a> , <a class="enlace_externo" href="mailto:mjeducacion@ayto-velilla.es">mjeducacion@ayto-velilla.es</a> , <a class="enlace_externo" href="mailto:tecnicobiblioteca@ayto-velilla.es">tecnicobiblioteca@ayto-velilla.es</a> <br /><a class="enlace_externo" target="_blank" href="https://goo.gl/maps/nADjLQniokfs5KyVA">Mapa Localización</a><br /><a class="enlace_externo" target="_blank" href="http://www.bibliotecaspublicas.es/velilla">Sitio Web</a><br /></span></p></div><div class="separador_imagenes"></div><div class="transporte"><p class="ficha_valor"><span class="etiqueta">Transportes:  </span><span class="valor"><span class="texto_transportes"><span class="icono_transportes"><img src="../img/iconos/transporte_interurbano.gif" alt="interurbano" /> </span>284/341</span></span></p></div><div class="horario_accesibilidad"><p class="ficha_valor"><span class="etiqueta">Horarios:  </span><span class="valor">General de Apertura: Lunes a Viernes de 09:00 a 21:00 <br /> </span></p><p class="ficha_valor"><span class="etiqueta">Accesible:  </span><span class="valor"><img class="icono_accesibilidad" src="../img/iconos/accesibilidad.gif" alt="Biblioteca con accesibilidad" /> </span></p></div><div class="separador_transp_horario"></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Entidad responsable:  </span><span class="valor">Ayuntamiento de Velilla de San Antonio. Concejalía de Educación y Cultura</span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Puntos de servicio:  </span><span class="valor">Número de puntos: 1<br />Nombre de los puntos: Biblioteca Municipal María Moliner</span></p></div><div class="fechas"><p class="ficha_valor"><span class="etiqueta">La Biblioteca en fechas:  </span><span class="valor">Creación: 13/11/1968</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Historia:  </span><span class="valor">La biblioteca "María Moliner" de Velilla de San Antonio se inauguró en 1968 (según consta en el Libro de Registro de Carnets de Préstamo") aunque nos consta que la biblioteca estaba en activo en los años 50.<br /><br />Se trasladó a una nueva sede en Marzo de 2004 a un edificio diseñado por Paredes Pedrosa Arquitectos - ganando el Premio Calidad Arquitectura y Vivienda de la Comunidad de Madrid 2005 - donde actualmente se encuentra la biblioteca.<br /><a class="enlace_externo" target="_blank" href="http://www.paredespedrosa.com/works/45-biblioteca-publica-maria-moliner/">Historia</a></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Ubicación:  </span><span class="valor">Velilla de San Antonio</span></p></div><div class="administrativa"><p class="ficha_valor"><span class="etiqueta">Tipo y titularidad:  </span><span class="valor">Tipo biblioteca: Pública - Punto de servicio fijo<br />Tipo administración: Administración Local</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Datos municipales:  </span><span class="valor">Estadísticas: <a class="enlace_externo" target="_blank" href="https://gestiona.comunidad.madrid/desvan/almudena/BuscarMunicipios.icm?codFicha=1&codSolapaActiva=1">Datos estadísticos básicos</a></span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Forma de acceso:  </span><span class="valor">Acceso libre</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Fecha de actualización del registro:  </span><span class="valor">27/09/2026</span></p></div></span></p></div><div class="tab_panel" id="instalaciones_servicios"><h2>Instalaciones y servicios</h2><div class="direccion"><p class="ficha_valor"><span class="etiqueta">Edificio:  </span><span class="valor">Año construcción: 2003. Superficie útil: 842,00 metros cuadrados. Superficie útil de uso bibliotecario: 629,00 metros cuadrados. <br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Instalaciones y servicios:  </span><span class="valor"><strong>Sala adultos o principal</strong>: Capacidad: 60. Superficie: 307 metros cuadrados.<br /><br /><strong>Sala infantil/juvenil</strong>: Capacidad: 48. Superficie: 177 metros cuadrados.<br /><br /><strong>Hemeroteca</strong>: Capacidad: 9.<br /><br /><strong>Depósitos</strong>: Otra información:  .<br /><br /><strong>Internet</strong>: Capacidad: 8.<br /><br /><strong>Sala polivalente</strong>: Superficie: 77 metros cuadrados. Otra información: De uso múltiple, también como taller de actividades.<br /><br /><strong>Otras instalaciones</strong>: Puestos de atención: 10. Superficie: 24 metros cuadrados. Otra información: Sala de estudiob.<br /><br /><strong>Zona de trabajos o servicios internos</strong>: Superficie: 7 metros cuadrados. Otra información: Despacho y office de limpieza.<br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Equipamiento:  </span><span class="valor"><strong>Ordenadores con acceso a OPAC</strong>: Nº Unidades públicas: 1. <br /><br /><strong>Impresoras</strong>: Otra Información: Impresora de carnets.. <br /><br /><strong>Ordenadores con acceso a Internet</strong>: Nº Unidades públicas: 9. <br /><br /><strong>Lectores/reproductores de sonido</strong>: <br /><br /><strong>Lectores de CD-ROM, DVD</strong>: Nº Unidades públicas: 9. <br /><br /><strong>Equipos multifunción</strong>: <br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Servicios en red:  </span><span class="valor"> Catálogo en Internet <a class="enlace_externo" target="_blank" href=" https://gestiona.comunidad.madrid/biblio_publicas/cgi-bin/abnetopac?SUBC=RBMVEL/BMVEL1 "> https://gestiona.comunidad.madrid/biblio_publicas/cgi-bin/abnetopac?SUBC=RBMVEL/BMVEL1 </a><br /> Sitio web <a class="enlace_externo" target="_blank" href=" http://www.bibliotecaspublicas.es/velilla/index.jsp"> http://www.bibliotecaspublicas.es/velilla/index.jsp</a><br /> Otras <a class="enlace_externo" target="_blank" href=" https://www.instagram.com/bibliotecavelilla"> https://www.instagram.com/bibliotecavelilla</a> Descripción: Instagram. <br /> Otras <a class="enlace_externo" target="_blank" href=" https://www.facebook.com/bibliotecavelilla"> https://www.facebook.com/bibliotecavelilla</a> Descripción: Facebook. <br />Acceso a bases de datos en red local: No. <br />Acceso a bases de datos en Internet: Si. <br />Acceso a Internet inalámbrico: Si. <br />Radiofrecuencia: No. </span></p></div></span></p></div><div class="tab_panel" id="actividades"><h2>Actividades</h2><div class="notas"><p class="ficha_valor"><span class="etiqueta">Actividades para adultos:  </span><span class="valor"><strong>Presentaciones de libros, encuentros con autores, etc.</strong>Organización: Propia. <br /><br /><strong>Narración de cuentos</strong>Organización: Propia. <br /><br /><strong>Otras actividades</strong>: Club de Lectura Municipal "Clara Campoamor". Organización: Propia. Fecha inicio: 13/01/2026. Fecha finalización: 15/12/2026. <br /><br /><strong>Cursos y talleres</strong>: Taller de Escritura Creativa. Organización: Propia. Fecha inicio: 12/01/2026. Fecha finalización: 14/12/2026. <br /><br /><strong>Otras actividades</strong>: Club de Cultura Audiovisual (Series TV). Organización: Propia. Fecha inicio: 16/01/2026. Fecha finalización: 19/12/2026. <br /><br /><strong>Otras actividades</strong>: Club de Lectura de Género (Fantasía / Ciencia Ficción / Terror). Organización: Propia. Fecha inicio: 16/01/2026. Fecha finalización: 19/12/2026. <br /><br /><strong>Presentaciones de libros, encuentros con autores, etc.</strong>: Feria del Libro 2026. Organización: Concejalía de Cultura. Fecha inicio: 09/05/2026. Fecha finalización: 09/05/2026. <br /><br /><strong>Otras actividades</strong>: Semana Hernandiana (Miguel Hernández). Organización: Propia. Fecha inicio: 20/02/2026. Fecha finalización: 28/02/2026. <br /></span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Actividades para niños:  </span><span class="valor"><strong>Presentaciones de libros, encuentros con autores, etc.</strong>: Presentaciones de libros. Organización: Propia. <br /><br /><strong>Narración de cuentos</strong>: Cuentacuentos (varias temáticas). Organización: Propia. <br /><br /><strong>Cursos y talleres</strong>: Talleres en Familia (varias temáticas). Organización: Propia. <br /><br /><strong>Visitas guiadas</strong>: Visita Guiada por la Biblioteca por Escuelas Infantiles, CEIP e IES. Organización: Propia. <br /><br /><strong>Cursos y talleres</strong>: Taller de Escritura Creativa Infantil. Organización: Propia. Fecha inicio: 16/01/2026. Fecha finalización: 18/12/2026. <br /><br /><strong>Exposiciones</strong>: Muestra del Libro Infantil y Juvenil. Organización: Comunidad de Madrid. Fecha inicio: 21/09/0206. Fecha finalización: 30/09/2026. <br /></span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Formación de usuarios:  </span><span class="valor"><strong>Otros</strong> </span></p></div></span></p></div><div class="tab_panel" id="colecciones"><h2>Colecciones</h2><div class="fondos"><p class="ficha_valor"><span class="etiqueta">Fondos:  </span><span class="valor">Total fondos biblioteca: 35.559<br />Fecha actualización de datos acumulados: 27/09/2026<br /><br />Libros y folletos: 32.074<br />DVD Vídeos: 2.135<br />Documentos sonoros (discos compactos): 1.194<br />Documentos sonoros (casetes y vinilos): 1<br />Electrónicos: CD-ROM: 148<br />Electrónicos: DVD-ROM: 4<br />Música impresa: 1<br />Documentos cartográficos: 2</span></p></div></span></p></div><div class="tab_panel" id="identificacion"><h2>Número de registro</h2><div class="control"><p class="ficha_valor"><span class="etiqueta">Número de control:  </span><span class="valor">0316781001</span></p></div><div class="texto"><p class="ficha_valor"><span class="etiqueta">Campos texto:  </span><span class="valor"><br />Antiguo NIDEN: 2808255<br />40,367<br />-3,48803</span></p></div></span></p></div></div></div></div><script type="text/javascript">
+addFuncionOnLoad (function() {
+    createTabbedPanel('tabs_ficha', 'h2');
+});
+</script>
+	            			</div>
+       	</div>
+	</div>
+
+	        		        		        		    	
+			<div class="vacio"></div>
+		    	</div>
+    	
+	    </div>
+    </div>
+    
+        <div id="cabecera">
+	<div id="imagen_dcha_cabecera">
+		<img src="../img/cabecera/cabecera_dir.gif" alt="Dirección general de archivos, museos y bibliotecas. Consejería de cultura y turismo. Comunidad de Madrid"/> 
+
+	</div>	
+	
+	<div id="imagen_cabecera">
+
+	</div>	
+</div>
+<!--
+<div class="identificacion_menu">
+			
+			<a href="../seguridad/form_login.cmd?destino=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D263">Bibliotecas</a>
+	</div>
+-->    
+        <div id="menu_principal">
+    	    			        	<h1 class="menu_titulo">Menú</h1>
+		            	
+
+
+
+<div class="menu">
+						<ul class="menu_element">
+    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/busqueda.cmd">Búsqueda</a> 
+					        			        		</li>
+        	    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/busqueda_avanzada.cmd">Búsqueda Avanzada</a> 
+					        			        		</li>
+        	    	    		    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/registros.cmd">Listado Completo</a> 
+					        			        		</li>
+        	    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    	</ul>
+    	</div>
+
+                    </div>
+    
+        <div id="pie">
+    <div class="estandares">
+        <a href="http://validator.w3.org/check/referer"><img
+        src="../img/iconos_estandares/valid-xhtml10.gif" alt='Validado XHTML 1.0' /></a>
+        
+        <a href="http://jigsaw.w3.org/css-validator/"><img
+        src="../img/iconos_estandares/valid-css.gif" alt='CSS validado' /></a>
+
+		<a href="http://www.w3.org/WAI/WCAG1AA-Conformance" title='Explicación del Nivel Doble-A de Conformidad'><img 
+		src="../img/iconos_estandares/dobleA.gif" alt='Icono de conformidad con el Nivel Doble-A, de las Directrices de Accesibilidad para el Contenido Web 1.0 del W3C-WAI' /></a>
+    	
+    		        	<a href="http://www.tawdis.net/servlets/taw?url=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D263"><img src="../img/iconos_estandares/taw.gif" alt='Validado por TAW' /></a>
+    </div>
+					<script type="text/javascript">
+			ocultarDetalleGrupo();
+		</script>
+		<script type="text/javascript">
+		ocultarEdicionGrupo();
+	</script>    
+</div>
+
+ </div>  </div> </div>
+</body>
+</html>

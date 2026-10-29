@@ -37,6 +37,8 @@ export type Library = {
   historical_popularity?: { model?: string };
   opening_hours: OpeningHours;
   total_seats: number | null;
+  /** Capacidad extraída de fuentes oficiales auditadas; nunca inferida de total_seats. */
+  total_capacity: number | null;
   created_at: string;
   updated_at: string;
 };

@@ -1,0 +1,1065 @@
+{
+  "retrieved_at": "2026-10-29T09:39:36.767298+00:00",
+  "catalogue_count": 97,
+  "catalogue_sha256": "d95bd5038d0329b7c3c512607f4efc4f9808d953cc0342a397d2ae4a0e38d8d5",
+  "alias_metadata_sha256": "7f6b95b8f8f72ab69fbbb251662938408b342e3790382f065402d534b1618c48",
+  "replayed_evidence_count": 81,
+  "verified": 81,
+  "null": 16,
+  "method": "Explicit reading/study totals only; no sums, estimates, or database writes.",
+  "downloads": [
+    {
+      "requested_url": "https://datos.madrid.es/egob/catalogo/201747-0-bibliobuses-bibliotecas.json",
+      "url": "https://datos.madrid.es/dataset/201747-0-bibliobuses-bibliotecas/resource/201747-2-bibliobuses-bibliotecas-json/download/201747-2-bibliobuses-bibliotecas-json",
+      "retrieved_at": "2026-10-29T09:39:26.677511+00:00",
+      "status": 200,
+      "sha256": "bc349ad129c749a6a76667f55905394847b740a1d24ba9bf95efd1c5a5729e3f",
+      "snapshot": "bc349ad129c749a6a76667f55905394847b740a1d24ba9bf95efd1c5a5729e3f.response",
+      "content_type": "application/json",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://datos.madrid.es/egob/catalogo/217921-0-salas-estudio.json",
+      "url": "https://datos.madrid.es/dataset/217921-0-salas-estudio/resource/217921-0-salas-estudio-json/download/217921-0-salas-estudio-json",
+      "retrieved_at": "2026-10-29T09:39:27.229492+00:00",
+      "status": 200,
+      "sha256": "66cdd9fe641a71c84d6b6451850deb09c7c8f55e543a3df2a2af61209cff8d36",
+      "snapshot": "66cdd9fe641a71c84d6b6451850deb09c7c8f55e543a3df2a2af61209cff8d36.response",
+      "content_type": "application/json",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://datos.madrid.es/dataset/200304-0-centros-culturales/resource/200304-0-centros-culturales-json/download/200304-0-centros-culturales.json",
+      "url": "https://datos.madrid.es/dataset/200304-0-centros-culturales/resource/200304-0-centros-culturales-json/download/200304-0-centros-culturales.json",
+      "retrieved_at": "2026-10-29T09:39:27.557467+00:00",
+      "status": 200,
+      "sha256": "c45040ce7d453b57d585fab36df05aebd28fed390109c125cfe5cccde8b9d38c",
+      "snapshot": "c45040ce7d453b57d585fab36df05aebd28fed390109c125cfe5cccde8b9d38c.response",
+      "content_type": "application/json",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd",
+      "retrieved_at": "2026-10-29T09:39:27.732327+00:00",
+      "status": 200,
+      "sha256": "c19a2442423b19f0186cde0ab4d4696c96671c9f50ca0655701caf9f437e7514",
+      "snapshot": "c19a2442423b19f0186cde0ab4d4696c96671c9f50ca0655701caf9f437e7514.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=101",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=101",
+      "retrieved_at": "2026-10-29T09:39:28.653662+00:00",
+      "status": 200,
+      "sha256": "b8c7524733e02ee77bef93add7e513a43a2a80a29939c97582c9957601439621",
+      "snapshot": "b8c7524733e02ee77bef93add7e513a43a2a80a29939c97582c9957601439621.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=151",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=151",
+      "retrieved_at": "2026-10-29T09:39:28.654920+00:00",
+      "status": 200,
+      "sha256": "b64db77bdfebee118508a9a84fda21a0fe165d40f71d0f0cd76e614f016b691b",
+      "snapshot": "b64db77bdfebee118508a9a84fda21a0fe165d40f71d0f0cd76e614f016b691b.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=201",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=201",
+      "retrieved_at": "2026-10-29T09:39:28.655544+00:00",
+      "status": 200,
+      "sha256": "739ef1a7d259cba31c74c7e891695662b6b29b8fd788216192b4b94b388480ea",
+      "snapshot": "739ef1a7d259cba31c74c7e891695662b6b29b8fd788216192b4b94b388480ea.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=251",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=251",
+      "retrieved_at": "2026-10-29T09:39:28.656033+00:00",
+      "status": 200,
+      "sha256": "31c95e1e57389bfec57250544efa32a2adfbe4d758beaf38f442a3f4c351bc0f",
+      "snapshot": "31c95e1e57389bfec57250544efa32a2adfbe4d758beaf38f442a3f4c351bc0f.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=301",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=301",
+      "retrieved_at": "2026-10-29T09:39:28.656543+00:00",
+      "status": 200,
+      "sha256": "a92ec56608cd235d5fb40212c8035936b0a8547f49506a1d34a49a6338b15570",
+      "snapshot": "a92ec56608cd235d5fb40212c8035936b0a8547f49506a1d34a49a6338b15570.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=351",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=351",
+      "retrieved_at": "2026-10-29T09:39:28.656567+00:00",
+      "status": 200,
+      "sha256": "61ecbb3ffb866adff8e9711b17f393656bbfe52191a27a812631909e1ee4c9ee",
+      "snapshot": "61ecbb3ffb866adff8e9711b17f393656bbfe52191a27a812631909e1ee4c9ee.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=401",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=401",
+      "retrieved_at": "2026-10-29T09:39:28.656574+00:00",
+      "status": 200,
+      "sha256": "e86d147848b5ebc4e28cae29863a377578fcfc81cbdb1407bb6b6aa5a0cd2e78",
+      "snapshot": "e86d147848b5ebc4e28cae29863a377578fcfc81cbdb1407bb6b6aa5a0cd2e78.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=451",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=451",
+      "retrieved_at": "2026-10-29T09:39:28.656580+00:00",
+      "status": 200,
+      "sha256": "6af7ee2d35c9b1313f7a4ab12eb7c9db50bfc8d0f34365f82ed4244f152aae62",
+      "snapshot": "6af7ee2d35c9b1313f7a4ab12eb7c9db50bfc8d0f34365f82ed4244f152aae62.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=501",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=501",
+      "retrieved_at": "2026-10-29T09:39:28.656586+00:00",
+      "status": 200,
+      "sha256": "272077d46259cd410a9525c91c4e395e701bf1e8525fb705b13fca2097c075af",
+      "snapshot": "272077d46259cd410a9525c91c4e395e701bf1e8525fb705b13fca2097c075af.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=51",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=51",
+      "retrieved_at": "2026-10-29T09:39:28.656591+00:00",
+      "status": 200,
+      "sha256": "b630a21ec4caf66f6090913007985b53a136b12bfa318d7478de26d3eb8e5fff",
+      "snapshot": "b630a21ec4caf66f6090913007985b53a136b12bfa318d7478de26d3eb8e5fff.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=51&forma=",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=51&forma=",
+      "retrieved_at": "2026-10-29T09:39:28.656597+00:00",
+      "status": 200,
+      "sha256": "701d0f3c29039928a185d19a342eaa74e8efcba5a9f3362d428e4992bc1945e9",
+      "snapshot": "701d0f3c29039928a185d19a342eaa74e8efcba5a9f3362d428e4992bc1945e9.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=551",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=551",
+      "retrieved_at": "2026-10-29T09:39:28.656603+00:00",
+      "status": 200,
+      "sha256": "e327d2a00afb630438977b8dc7e0745eff88a1bc384ee7aec5914026e870d8c1",
+      "snapshot": "e327d2a00afb630438977b8dc7e0745eff88a1bc384ee7aec5914026e870d8c1.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=601",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=601",
+      "retrieved_at": "2026-10-29T09:39:28.656609+00:00",
+      "status": 200,
+      "sha256": "11a868659471bcf142d62e3294f0d662a0ec4636c8928a2db9709c732782df3a",
+      "snapshot": "11a868659471bcf142d62e3294f0d662a0ec4636c8928a2db9709c732782df3a.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=651",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=651",
+      "retrieved_at": "2026-10-29T09:39:28.656615+00:00",
+      "status": 200,
+      "sha256": "820e1303472ddaca690ce1329850d398c822afa359351851fa6464e5fdd26e99",
+      "snapshot": "820e1303472ddaca690ce1329850d398c822afa359351851fa6464e5fdd26e99.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=701",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=701",
+      "retrieved_at": "2026-10-29T09:39:28.656621+00:00",
+      "status": 200,
+      "sha256": "8e27ac99140406d4601ab64228b769bde90ca766ca0ed5627a5aa3abac872446",
+      "snapshot": "8e27ac99140406d4601ab64228b769bde90ca766ca0ed5627a5aa3abac872446.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=751",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=751",
+      "retrieved_at": "2026-10-29T09:39:28.656625+00:00",
+      "status": 200,
+      "sha256": "d19faab702cdec2363317795c166e764e6a85a0f65c4665885f421ab7279ca57",
+      "snapshot": "d19faab702cdec2363317795c166e764e6a85a0f65c4665885f421ab7279ca57.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=801",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=801",
+      "retrieved_at": "2026-10-29T09:39:28.656630+00:00",
+      "status": 200,
+      "sha256": "820e0dd12e6ae72639901fb9723014ba68889d503c5e0b36502b2db5ca59a371",
+      "snapshot": "820e0dd12e6ae72639901fb9723014ba68889d503c5e0b36502b2db5ca59a371.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=851",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=851",
+      "retrieved_at": "2026-10-29T09:39:28.656634+00:00",
+      "status": 200,
+      "sha256": "616fed92fed5b386654d92ee7543e3292a861a24c8568ecfb760a0dd12610b0a",
+      "snapshot": "616fed92fed5b386654d92ee7543e3292a861a24c8568ecfb760a0dd12610b0a.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=851&forma=",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registros.cmd?posicion=851&forma=",
+      "retrieved_at": "2026-10-29T09:39:28.656638+00:00",
+      "status": 200,
+      "sha256": "bd1b2bd520407ccf699c7e2047328dadfe152c944c69bf7300387421ddf704fa",
+      "snapshot": "bd1b2bd520407ccf699c7e2047328dadfe152c944c69bf7300387421ddf704fa.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=51",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=51",
+      "retrieved_at": "2026-10-29T09:39:32.384346+00:00",
+      "status": 200,
+      "sha256": "3d0c18632bcc24ef682ee3e9b58945b48635208bec11130e3409446825e5cfda",
+      "snapshot": "3d0c18632bcc24ef682ee3e9b58945b48635208bec11130e3409446825e5cfda.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=3992",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=3992",
+      "retrieved_at": "2026-10-29T09:39:32.384797+00:00",
+      "status": 200,
+      "sha256": "1cc796c1644a48ff18990523ddb609c02823a6c35712ddb1b74a0cabcf2539db",
+      "snapshot": "1cc796c1644a48ff18990523ddb609c02823a6c35712ddb1b74a0cabcf2539db.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=2209",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=2209",
+      "retrieved_at": "2026-10-29T09:39:32.385033+00:00",
+      "status": 200,
+      "sha256": "ec35de1294970399a5333a9140e2480f3aa27927026fa59bbd2ad670e4d17961",
+      "snapshot": "ec35de1294970399a5333a9140e2480f3aa27927026fa59bbd2ad670e4d17961.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=681",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=681",
+      "retrieved_at": "2026-10-29T09:39:32.385255+00:00",
+      "status": 200,
+      "sha256": "bd124510573df771048dcf56690ca9f714fa22e28dddaeb1fd18a08ce81ff5c5",
+      "snapshot": "bd124510573df771048dcf56690ca9f714fa22e28dddaeb1fd18a08ce81ff5c5.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=462",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=462",
+      "retrieved_at": "2026-10-29T09:39:32.385477+00:00",
+      "status": 200,
+      "sha256": "90129e420b42bc1c34ec44b1f6788c8b12a09b8590d14ba9d00eee2759fef122",
+      "snapshot": "90129e420b42bc1c34ec44b1f6788c8b12a09b8590d14ba9d00eee2759fef122.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=86381e79ee71c010VgnVCM1000000b205a0aRCRD",
+      "url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=86381e79ee71c010VgnVCM1000000b205a0aRCRD",
+      "retrieved_at": "2026-10-29T09:39:32.385481+00:00",
+      "status": 200,
+      "sha256": "0c0fccdaf3325f63082da3b1848721cf5c5245da0b00897770b8ef5df4a436b0",
+      "snapshot": "0c0fccdaf3325f63082da3b1848721cf5c5245da0b00897770b8ef5df4a436b0.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=239",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=239",
+      "retrieved_at": "2026-10-29T09:39:32.385484+00:00",
+      "status": 200,
+      "sha256": "9f31e5fb151f86a8b5923ca72e79c4885a8da563362d4b836058fc053e07f5eb",
+      "snapshot": "9f31e5fb151f86a8b5923ca72e79c4885a8da563362d4b836058fc053e07f5eb.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=228",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=228",
+      "retrieved_at": "2026-10-29T09:39:32.385486+00:00",
+      "status": 200,
+      "sha256": "e1df594145fa76935fa0f30004f81485b76fa3d6d975995ff4455bb4a46929ac",
+      "snapshot": "e1df594145fa76935fa0f30004f81485b76fa3d6d975995ff4455bb4a46929ac.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=464",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=464",
+      "retrieved_at": "2026-10-29T09:39:32.385492+00:00",
+      "status": 200,
+      "sha256": "3594676d98f07e5cd6fc11e48b26970b1ae664276145e55baa16fbe351ecb19a",
+      "snapshot": "3594676d98f07e5cd6fc11e48b26970b1ae664276145e55baa16fbe351ecb19a.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=283",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=283",
+      "retrieved_at": "2026-10-29T09:39:32.385496+00:00",
+      "status": 200,
+      "sha256": "f10751d29a2181d9742c0c4b3f2b4418a0021c9ccc8b372fa99ea124ab0ef383",
+      "snapshot": "f10751d29a2181d9742c0c4b3f2b4418a0021c9ccc8b372fa99ea124ab0ef383.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=48",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=48",
+      "retrieved_at": "2026-10-29T09:39:32.385498+00:00",
+      "status": 200,
+      "sha256": "5579c4cb2502641e1b81eb3bdfc471e28eea9c2620ac4b88d723f0fa3056da8f",
+      "snapshot": "5579c4cb2502641e1b81eb3bdfc471e28eea9c2620ac4b88d723f0fa3056da8f.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=459",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=459",
+      "retrieved_at": "2026-10-29T09:39:32.385504+00:00",
+      "status": 200,
+      "sha256": "d6a10713794d3f0f8a54a69e2948626fd3d617569d22416da2106356887fa687",
+      "snapshot": "d6a10713794d3f0f8a54a69e2948626fd3d617569d22416da2106356887fa687.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=25990",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=25990",
+      "retrieved_at": "2026-10-29T09:39:32.385505+00:00",
+      "status": 200,
+      "sha256": "5710de693d451a76922de7fc2586a2429f557dff4a852676a76dcdc7670f2577",
+      "snapshot": "5710de693d451a76922de7fc2586a2429f557dff4a852676a76dcdc7670f2577.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=449",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=449",
+      "retrieved_at": "2026-10-29T09:39:32.385509+00:00",
+      "status": 200,
+      "sha256": "3a6164f9502f31d4e85d461461f0b695547e8a1b1cccb230fcc3745f264e634a",
+      "snapshot": "3a6164f9502f31d4e85d461461f0b695547e8a1b1cccb230fcc3745f264e634a.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=1788",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=1788",
+      "retrieved_at": "2026-10-29T09:39:32.385511+00:00",
+      "status": 200,
+      "sha256": "fe59ebfa79f733f47c96ae78ed10d66e3763e02d559e8abc75d7c89ec5673143",
+      "snapshot": "fe59ebfa79f733f47c96ae78ed10d66e3763e02d559e8abc75d7c89ec5673143.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=454",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=454",
+      "retrieved_at": "2026-10-29T09:39:32.385513+00:00",
+      "status": 200,
+      "sha256": "c8b58a6d533adaf4ba3b5d02309e6aecc87afbfdda38536ad7e73afd3180e78e",
+      "snapshot": "c8b58a6d533adaf4ba3b5d02309e6aecc87afbfdda38536ad7e73afd3180e78e.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://biblioagenda.ucm.es/hours",
+      "url": "https://biblioagenda.ucm.es/hours",
+      "retrieved_at": "2026-10-29T09:39:32.385514+00:00",
+      "error": "ConnectError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=347",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=347",
+      "retrieved_at": "2026-10-29T09:39:32.385515+00:00",
+      "status": 200,
+      "sha256": "212d3f94a897d6688d2236ba58ba1676cfa81942ff9d766f5e9e4b9a1cd0f203",
+      "snapshot": "212d3f94a897d6688d2236ba58ba1676cfa81942ff9d766f5e9e4b9a1cd0f203.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=460",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=460",
+      "retrieved_at": "2026-10-29T09:39:32.385516+00:00",
+      "status": 200,
+      "sha256": "d2d3b04a8f197b52677f19d994d47a16deecd0209ff492bfb05aabca0a258783",
+      "snapshot": "d2d3b04a8f197b52677f19d994d47a16deecd0209ff492bfb05aabca0a258783.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=1782",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=1782",
+      "retrieved_at": "2026-10-29T09:39:32.385518+00:00",
+      "status": 200,
+      "sha256": "cf4988e764b9fbc7e420ba73134f49078287601c7dc9b94d24eee2fbc2a667f2",
+      "snapshot": "cf4988e764b9fbc7e420ba73134f49078287601c7dc9b94d24eee2fbc2a667f2.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=361",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=361",
+      "retrieved_at": "2026-10-29T09:39:32.385520+00:00",
+      "status": 200,
+      "sha256": "b763003bb2f4dd811a595d57f9583149b7688f9fe41a7297b73368e0593cc084",
+      "snapshot": "b763003bb2f4dd811a595d57f9583149b7688f9fe41a7297b73368e0593cc084.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=222",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=222",
+      "retrieved_at": "2026-10-29T09:39:32.385521+00:00",
+      "status": 200,
+      "sha256": "74f8e01b55cb4eff13c66c3ecbb02748b5532affeb7ede7b99f5294bbe9a8040",
+      "snapshot": "74f8e01b55cb4eff13c66c3ecbb02748b5532affeb7ede7b99f5294bbe9a8040.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=221",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=221",
+      "retrieved_at": "2026-10-29T09:39:32.385522+00:00",
+      "status": 200,
+      "sha256": "d3b9f70256caa211875415fc38e834ce12ce21f913a12d81c1529857cc3728c5",
+      "snapshot": "d3b9f70256caa211875415fc38e834ce12ce21f913a12d81c1529857cc3728c5.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=56",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=56",
+      "retrieved_at": "2026-10-29T09:39:32.385523+00:00",
+      "status": 200,
+      "sha256": "39bf4aefc0a1a5af5fdf7b176b5f1673be694c5849c437c20abc2f0c0c661cb4",
+      "snapshot": "39bf4aefc0a1a5af5fdf7b176b5f1673be694c5849c437c20abc2f0c0c661cb4.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=656",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=656",
+      "retrieved_at": "2026-10-29T09:39:32.385524+00:00",
+      "status": 200,
+      "sha256": "b09cb9f0f091b67cb86ad1e5fd253b7e8beb84d9ce9c41de663ff259ab8071c8",
+      "snapshot": "b09cb9f0f091b67cb86ad1e5fd253b7e8beb84d9ce9c41de663ff259ab8071c8.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=359",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=359",
+      "retrieved_at": "2026-10-29T09:39:32.385526+00:00",
+      "status": 200,
+      "sha256": "b8e803f70067fc2d12e669084548bcaede4f3cf0ac5e164a0ec3a875a08bf6ec",
+      "snapshot": "b8e803f70067fc2d12e669084548bcaede4f3cf0ac5e164a0ec3a875a08bf6ec.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=5027",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=5027",
+      "retrieved_at": "2026-10-29T09:39:32.452911+00:00",
+      "status": 200,
+      "sha256": "7633a341e9284ce2ad15e5c560b96f767bbd396daeb1b219d92a6be8c17e87ce",
+      "snapshot": "7633a341e9284ce2ad15e5c560b96f767bbd396daeb1b219d92a6be8c17e87ce.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=263",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=263",
+      "retrieved_at": "2026-10-29T09:39:32.466064+00:00",
+      "status": 200,
+      "sha256": "ec38a7362d0f622c6bc189df8e95e3d3968b2d3fc98c02d7ee50d9c1265aa265",
+      "snapshot": "ec38a7362d0f622c6bc189df8e95e3d3968b2d3fc98c02d7ee50d9c1265aa265.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=7a73f884ad3f9210VgnVCM1000000b205a0aRCRD",
+      "url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=7a73f884ad3f9210VgnVCM1000000b205a0aRCRD",
+      "retrieved_at": "2026-10-29T09:39:32.467826+00:00",
+      "status": 200,
+      "sha256": "c7f4ee1b9caeaa9159b0a2f99e048a761ac02a1e2c08fdedd4818a41d7f03cdb",
+      "snapshot": "c7f4ee1b9caeaa9159b0a2f99e048a761ac02a1e2c08fdedd4818a41d7f03cdb.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=09ac38d60b41c010VgnVCM2000000c205a0aRCRD",
+      "url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=09ac38d60b41c010VgnVCM2000000c205a0aRCRD",
+      "retrieved_at": "2026-10-29T09:39:32.613482+00:00",
+      "status": 200,
+      "sha256": "16557fcd13269c4f9846fb0f56fd1f0cc32c1d9a4f812c71aecf3b4d7c826b8b",
+      "snapshot": "16557fcd13269c4f9846fb0f56fd1f0cc32c1d9a4f812c71aecf3b4d7c826b8b.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=107",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=107",
+      "retrieved_at": "2026-10-29T09:39:32.621837+00:00",
+      "status": 200,
+      "sha256": "626193a43fdbb839a9c421b97442c1ef49a9c7c886cd0b1783690574e6eae4cd",
+      "snapshot": "626193a43fdbb839a9c421b97442c1ef49a9c7c886cd0b1783690574e6eae4cd.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=63",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=63",
+      "retrieved_at": "2026-10-29T09:39:32.848576+00:00",
+      "status": 200,
+      "sha256": "f8f28033b1ca349ba2ce14f0e77e3ea6c05f05fc1439e241e16f475614076bf0",
+      "snapshot": "f8f28033b1ca349ba2ce14f0e77e3ea6c05f05fc1439e241e16f475614076bf0.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=457e995a8bf5d010VgnVCM2000000c205a0aRCRD",
+      "url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=457e995a8bf5d010VgnVCM2000000c205a0aRCRD",
+      "retrieved_at": "2026-10-29T09:39:32.962514+00:00",
+      "status": 200,
+      "sha256": "9b832d72d28ad9f1bc1dda8f6a16fe840d2a0fc4db60d0c1655f237ff9ba319b",
+      "snapshot": "9b832d72d28ad9f1bc1dda8f6a16fe840d2a0fc4db60d0c1655f237ff9ba319b.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=738",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=738",
+      "retrieved_at": "2026-10-29T09:39:32.980101+00:00",
+      "status": 200,
+      "sha256": "ee1c6b7620545e6a4827bcbf391ca0ea762c2620d71d33d1188409043f7532da",
+      "snapshot": "ee1c6b7620545e6a4827bcbf391ca0ea762c2620d71d33d1188409043f7532da.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=44213d0b5e71c010VgnVCM1000000b205a0aRCRD",
+      "url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=44213d0b5e71c010VgnVCM1000000b205a0aRCRD",
+      "retrieved_at": "2026-10-29T09:39:32.981898+00:00",
+      "status": 200,
+      "sha256": "fc0f9a5bacb6a268637571aff1dcca17646bdf638abd13eae3b5f814744048fe",
+      "snapshot": "fc0f9a5bacb6a268637571aff1dcca17646bdf638abd13eae3b5f814744048fe.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=ad345442c6452510VgnVCM2000000c205a0aRCRD",
+      "url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=ad345442c6452510VgnVCM2000000c205a0aRCRD",
+      "retrieved_at": "2026-10-29T09:39:33.037062+00:00",
+      "status": 200,
+      "sha256": "72e8d20d42967188b5acbd07e245e7a1e012f7349652ed89cb5689b7cc49d735",
+      "snapshot": "72e8d20d42967188b5acbd07e245e7a1e012f7349652ed89cb5689b7cc49d735.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=e9ad995a8bf5d010VgnVCM2000000c205a0aRCRD",
+      "url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=e9ad995a8bf5d010VgnVCM2000000c205a0aRCRD",
+      "retrieved_at": "2026-10-29T09:39:33.102203+00:00",
+      "status": 200,
+      "sha256": "35e99e4e5682d422ff30224e43b5b28d6a14bd93e13d06329965a9b0f7279863",
+      "snapshot": "35e99e4e5682d422ff30224e43b5b28d6a14bd93e13d06329965a9b0f7279863.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=67ed995a8bf5d010VgnVCM2000000c205a0aRCRD",
+      "url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=67ed995a8bf5d010VgnVCM2000000c205a0aRCRD",
+      "retrieved_at": "2026-10-29T09:39:33.138022+00:00",
+      "status": 200,
+      "sha256": "e2157437808d6150e5b7054d29aa15714ecaac67d12da062be6098044acc0234",
+      "snapshot": "e2157437808d6150e5b7054d29aa15714ecaac67d12da062be6098044acc0234.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=447",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=447",
+      "retrieved_at": "2026-10-29T09:39:33.202092+00:00",
+      "status": 200,
+      "sha256": "5cef7ea3deb201730ee5b490eb2a2be126a906fb92cf3c5df320a9c897b50858",
+      "snapshot": "5cef7ea3deb201730ee5b490eb2a2be126a906fb92cf3c5df320a9c897b50858.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=b2413d0b5e71c010VgnVCM1000000b205a0aRCRD",
+      "url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=b2413d0b5e71c010VgnVCM1000000b205a0aRCRD",
+      "retrieved_at": "2026-10-29T09:39:33.266936+00:00",
+      "status": 200,
+      "sha256": "315594880396a211843149089156f4d6421b926999894d4a38be9640f7a09030",
+      "snapshot": "315594880396a211843149089156f4d6421b926999894d4a38be9640f7a09030.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.uned.es/universidad/biblioteca/contacto.html",
+      "url": "https://www.uned.es/universidad/biblioteca/contacto.html",
+      "retrieved_at": "2026-10-29T09:39:33.293456+00:00",
+      "status": 200,
+      "sha256": "9e0cf87ba4a5daadb3ca8443cbb25c1232647e50ea39a70255603fdc17da6365",
+      "snapshot": "9e0cf87ba4a5daadb3ca8443cbb25c1232647e50ea39a70255603fdc17da6365.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.comunidad.madrid/centros/biblioteca-municipal-santiago-amon",
+      "url": "https://www.comunidad.madrid/centros/biblioteca-municipal-santiago-amon",
+      "retrieved_at": "2026-10-29T09:39:33.378889+00:00",
+      "status": 200,
+      "sha256": "9ac3b814b3c5f815386d2262c4eda98d0fd1f0957dd03282e76772a105ea2518",
+      "snapshot": "9ac3b814b3c5f815386d2262c4eda98d0fd1f0957dd03282e76772a105ea2518.response",
+      "content_type": "text/html; charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=248",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=248",
+      "retrieved_at": "2026-10-29T09:39:33.400541+00:00",
+      "status": 200,
+      "sha256": "da849fb50eb1fd56517c29bcbcb632928da497001bd986623da66b9e2890c277",
+      "snapshot": "da849fb50eb1fd56517c29bcbcb632928da497001bd986623da66b9e2890c277.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=708",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=708",
+      "retrieved_at": "2026-10-29T09:39:33.468051+00:00",
+      "status": 200,
+      "sha256": "43ac55c38f1c09775a7ac796a8ba71f9252eea45d3f3f2c16e140e3565820b05",
+      "snapshot": "43ac55c38f1c09775a7ac796a8ba71f9252eea45d3f3f2c16e140e3565820b05.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=159",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=159",
+      "retrieved_at": "2026-10-29T09:39:33.490357+00:00",
+      "status": 200,
+      "sha256": "ae51e6b2dd413274bf78308a5dc8a433a85b000768b1913ffeb24292d52837aa",
+      "snapshot": "ae51e6b2dd413274bf78308a5dc8a433a85b000768b1913ffeb24292d52837aa.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=2e5068540e41c010VgnVCM2000000c205a0aRCRD",
+      "url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=2e5068540e41c010VgnVCM2000000c205a0aRCRD",
+      "retrieved_at": "2026-10-29T09:39:33.529801+00:00",
+      "status": 200,
+      "sha256": "bc231ba1d1432aef135176c1445305b740793c1af226721577d720c7f7b59860",
+      "snapshot": "bc231ba1d1432aef135176c1445305b740793c1af226721577d720c7f7b59860.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=180",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=180",
+      "retrieved_at": "2026-10-29T09:39:33.618115+00:00",
+      "status": 200,
+      "sha256": "674265835cd1a10dff5661e4df853dfe946933b68a69229666e3f86a99e94941",
+      "snapshot": "674265835cd1a10dff5661e4df853dfe946933b68a69229666e3f86a99e94941.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=250",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=250",
+      "retrieved_at": "2026-10-29T09:39:33.736846+00:00",
+      "status": 200,
+      "sha256": "efd785bd1358008489c9fdf2d3f1963d3bf9a314de20a434df0d7cc4dc79a4e0",
+      "snapshot": "efd785bd1358008489c9fdf2d3f1963d3bf9a314de20a434df0d7cc4dc79a4e0.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=c73e995a8bf5d010VgnVCM2000000c205a0aRCRD",
+      "url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=c73e995a8bf5d010VgnVCM2000000c205a0aRCRD",
+      "retrieved_at": "2026-10-29T09:39:33.748206+00:00",
+      "status": 200,
+      "sha256": "fdf64ccfd9e052a4aa4338e06e60ad237d1bba340baf967012cf66dc6c1760a7",
+      "snapshot": "fdf64ccfd9e052a4aa4338e06e60ad237d1bba340baf967012cf66dc6c1760a7.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=60",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=60",
+      "retrieved_at": "2026-10-29T09:39:33.754031+00:00",
+      "status": 200,
+      "sha256": "b0f66a85bea7a50c894b33e6000dc8c45c2c3de40e729385bee39c617ea23f28",
+      "snapshot": "b0f66a85bea7a50c894b33e6000dc8c45c2c3de40e729385bee39c617ea23f28.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=47",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=47",
+      "retrieved_at": "2026-10-29T09:39:33.846289+00:00",
+      "status": 200,
+      "sha256": "e233f0f325d80130a2bf97869befec6daf76857ed39b5e147b6a7a53202c2a20",
+      "snapshot": "e233f0f325d80130a2bf97869befec6daf76857ed39b5e147b6a7a53202c2a20.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=456",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=456",
+      "retrieved_at": "2026-10-29T09:39:33.957928+00:00",
+      "status": 200,
+      "sha256": "9afb64d33fb74687d66243030b756d9dc3a0469410e12c8b2ffd8226fc1b4c2d",
+      "snapshot": "9afb64d33fb74687d66243030b756d9dc3a0469410e12c8b2ffd8226fc1b4c2d.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.comunidad.madrid/centros/biblioteca-luis-martin-santos",
+      "url": "https://www.comunidad.madrid/centros/biblioteca-luis-martin-santos",
+      "retrieved_at": "2026-10-29T09:39:34.064446+00:00",
+      "status": 200,
+      "sha256": "47cb275296ef4739540eac424092594b8dff178bf551f87257da7ae7613835bc",
+      "snapshot": "47cb275296ef4739540eac424092594b8dff178bf551f87257da7ae7613835bc.response",
+      "content_type": "text/html; charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=46",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=46",
+      "retrieved_at": "2026-10-29T09:39:34.213406+00:00",
+      "status": 200,
+      "sha256": "fa323291d1b1c19cbf7b574872f82f8d37223e657602a65043476ce014534448",
+      "snapshot": "fa323291d1b1c19cbf7b574872f82f8d37223e657602a65043476ce014534448.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.comunidad.madrid/centros/biblioteca-javier-marias",
+      "url": "https://www.comunidad.madrid/centros/biblioteca-javier-marias",
+      "retrieved_at": "2026-10-29T09:39:34.294494+00:00",
+      "status": 200,
+      "sha256": "27c4bc06a9c2776efd2828f35a06e22959d5d02413f1ec94988cfe596ee9a949",
+      "snapshot": "27c4bc06a9c2776efd2828f35a06e22959d5d02413f1ec94988cfe596ee9a949.response",
+      "content_type": "text/html; charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.comunidad.madrid/centros/biblioteca-elena-fortun",
+      "url": "https://www.comunidad.madrid/centros/biblioteca-elena-fortun",
+      "retrieved_at": "2026-10-29T09:39:34.307129+00:00",
+      "status": 200,
+      "sha256": "bf3132c97b685f9a00d07b6a317591a209c314e16e20e37d209fbf556cd53336",
+      "snapshot": "bf3132c97b685f9a00d07b6a317591a209c314e16e20e37d209fbf556cd53336.response",
+      "content_type": "text/html; charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.comunidad.madrid/centros/biblioteca-jose-acuna",
+      "url": "https://www.comunidad.madrid/centros/biblioteca-jose-acuna",
+      "retrieved_at": "2026-10-29T09:39:34.510484+00:00",
+      "status": 200,
+      "sha256": "9c05bca951b9acf778c47a545b53ca056f1a5ec36a626bd20aa0cde98978b3b1",
+      "snapshot": "9c05bca951b9acf778c47a545b53ca056f1a5ec36a626bd20aa0cde98978b3b1.response",
+      "content_type": "text/html; charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.comunidad.madrid/centros/biblioteca-pedro-salinas",
+      "url": "https://www.comunidad.madrid/centros/biblioteca-pedro-salinas",
+      "retrieved_at": "2026-10-29T09:39:34.521067+00:00",
+      "status": 200,
+      "sha256": "4df2609f577d28718c9cc0411680747b6517dc1b8bfa8145012a3d0031fae1dd",
+      "snapshot": "4df2609f577d28718c9cc0411680747b6517dc1b8bfa8145012a3d0031fae1dd.response",
+      "content_type": "text/html; charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=5a2279262ef5d010VgnVCM1000000b205a0aRCRD",
+      "url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=5a2279262ef5d010VgnVCM1000000b205a0aRCRD",
+      "retrieved_at": "2026-10-29T09:39:34.594834+00:00",
+      "status": 200,
+      "sha256": "f7e8f192f2fa696f7fe393a957429612cec9fde63dc4edb0a6274f091afee5b0",
+      "snapshot": "f7e8f192f2fa696f7fe393a957429612cec9fde63dc4edb0a6274f091afee5b0.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.comunidad.madrid/centros/biblioteca-ruiz-egea",
+      "url": "https://www.comunidad.madrid/centros/biblioteca-ruiz-egea",
+      "retrieved_at": "2026-10-29T09:39:34.765825+00:00",
+      "status": 200,
+      "sha256": "def68f6dd462358674506f79e3d35e7761948f1cfe60a439865a68ca87e43311",
+      "snapshot": "def68f6dd462358674506f79e3d35e7761948f1cfe60a439865a68ca87e43311.response",
+      "content_type": "text/html; charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://sede-electronica.rivasciudad.es/equipamiento/centro-cultural-federico-garcia-lorca/",
+      "url": "https://sede-electronica.rivasciudad.es/equipamiento/centro-cultural-federico-garcia-lorca/",
+      "retrieved_at": "2026-10-29T09:39:34.872896+00:00",
+      "status": 200,
+      "sha256": "3f460146b67e1679d8923e8232f8845daef690753c64fd60dc4673fbbeabf10f",
+      "snapshot": "3f460146b67e1679d8923e8232f8845daef690753c64fd60dc4673fbbeabf10f.response",
+      "content_type": "text/html; charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://sede-electronica.rivasciudad.es/equipamiento/biblioteca-jose-saramago/",
+      "url": "https://sede-electronica.rivasciudad.es/equipamiento/biblioteca-jose-saramago/",
+      "retrieved_at": "2026-10-29T09:39:34.908822+00:00",
+      "status": 200,
+      "sha256": "a272fb94d3c3de5517885d261e176b6bb1e5d71c78fd6f4964717e34dad942b7",
+      "snapshot": "a272fb94d3c3de5517885d261e176b6bb1e5d71c78fd6f4964717e34dad942b7.response",
+      "content_type": "text/html; charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=285",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=285",
+      "retrieved_at": "2026-10-29T09:39:34.978479+00:00",
+      "status": 200,
+      "sha256": "709567bad5f0333c78f77ee4f23f49f700c681301281246df83f168784105222",
+      "snapshot": "709567bad5f0333c78f77ee4f23f49f700c681301281246df83f168784105222.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=740",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=740",
+      "retrieved_at": "2026-10-29T09:39:35.050021+00:00",
+      "status": 200,
+      "sha256": "c112d71886f933fb1f5b1477a08a832ec3eceb11a868d0b52d61f64932883878",
+      "snapshot": "c112d71886f933fb1f5b1477a08a832ec3eceb11a868d0b52d61f64932883878.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.leganes.org/portal/leganes/contenedor1.jsp?seccion=s_fdes_d4_v1.jsp&codbusqueda=269&language=es&codResi=1&codMenuPN=3&codMenuSN=49&codMenuTN=166",
+      "url": "https://www.leganes.org/portal/leganes/contenedor1.jsp?seccion=s_fdes_d4_v1.jsp&codbusqueda=269&language=es&codResi=1&codMenuPN=3&codMenuSN=49&codMenuTN=166",
+      "retrieved_at": "2026-10-29T09:39:35.092132+00:00",
+      "status": 404,
+      "error": "HTTPStatusError: Client error '404 404' for url 'https://www.leganes.org/portal/leganes/contenedor1.jsp?seccion=s_fdes_d4_v1.jsp&codbusqueda=269&language=es&codResi=1&codMenuPN=3&codMenuSN=49&codMenuTN=166'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=463",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=463",
+      "retrieved_at": "2026-10-29T09:39:35.209018+00:00",
+      "status": 200,
+      "sha256": "20aa0a43f64b09b96c0268c658c86423ca42d47df88a7f40c34a9cee9ab1e615",
+      "snapshot": "20aa0a43f64b09b96c0268c658c86423ca42d47df88a7f40c34a9cee9ab1e615.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=535979262ef5d010VgnVCM1000000b205a0aRCRD",
+      "url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=535979262ef5d010VgnVCM1000000b205a0aRCRD",
+      "retrieved_at": "2026-10-29T09:39:35.259371+00:00",
+      "status": 200,
+      "sha256": "eea891c9e1920f79b7e3b5b792259a82ed38b02c9cb2cf450a865adbca263be0",
+      "snapshot": "eea891c9e1920f79b7e3b5b792259a82ed38b02c9cb2cf450a865adbca263be0.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.comunidad.madrid/centros/biblioteca-antonio-mingote",
+      "url": "https://www.comunidad.madrid/centros/biblioteca-antonio-mingote",
+      "retrieved_at": "2026-10-29T09:39:35.382684+00:00",
+      "status": 200,
+      "sha256": "292feda4cd2a444f0276f5722c2a318885e542ac8dde0ff1de26afeb92a5c620",
+      "snapshot": "292feda4cd2a444f0276f5722c2a318885e542ac8dde0ff1de26afeb92a5c620.response",
+      "content_type": "text/html; charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=943979262ef5d010VgnVCM1000000b205a0aRCRD",
+      "url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=943979262ef5d010VgnVCM1000000b205a0aRCRD",
+      "retrieved_at": "2026-10-29T09:39:35.400470+00:00",
+      "status": 200,
+      "sha256": "6b0c0f76d32af11179e9eb46cbc5fe3efab7b287e59e27b8a8c4753e77b68a1b",
+      "snapshot": "6b0c0f76d32af11179e9eb46cbc5fe3efab7b287e59e27b8a8c4753e77b68a1b.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=260e995a8bf5d010VgnVCM2000000c205a0aRCRD",
+      "url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=260e995a8bf5d010VgnVCM2000000c205a0aRCRD",
+      "retrieved_at": "2026-10-29T09:39:35.468155+00:00",
+      "status": 200,
+      "sha256": "db5b544d4dcaebbba0b7c1b133364e4e19109710b137b67b09c3ed7e95502bcf",
+      "snapshot": "db5b544d4dcaebbba0b7c1b133364e4e19109710b137b67b09c3ed7e95502bcf.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=5029",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=5029",
+      "retrieved_at": "2026-10-29T09:39:35.684000+00:00",
+      "status": 200,
+      "sha256": "58dc407d5249845334757d694c8e011f9488ab4016742d8b35235817e47b265a",
+      "snapshot": "58dc407d5249845334757d694c8e011f9488ab4016742d8b35235817e47b265a.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.comunidad.madrid/centros/biblioteca-jose-luis-sampedro",
+      "url": "https://www.comunidad.madrid/centros/biblioteca-jose-luis-sampedro",
+      "retrieved_at": "2026-10-29T09:39:35.689022+00:00",
+      "status": 200,
+      "sha256": "7fb4a6bfcd9c37bdb7cd074d0872a02a0850987a8682a887b3ff4e0546113118",
+      "snapshot": "7fb4a6bfcd9c37bdb7cd074d0872a02a0850987a8682a887b3ff4e0546113118.response",
+      "content_type": "text/html; charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://sede-electronica.rivasciudad.es/equipamiento/biblioteca-gloria-fuertes/",
+      "url": "https://sede-electronica.rivasciudad.es/equipamiento/biblioteca-gloria-fuertes/",
+      "retrieved_at": "2026-10-29T09:39:35.704228+00:00",
+      "status": 200,
+      "sha256": "cad1d2021537574376cb8d0f34aa92b42639918b3335f59a839318f468f72ae7",
+      "snapshot": "cad1d2021537574376cb8d0f34aa92b42639918b3335f59a839318f468f72ae7.response",
+      "content_type": "text/html; charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=127979262ef5d010VgnVCM1000000b205a0aRCRD",
+      "url": "https://www.madrid.es/sites/v/index.jsp?vgnextchannel=bfa48ab43d6bb410VgnVCM100000171f5a0aRCRD&vgnextoid=127979262ef5d010VgnVCM1000000b205a0aRCRD",
+      "retrieved_at": "2026-10-29T09:39:35.812186+00:00",
+      "status": 200,
+      "sha256": "763fbf1a053e58c3c767d25ae4353f64ea2f3570a2bf92f20d6d969dcd6fb1f3",
+      "snapshot": "763fbf1a053e58c3c767d25ae4353f64ea2f3570a2bf92f20d6d969dcd6fb1f3.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.comunidad.madrid/centros/biblioteca-miguel-hernandez",
+      "url": "https://www.comunidad.madrid/centros/biblioteca-miguel-hernandez",
+      "retrieved_at": "2026-10-29T09:39:35.898788+00:00",
+      "status": 200,
+      "sha256": "a66fb32b9c323324fd2dd3f8afa4e1eebf749161ed878b132ef26e064f516365",
+      "snapshot": "a66fb32b9c323324fd2dd3f8afa4e1eebf749161ed878b132ef26e064f516365.response",
+      "content_type": "text/html; charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.comunidad.madrid/centros/biblioteca-rafael-alberti",
+      "url": "https://www.comunidad.madrid/centros/biblioteca-rafael-alberti",
+      "retrieved_at": "2026-10-29T09:39:35.969717+00:00",
+      "status": 200,
+      "sha256": "b8c45db588e191ab5323db012dae27fa0f1554e2d2c1e3160d725cf98434e58d",
+      "snapshot": "b8c45db588e191ab5323db012dae27fa0f1554e2d2c1e3160d725cf98434e58d.response",
+      "content_type": "text/html; charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.comunidad.madrid/centros/biblioteca-jose-hierro",
+      "url": "https://www.comunidad.madrid/centros/biblioteca-jose-hierro",
+      "retrieved_at": "2026-10-29T09:39:35.969732+00:00",
+      "status": 200,
+      "sha256": "bcb9f94b67ce2a166e057e72cd3acf5a49e109c1ee16b6479678a5c1f9cc1610",
+      "snapshot": "bcb9f94b67ce2a166e057e72cd3acf5a49e109c1ee16b6479678a5c1f9cc1610.response",
+      "content_type": "text/html; charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=92",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=92",
+      "retrieved_at": "2026-10-29T09:39:36.155156+00:00",
+      "status": 200,
+      "sha256": "51aac0a4ed2c0c849416c57c2eabab8a0d34b573f470a6fa277eb7fe43814405",
+      "snapshot": "51aac0a4ed2c0c849416c57c2eabab8a0d34b573f470a6fa277eb7fe43814405.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://www.comunidad.madrid/centros/biblioteca-maria-moliner",
+      "url": "https://www.comunidad.madrid/centros/biblioteca-maria-moliner",
+      "retrieved_at": "2026-10-29T09:39:36.177926+00:00",
+      "status": 200,
+      "sha256": "9aacd09e99dd1b3521deeef3b39240873257fd804f5a690dc9e3527df4784406",
+      "snapshot": "9aacd09e99dd1b3521deeef3b39240873257fd804f5a690dc9e3527df4784406.response",
+      "content_type": "text/html; charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=223",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=223",
+      "retrieved_at": "2026-10-29T09:39:36.266369+00:00",
+      "status": 200,
+      "sha256": "47d2150061913fc4b553536d19b44efc6b7bbdaec0da669318a72d9f5631f1ab",
+      "snapshot": "47d2150061913fc4b553536d19b44efc6b7bbdaec0da669318a72d9f5631f1ab.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=166",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=166",
+      "retrieved_at": "2026-10-29T09:39:36.403108+00:00",
+      "status": 200,
+      "sha256": "2e44ecc5aa58cbb0b851046f444f1f762255f303e61dd360c9aef19f72f08ad4",
+      "snapshot": "2e44ecc5aa58cbb0b851046f444f1f762255f303e61dd360c9aef19f72f08ad4.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=104",
+      "url": "https://gestiona.comunidad.madrid/directorio_publicacion/comunidades/registro.cmd?id=104",
+      "retrieved_at": "2026-10-29T09:39:36.516482+00:00",
+      "status": 200,
+      "sha256": "8fe8bc8e2bf7cfaa4d3dfadbd4fecb63c183096b6b5c5ae8175478091a7203bc",
+      "snapshot": "8fe8bc8e2bf7cfaa4d3dfadbd4fecb63c183096b6b5c5ae8175478091a7203bc.response",
+      "content_type": "text/html;charset=UTF-8",
+      "encoding": "utf-8"
+    },
+    {
+      "requested_url": "https://sede-electronica.rivasciudad.es/equipamiento/biblioteca-casco-antiguo/",
+      "url": "https://sede-electronica.rivasciudad.es/equipamiento/biblioteca-casco-antiguo/",
+      "retrieved_at": "2026-10-29T09:39:36.618976+00:00",
+      "status": 200,
+      "sha256": "a9108208e7f4e5df6d703e2791613b0665904b620c499136ddf952b809b1b59d",
+      "snapshot": "a9108208e7f4e5df6d703e2791613b0665904b620c499136ddf952b809b1b59d.response",
+      "content_type": "text/html; charset=UTF-8",
+      "encoding": "utf-8"
+    }
+  ]
+}

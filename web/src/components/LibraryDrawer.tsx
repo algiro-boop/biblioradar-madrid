@@ -13,6 +13,7 @@ import {
 } from "@/lib/occupancy";
 import type { LibraryWithOccupancy, ReportValue, UserPosition } from "@/lib/types";
 import { InstitutionBadge } from "./Badges";
+import { CapacityText } from "./CapacityText";
 import { ReportButtons } from "./ReportButtons";
 import { ShareButtons } from "./ShareButtons";
 
@@ -203,6 +204,7 @@ export function LibraryDrawer({
                     >
                       {level === "closed" ? "Cerrada" : formatOccupancy(pct)}
                     </p>
+                    <CapacityText library={library} className="mt-1 block text-sm font-medium text-slate-600" />
                   </div>
                   <span
                     className={`mb-1 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold ring-1 ring-inset ${styles.soft}`}
@@ -254,12 +256,6 @@ export function LibraryDrawer({
                   }
                 />
               </section>
-
-              {library.total_seats !== null && (
-                <p className="flex items-center gap-2 text-sm text-slate-600">
-                  <Armchair className="size-4 text-slate-400" /> {library.total_seats} puestos de lectura
-                </p>
-              )}
 
               <section aria-labelledby="hours-title">
                 <h3 id="hours-title" className="flex items-center gap-1.5 text-sm font-semibold text-slate-900">

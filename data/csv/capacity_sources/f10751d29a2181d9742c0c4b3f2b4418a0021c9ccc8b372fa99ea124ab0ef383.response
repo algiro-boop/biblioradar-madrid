@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
+<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=7" />
+	
+
+
+
+	 	
+	<title>Directorio de bibliotecas de la Comunidad de Madrid &gt; 
+             	    	    		Datos de biblioteca
+    	    </title>
+
+		
+ 		
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Language" content="es" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<link href="../css/comun_defaults.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_menu.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_arboles.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_mensajes.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_paginacion.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_tooltips.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_campos.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_tabs.css" rel="stylesheet" type="text/css" />
+<link href="../css/comun_dl.css" rel="stylesheet" type="text/css" />
+<link href="../css/adicional_menu.css" rel="stylesheet" type="text/css" />
+
+
+
+
+<script type="text/javascript">
+	var root = "..";
+	var root_i18n = "..";
+</script>
+
+
+
+<script type="text/javascript" src="../js/prototype.js"></script>
+<script type="text/javascript" src="../js/window.js"></script>
+<script type="text/javascript" src="../js/botones.js"></script>
+<script type="text/javascript" src="../js/i18n.js"></script>
+<script type="text/javascript" src="../js/nodos.js"></script>
+
+<script type="text/javascript">	
+	function ocultarDetalleGrupo()
+	{
+		alAbrirCerrarDetalle(true);
+
+		var elem = $("contenedor_detalle");
+		if(elem!=null){
+			var vis = elem.style; 
+			vis.display='none';
+		}
+		$('contenido_detalle').hide();
+	}
+	function ocultarEdicionGrupo()
+	{
+		var elem = $("boton_edicion_grupo");
+		if(elem!=null){
+			var vis = elem.style; 
+			vis.display='none';
+		}
+	}
+</script>
+
+
+		<script type="text/javascript" src="../js/i18n.cmd?fichero=validacion_campos_i18n.vm"></script>
+	<script type="text/javascript" src="../js/validacion_campos.js"></script>		
+	
+	<link href="../css/registro_marc.css" rel="stylesheet" type="text/css" />
+	<link href="../css/formatos.css" rel="stylesheet" type="text/css" />
+	<link href="../css/formatos_com.css" rel="stylesheet" type="text/css" />
+
+	<script type="text/javascript" src="../js/window.js"></script>
+
+	<script type="text/javascript" src="../js/calendario_ficha.js"></script>
+	
+			</head>
+
+<body>
+	
+<div id="pagina">
+
+ <div id="public">  <div id="comunidad"> 
+<div id="pagina_contenido0">
+	<div id="pagina_contenido">
+	    		<div class="identificacion_menu">
+									
+							<a href="../seguridad/form_login.cmd?destino=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D283">Bibliotecas</a>
+					</div>		    
+
+	    <h1 id="web_route">
+	    			    	
+            	    	       		<span class="webroute_current">Datos de biblioteca</span>
+       	    	        	    </h1>
+									
+	    	    <div id="contenido">
+			<div class="vacio"></div>				
+	<div id="consulta_registro">
+		<div class="registro_acciones">
+						
+			
+					<div class="datos_estadisticos">
+
+		</div>	
+
+   				   		
+    		<div class="registro_acciones">
+					<form name="formExport" action="../bibliotecas/operacion_seleccion.cmd"  method='post' >
+	
+					<input type="hidden" name="sel283" value="on" />
+					<input type="hidden" name="destino" value="../comunidades/registro.cmd?id=283" />
+										<span class="opciones_resultados">
+						<label for="operacion">Operación: </label>
+						<select name="operacion" id="operacion">
+							<option value="bibliotecas/imprimir">Imprimir ficha</option>
+													<option value="comunidades/exportar_registros">Exportar</option>
+																								
+					
+																			<option value="comunidades/add_cesta_seleccion">Añadir a Mis Seleccionados</option>
+												</select>
+						
+		    									 					<span class="boton_aceptar">
+	    	    		<input type="submit" name="aceptar" id='boton_aceptar' class="submit_boton" onmouseover="cambiarEstilo(this,'submit_boton_over', 'submit_boton', true);" onfocus="cambiarEstilo(this,'submit_boton_over', 'submit_boton', true);" onmouseout="cambiarEstilo(this,'submit_boton_over', 'submit_boton', false);" onblur="cambiarEstilo(this,'submit_boton_over', 'submit_boton', false);" value="Aceptar" />
+    	    	</span>
+					</span>
+					</form>
+       		</div>
+		</div>
+   		<div class="registro_datos">
+			<div class="registro_com">
+	            	    	        <div class="ficha"><h2>Biblioteca Municipal "José Hierro"</h2><div id="tabs_ficha"><div class="tabpanel_container"><div class="tab_panel" id="datos_basicos"><h2>Datos básicos</h2><p class="imagen_favorita"><a href="../catalogo_imagenes/grupo.cmd?path=84&amp;idRegistro=283" ><img src="../catalogo_imagenes/imagen_id.cmd?formato=jpg&altoMaximo=200&anchoMaximo=200&idImagen=1238" alt="Imagen de la biblioteca" /></a><br /><a href="../catalogo_imagenes/galeria.cmd?path=84&amp;idRegistro=283" >Galería imágenes</a></p><div class="direccion"><p class="ficha_valor"><span class="etiqueta">Dirección:  </span><span class="valor">Calle los Robles, s/n<br />28922 Alcorcón (Madrid)<br />España<br />Tel.: 916648481 (Sala adultos), 916648483 (Sala infantil/juvenil), 916648452 (Bibliotecaria Municipal)<br />E-mail:<a class="enlace_externo" href="mailto: bibjosehierro@ayto-alcorcon.es"> bibjosehierro@ayto-alcorcon.es</a> , <a class="enlace_externo" href="mailto:biblioteca@ayto-alcorcon.es">biblioteca@ayto-alcorcon.es</a> <br /><a class="enlace_externo" target="_blank" href="http://maps.google.es/maps/ms?ie=UTF8&hl=es&msa=0&msid=100241115758437167377.00048b59a498d8b4103d4&ll=40.34486,-3.833853&spn=0.003549,0.006856&t=h&z=17&lci=transit_comp">Mapa Localización</a><br /><a class="enlace_externo" target="_blank" href="http://www.bibliotecaspublicas.es/alcorcon/index.jsp">Sitio Web</a><br /></span></p></div><div class="separador_imagenes"></div><div class="transporte"><p class="ficha_valor"><span class="etiqueta">Transportes:  </span><span class="valor"><span class="texto_transportes"><span class="icono_transportes"><img src="../img/iconos/transporte_metro.gif" alt="metro" /> </span>Línea 12 Metrosur, estación Alcorcón Central</span><br /><span class="texto_transportes"><span class="icono_transportes"><img src="../img/iconos/transporte_cercanias.gif" alt="cercanias" /> </span>Línea C5, estación Alcorcón</span><br /><span class="texto_transportes"><span class="icono_transportes"><img src="../img/iconos/transporte_urbano.gif" alt="urbano" /> </span>L1 y L2  </span><br /><span class="texto_transportes"><span class="icono_transportes"><img src="../img/iconos/transporte_interurbano.gif" alt="interurbano" /> </span>Alcorcón-Madrid 512, Alcorcón-Móstoles 520, Alcorcón-Leganés-Getafe 450, Alcorcón-Móstoles-Navalcarnero 529H (parada en C/ Berlín, frente a Cercanías Renfe estación Alcorcón) </span></span></p></div><div class="horario_accesibilidad"><p class="ficha_valor"><span class="etiqueta">Horarios:  </span><span class="valor">Sección de adultos: De Lunes a Viernes de 9:00 a 21:00 horas. Sábados y Domingos de 8:30 a 15:00 horas. <br />Sección infantil/juvenil: De Lunes a viernes de 15:00 a 21:00 horas. Sábados y domingos de 08:30 a 15:00  horas (excepto verano) <br /> </span></p><p class="ficha_valor"><span class="etiqueta">Accesible:  </span><span class="valor"><img class="icono_accesibilidad" src="../img/iconos/accesibilidad.gif" alt="Biblioteca con accesibilidad" /> </span></p></div><div class="separador_transp_horario"></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Otros nombres:  </span><span class="valor">Biblioteca Centro Municipal de las Artes</span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Entidad responsable:  </span><span class="valor">Ayuntamiento de Alcorcón. Concejalía de Cultura y Festejos</span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Puntos de servicio:  </span><span class="valor">Número de puntos: 7<br />Nombre de los puntos: Biblioteca Municipal "José Hierro"; Biblioteca Municipal "Ciudad de Nejapa"; Biblioteca Municipal "Almudena Grandes"; Biblioteca Municipal "Alcalde Jesús Salvador"; Biblioteca Municipal "Joaquín Vilumbrales"; Biblioteca Municipal "Fuente Cisneros"; Biblioteca Municipal "Miguel Delibes"</span></p></div><div class="fechas"><p class="ficha_valor"><span class="etiqueta">La Biblioteca en fechas:  </span><span class="valor">Creación: 1998</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Historia:  </span><span class="valor">La Biblioteca Municipal José Hierro de Alcorcón fue inaugurada el 15 de diciembre de 1998 aunque su apertura se había producido el 25 de junio de ese mismo año. Está dedicada al poeta y premio Cervantes José Hierro del Real (1922-2002).<br /><br />Está ubicada en el edificio del Centro Municipal de las Artes, que alberga también el Teatro Buero Vallejo. Consta de dos salas de 400 m2 cada una. Con servicios de préstamo y consulta de libros y préstamo de material audiovisual y multimedia de acceso directo, lectura y consulta de revistas y prensa, boletines oficiales, animación a la lectura y actividades. Con formación de usuarios para educación infantil, primaria y secundaria. </span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Ubicación:  </span><span class="valor">Alcorcón - Distrito 1. Casco antiguo</span></p></div><div class="administrativa"><p class="ficha_valor"><span class="etiqueta">Tipo y titularidad:  </span><span class="valor">Tipo biblioteca: Pública - Punto de servicio fijo<br />Tipo administración: Administración Local</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Datos municipales:  </span><span class="valor">Estadísticas: <a class="enlace_externo" target="_blank" href="https://gestiona.comunidad.madrid/desvan/almudena/BuscarMunicipios.icm?codFicha=1&codSolapaActiva=1">Datos estadísticos básicos</a></span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Forma de acceso:  </span><span class="valor">Acceso libre</span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Fecha de actualización del registro:  </span><span class="valor">29/09/2026</span></p></div></span></p></div><div class="tab_panel" id="instalaciones_servicios"><h2>Instalaciones y servicios</h2><div class="direccion"><p class="ficha_valor"><span class="etiqueta">Edificio:  </span><span class="valor">Superficie útil: 2.615,00 metros cuadrados. Superficie útil de uso bibliotecario: 815,00 metros cuadrados. <br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Instalaciones y servicios:  </span><span class="valor"><strong>Sala adultos o principal</strong>: Capacidad: 107. Puestos de atención: 2. Superficie: 400 metros cuadrados.<br /><br /><strong>Sala infantil/juvenil</strong>: Capacidad: 94. Puestos de atención: 2. Superficie: 306 metros cuadrados.<br /><br /><strong>Internet</strong>: Capacidad: 13.<br /><br /><strong>Depósitos</strong>: Superficie: 48 metros cuadrados.<br /><br /><strong>Zona de trabajos o servicios internos</strong>: Superficie: 48 metros cuadrados.<br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Equipamiento:  </span><span class="valor"><strong>Ordenadores con acceso a OPAC</strong>: Nº Unidades públicas: 2. <br /><br /><strong>Ordenadores con acceso a Internet</strong>: Nº Unidades públicas: 13. <br /><br /><strong>Lectores de CD-ROM, DVD</strong>: Nº Unidades públicas: 0. Otra Información: Es un lector externo . <br /><br /><strong>Regrabadoras de CD, CD-ROM, DVD</strong>: Nº Unidades públicas: 0. Otra Información: El lector externo de CD también es regrabadora. <br /><br /><strong>Impresoras</strong>: <br /><br /><strong>Escáneres</strong>: <br /></span></p></div><div class="com"><p class="ficha_valor"><span class="etiqueta">Servicios en red:  </span><span class="valor"> Catálogo en Internet <a class="enlace_externo" target="_blank" href=" https://gestiona.comunidad.madrid/biblio_publicas/cgi-bin/abnetopac?SUBC=RBMALR/BMALR2 "> https://gestiona.comunidad.madrid/biblio_publicas/cgi-bin/abnetopac?SUBC=RBMALR/BMALR2 </a><br /> Sitio web <a class="enlace_externo" target="_blank" href=" http://www.bibliotecaspublicas.es/alcorcon/index.jsp"> http://www.bibliotecaspublicas.es/alcorcon/index.jsp</a><br />Acceso a bases de datos en red local: Si. <br />Acceso a bases de datos en Internet: Si. <br />Acceso a Internet inalámbrico: Si. <br />Radiofrecuencia: No. </span></p></div></span></p></div><div class="tab_panel" id="actividades"><h2>Actividades</h2><div class="notas"><p class="ficha_valor"><span class="etiqueta">Actividades para adultos:  </span><span class="valor"><strong>Presentaciones de libros, encuentros con autores, etc.</strong>Organización: Biblioteca. <br /><br /><strong>Exposiciones</strong>Organización: Biblioteca. <br /><br /><strong>Narración de cuentos</strong>Organización: Biblioteca. <br /><br /><strong>Concursos</strong>Organización: Biblioteca. <br /><br /><strong>Visitas guiadas</strong>Organización: Biblioteca. <br /></span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Actividades para niños:  </span><span class="valor"><strong>Presentaciones de libros, encuentros con autores, etc.</strong>Organización: Biblioteca. <br /><br /><strong>Exposiciones</strong>Organización: Biblioteca. <br /><br /><strong>Cursos y talleres</strong>Organización: Biblioteca. <br /><br /><strong>Narración de cuentos</strong>Organización: Biblioteca. <br /><br /><strong>Concursos</strong>Organización: Biblioteca. <br /></span></p></div><div class="notas"><p class="ficha_valor"><span class="etiqueta">Formación de usuarios:  </span><span class="valor"><strong>Opac</strong> </span></p></div></span></p></div><div class="tab_panel" id="colecciones"><h2>Colecciones</h2><div class="fondos"><p class="ficha_valor"><span class="etiqueta">Fondos:  </span><span class="valor">Libros y folletos: 41.261<br />DVD Vídeos: 2.369<br />Documentos sonoros (discos compactos): 1.221<br />Electrónicos: CD-ROM: 184<br />Electrónicos: DVD-ROM: 7<br />Publicaciones periódicas: 3</span></p></div></span></p></div><div class="tab_panel" id="identificacion"><h2>Número de registro</h2><div class="control"><p class="ficha_valor"><span class="etiqueta">Número de control:  </span><span class="valor">0400721001</span></p></div><div class="texto"><p class="ficha_valor"><span class="etiqueta">Campos texto:  </span><span class="valor"><br />Antiguo NIiden: 2809544<br />40,339<br />-3,84241</span></p></div></span></p></div></div></div></div><script type="text/javascript">
+addFuncionOnLoad (function() {
+    createTabbedPanel('tabs_ficha', 'h2');
+});
+</script>
+	            			</div>
+       	</div>
+	</div>
+
+	        		        		        		    	
+			<div class="vacio"></div>
+		    	</div>
+    	
+	    </div>
+    </div>
+    
+        <div id="cabecera">
+	<div id="imagen_dcha_cabecera">
+		<img src="../img/cabecera/cabecera_dir.gif" alt="Dirección general de archivos, museos y bibliotecas. Consejería de cultura y turismo. Comunidad de Madrid"/> 
+
+	</div>	
+	
+	<div id="imagen_cabecera">
+
+	</div>	
+</div>
+<!--
+<div class="identificacion_menu">
+			
+			<a href="../seguridad/form_login.cmd?destino=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D283">Bibliotecas</a>
+	</div>
+-->    
+        <div id="menu_principal">
+    	    			        	<h1 class="menu_titulo">Menú</h1>
+		            	
+
+
+
+<div class="menu">
+						<ul class="menu_element">
+    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/busqueda.cmd">Búsqueda</a> 
+					        			        		</li>
+        	    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/busqueda_avanzada.cmd">Búsqueda Avanzada</a> 
+					        			        		</li>
+        	    	    		    	    		        		        		        		        				        		                		<li class='menu_nosel '>
+        			    <a href="../comunidades/registros.cmd">Listado Completo</a> 
+					        			        		</li>
+        	    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    		    	    	</ul>
+    	</div>
+
+                    </div>
+    
+        <div id="pie">
+    <div class="estandares">
+        <a href="http://validator.w3.org/check/referer"><img
+        src="../img/iconos_estandares/valid-xhtml10.gif" alt='Validado XHTML 1.0' /></a>
+        
+        <a href="http://jigsaw.w3.org/css-validator/"><img
+        src="../img/iconos_estandares/valid-css.gif" alt='CSS validado' /></a>
+
+		<a href="http://www.w3.org/WAI/WCAG1AA-Conformance" title='Explicación del Nivel Doble-A de Conformidad'><img 
+		src="../img/iconos_estandares/dobleA.gif" alt='Icono de conformidad con el Nivel Doble-A, de las Directrices de Accesibilidad para el Contenido Web 1.0 del W3C-WAI' /></a>
+    	
+    		        	<a href="http://www.tawdis.net/servlets/taw?url=..%2Fcomunidades%2Fregistro.cmd%3Fid%3D283"><img src="../img/iconos_estandares/taw.gif" alt='Validado por TAW' /></a>
+    </div>
+					<script type="text/javascript">
+			ocultarDetalleGrupo();
+		</script>
+		<script type="text/javascript">
+		ocultarEdicionGrupo();
+	</script>    
+</div>
+
+ </div>  </div> </div>
+</body>
+</html>

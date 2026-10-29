@@ -87,6 +87,7 @@ const BASE_LIBRARY: LibraryWithOccupancy = {
   google_place_id: null,
   opening_hours: hoursFromText("De lunes a viernes de 9 a 21 horas."),
   total_seats: null,
+  total_capacity: null,
   created_at: "2026-01-01T00:00:00Z",
   updated_at: "2026-01-01T00:00:00Z",
   occupancy: null,

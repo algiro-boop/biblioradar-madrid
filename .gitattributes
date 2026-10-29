@@ -1,0 +1,2 @@
+# Immutable HTTP evidence: preserve original bytes, whitespace and SHA-256 on checkout.
+data/csv/capacity_sources/*.response -text -diff
