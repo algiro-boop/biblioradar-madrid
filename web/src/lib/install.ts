@@ -8,6 +8,11 @@ export interface BeforeInstallPromptEvent extends Event {
 
 export type InstallTab = "ios" | "android";
 
+/** Señales explícitas de navegadores integrados; Chrome/Safari normales no coinciden. */
+export function isInAppBrowser(userAgent: string): boolean {
+  return /GSA\/|Instagram|TikTok|musical_ly|BytedanceWebview|FBAN|FBAV|FB_IAB|Twitter|LinkedInApp|Line\/|Snapchat|;\s*wv\b|\bWebView\b/i.test(userAgent);
+}
+
 /** Pestaña de la guía que se abre primero según el dispositivo. */
 export function defaultInstallTab(platform: LocationPlatform): InstallTab {
   return platform === "ios-safari" || platform === "ios-chrome" ? "ios" : "android";

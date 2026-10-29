@@ -4,8 +4,9 @@ import { Download, LoaderCircle, Smartphone, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { BRAND_ICON_SRC } from "@/lib/brand";
-import { defaultInstallTab, installStore, isStandalone, type InstallTab } from "@/lib/install";
+import { defaultInstallTab, installStore, isInAppBrowser, isStandalone, type InstallTab } from "@/lib/install";
 import { detectPlatform, type LocationPlatform } from "@/lib/location";
+import { shareOrCopy } from "@/lib/share";
 import {
   AndroidConfirm,
   AndroidMenu,
@@ -61,7 +62,7 @@ const TABS: ReadonlyArray<{ value: InstallTab; label: string }> = [
   { value: "android", label: "Android" },
 ];
 
-function InstallGuideModal({
+export function InstallGuideModal({
   canPrompt,
   onClose,
 }: {
@@ -69,19 +70,39 @@ function InstallGuideModal({
   onClose: () => void;
 }) {
   const platform = useMemo<LocationPlatform>(() => detectPlatform(navigator.userAgent, navigator.maxTouchPoints), []);
+  const inAppBrowser = useMemo(() => isInAppBrowser(navigator.userAgent), []);
   const [tab, setTab] = useState<InstallTab>(() => defaultInstallTab(platform));
   const [prompting, setPrompting] = useState(false);
+  const [copyStatus, setCopyStatus] = useState<"idle" | "copying" | "copied" | "failed">("idle");
+  const copyResetRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const mountedRef = useRef(false);
   const closeRef = useRef<HTMLButtonElement>(null);
   const tabRefs = useRef<Record<InstallTab, HTMLButtonElement | null>>({ ios: null, android: null });
 
   useEffect(() => {
+    mountedRef.current = true;
     closeRef.current?.focus();
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    return () => {
+      mountedRef.current = false;
+      window.removeEventListener("keydown", onKey);
+      if (copyResetRef.current !== null) clearTimeout(copyResetRef.current);
+    };
   }, [onClose]);
+
+  const copyLink = async () => {
+    if (copyResetRef.current !== null) clearTimeout(copyResetRef.current);
+    setCopyStatus("copying");
+    const outcome = await shareOrCopy(window.location.href, navigator, false);
+    if (!mountedRef.current) return;
+    setCopyStatus(outcome === "copied" ? "copied" : "failed");
+    if (outcome === "copied") {
+      copyResetRef.current = setTimeout(() => setCopyStatus("idle"), 3000);
+    }
+  };
 
   const install = async () => {
     setPrompting(true);
@@ -130,7 +151,40 @@ function InstallGuideModal({
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
-          {canPrompt && (
+          {(inAppBrowser || tab === "ios") && (
+            <aside aria-label="Abrir en un navegador para instalar" className="mb-4 rounded-2xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">
+              <p className="font-semibold">
+                ⚠️ ¿Estás usando la app de Google o redes sociales? Para instalar BiblioRadar en tu pantalla de inicio,
+                primero debes abrir esta web en Safari o Chrome.
+              </p>
+              <ol className="mt-3 list-decimal space-y-2 pl-5 text-xs leading-relaxed">
+                <li>Toca los tres puntos (•••) o el botón Compartir y selecciona <strong>«Abrir en Safari»</strong> o <strong>«Abrir en Chrome»</strong>.</li>
+                <li>
+                  Una vez allí, pulsa {tab === "ios"
+                    ? <strong>Compartir → Añadir a pantalla de inicio</strong>
+                    : <strong>Menú ⋮ → Instalar aplicación o Añadir a pantalla de inicio</strong>}.
+                </li>
+              </ol>
+              <p className="mt-3 text-xs">Si no aparece esa opción, copia el enlace, abre Safari o Chrome y pégalo en la barra de direcciones.</p>
+            </aside>
+          )}
+
+          <div className="mb-4">
+            <button
+              type="button"
+              onClick={() => void copyLink()}
+              disabled={copyStatus === "copying"}
+              className="flex min-h-11 w-full items-center justify-center rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600 disabled:opacity-60"
+            >
+              {copyStatus === "copied" ? "¡Enlace copiado!" : copyStatus === "copying" ? "Copiando…" : "📋 Copiar enlace de la web"}
+            </button>
+            <p role="status" aria-live="polite" className="mt-1 text-xs text-slate-600">
+              {copyStatus === "copied" && "¡Enlace copiado! Abre Safari o Chrome y pega el enlace."}
+              {copyStatus === "failed" && "No se pudo copiar. Mantén pulsada la dirección de esta página y copia el enlace manualmente."}
+            </p>
+          </div>
+
+          {canPrompt && !inAppBrowser && (
             <div className="mb-4">
               <button
                 type="button"
