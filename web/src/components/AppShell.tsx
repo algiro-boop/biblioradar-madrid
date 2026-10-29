@@ -164,7 +164,7 @@ export function AppShell() {
   const handleReported = useCallback(
     (libraryId: string) => {
       // Respaldo por si el WebSocket no está conectado: Realtime normalmente llega antes.
-      window.setTimeout(() => void refreshLibrary(libraryId), 800);
+      void refreshLibrary(libraryId);
     },
     [refreshLibrary],
   );

@@ -197,6 +197,7 @@ export function parseOccupancyStatus(raw: unknown): OccupancyStatus | null {
     library_id: r.library_id,
     prior_occupancy: toPct(r.prior_occupancy),
     bayesian_occupancy: toPct(r.bayesian_occupancy),
+    full_reported_at: asNullableString(r.full_reported_at),
     confidence_score: confidence !== null && confidence >= 0 && confidence <= 1 ? confidence : null,
     is_open_now: typeof r.is_open_now === "boolean" ? r.is_open_now : null,
     google_live_pct: toPct(r.google_live_pct),

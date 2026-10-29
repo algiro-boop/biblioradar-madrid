@@ -19,7 +19,7 @@ do $$ declare v_id uuid:='00000000-0000-0000-0000-000000000997'; v_conf numeric;
   end if;
   perform public.recalculate_csv_occupancy(v_id,'2027-07-15T11:00Z');
   select confidence_score into v_conf from public.occupancy_status where library_id=v_id;
-  if abs(v_conf-20::numeric/26)>0.000001 then
+  if abs(v_conf-40::numeric/46)>0.000001 then
     raise exception 'Una curva arquetípica completa debe usar kappa=6: %',v_conf;
   end if;
   if (select primary_source not like '%curva arquetípica%' from public.occupancy_status where library_id=v_id) then
@@ -29,7 +29,7 @@ do $$ declare v_id uuid:='00000000-0000-0000-0000-000000000997'; v_conf numeric;
     '{provenance,kind}','"reference_estimate"') where id=v_id;
   perform public.recalculate_csv_occupancy(v_id,'2027-07-15T11:00Z');
   select confidence_score into v_conf from public.occupancy_status where library_id=v_id;
-  if abs(v_conf-20/(20+least(24,8+2*ln(121::numeric))))>0.000001 then
+  if abs(v_conf-40/(40+least(24,8+2*ln(121::numeric))))>0.000001 then
     raise exception 'Se cambió la precisión normal de las curvas anteriores';
   end if;
   update public.libraries set historical_popularity=jsonb_set(historical_popularity,

@@ -27,7 +27,7 @@ update public.user_reports set device_hash=repeat('a',64),created_at='2026-10-28
 select public.recalculate_csv_occupancy('00000000-0000-0000-0000-000000000801','2026-10-28T09:30:00Z');
 do $$ begin
  if not exists(select 1 from public.occupancy_status where library_id='00000000-0000-0000-0000-000000000801'
-  and active_reports_count=1 and crowd_pct=100 and bayesian_occupancy=80 and confidence_score between .71 and .72) then
+  and active_reports_count=1 and crowd_pct=100 and bayesian_occupancy=88 and final_occupancy_pct=100 and confidence_score between .833 and .834) then
   raise exception 'Beta, deduplicación o confianza incorrectas'; end if;
 end $$;
 select public.recalculate_csv_occupancy('00000000-0000-0000-0000-000000000801','2026-10-28T13:30:00Z');
@@ -99,7 +99,7 @@ do $$ begin
  raise exception 'El vecino cercano no alteró el prior como se esperaba'; end if;
 end $$;
 delete from public.user_reports;
--- Un reporte actual pesa 20; uno de hace 40 minutos pesa 10.
+-- Un reporte actual pesa 40; uno de hace 40 minutos pesa 20.
 insert into public.user_reports(library_id,device_hash,reported_value,user_lat,user_lng)
 values('00000000-0000-0000-0000-000000000901',repeat('f',64),100,40.4,-3.7),
 ('00000000-0000-0000-0000-000000000901',repeat('0',64),20,40.4,-3.7);
@@ -108,7 +108,7 @@ update public.user_reports set created_at='2027-07-14T10:00Z'::timestamptz
 select public.recalculate_csv_occupancy('00000000-0000-0000-0000-000000000901','2027-07-14T10:00Z');
 do $$ begin
  if not exists(select 1 from public.occupancy_status where library_id='00000000-0000-0000-0000-000000000901'
- and bayesian_occupancy=66 and active_reports_count=2 and crowd_pct=73 and confidence_score between .789 and .790) then
+ and bayesian_occupancy=69 and active_reports_count=2 and crowd_pct=73 and confidence_score between .882 and .883) then
  raise exception 'Vida media de 40 minutos incorrecta'; end if;
 end $$;
 select public.recalculate_csv_occupancy('00000000-0000-0000-0000-000000000901','2027-07-14T11:31Z');

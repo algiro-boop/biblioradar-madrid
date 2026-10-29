@@ -6,6 +6,7 @@ import { formatDistance } from "@/lib/geo";
 import { formatRelativeTime, hasRoom } from "@/lib/occupancy";
 import { InstitutionBadge, LevelText, OccupancyPill } from "./Badges";
 import { CapacityText } from "./CapacityText";
+import { FullReportNotice } from "./FullReportNotice";
 
 function SkeletonCard() {
   return (
@@ -118,6 +119,7 @@ export function LibraryList({
                       </span>
                     )}
                   </span>
+                  <FullReportNotice status={library.occupancy} now={now} />
                 </span>
                 <ChevronRight className="size-4 shrink-0 text-slate-300" />
               </button>

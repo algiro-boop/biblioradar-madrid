@@ -14,6 +14,7 @@ import {
 import type { LibraryWithOccupancy, ReportValue, UserPosition } from "@/lib/types";
 import { InstitutionBadge } from "./Badges";
 import { CapacityText } from "./CapacityText";
+import { FullReportNotice } from "./FullReportNotice";
 import { ReportButtons } from "./ReportButtons";
 import { ShareButtons } from "./ShareButtons";
 
@@ -205,6 +206,7 @@ export function LibraryDrawer({
                       {level === "closed" ? "Cerrada" : formatOccupancy(pct)}
                     </p>
                     <CapacityText library={library} className="mt-1 block text-sm font-medium text-slate-600" />
+                    <FullReportNotice status={status} now={now} />
                   </div>
                   <span
                     className={`mb-1 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold ring-1 ring-inset ${styles.soft}`}

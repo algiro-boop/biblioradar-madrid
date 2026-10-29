@@ -1,6 +1,6 @@
 # Catálogo CSV y ocupación bayesiana
 
-El CSV maestro se conserva en `data/csv/bibliotecas_madrid_popular_times.csv`. La migración `supabase/migrations/202610280005_csv_bayesian.sql` añade los campos sin borrar fichas ni reportes, y puede repetirse. El cálculo vive íntegramente en PostgreSQL: el trigger de reportes y el cron llaman al mismo motor. No se duplican fórmulas en el navegador ni se consulta Google, UCM o el clima durante el mantenimiento.
+El CSV maestro se conserva en `data/csv/bibliotecas_madrid_popular_times.csv`. La migración `supabase/migrations/202610280005_csv_bayesian.sql` añade los campos sin borrar fichas ni reportes, y puede repetirse. El cálculo vive íntegramente en PostgreSQL: el trigger de reportes y el cron llaman al mismo motor. El navegador solo reproduce la transformación temporal de presentación de «sala completa»; no calcula el posterior ni consulta Google, UCM o el clima durante el mantenimiento.
 
 ## Puesta en marcha realizada
 
@@ -80,7 +80,7 @@ Los puntos horarios representan franjas: una apertura a las 08:30 permite el pun
 - Vecindad: reportes directos de hoy y de los últimos 90 minutos en centros activos a menos de 2,5 km; último reporte por centro/dispositivo. Compara contra la curva del vecino a la hora del reporte. Ignora desviaciones inferiores a 10 puntos, limita cada anomalía a ±15 puntos y traslada una cuarta parte de la media ponderada por proximidad y `ln(2+num_resenas)`. No usa posteriores vecinos, evitando ciclos de realimentación.
 - Inercia: 80% prior nuevo y 20% ancla del **prior** anterior corregida por el cambio de curva, si ese estado abierto tiene menos de tres horas. El ancla se fija por bloques de 30 minutos. Usar el prior evita incorporar dos veces reportes ya fusionados.
 - Media del prior recortada a `[0,02;0,98]`; precisión `κ=min(24,8+2·ln(1+num_resenas))`, o 6 si la curva está incompleta o identificada como arquetípica. Las reseñas son un indicador aproximado, no el número de observaciones de Popular Times.
-- Likelihood: solo último reporte por dispositivo, entre ahora−90 minutos y ahora. Cada uno pesa `20·exp(−ln(2)·edad_min/40)`. Se mantienen la proximidad de 250 m, el bloqueo asesor antispam y el límite existente de un reporte cada 30 minutos. El formulario mantiene sus cinco niveles y el servidor conserva también el valor heredado 30.
+- Likelihood: solo último reporte por dispositivo, entre ahora−90 minutos y ahora. Cada uno pesa `40·exp(−ln(2)·edad_min/40)`. Se mantienen la proximidad de 250 m, el bloqueo asesor antispam y el límite existente de un reporte cada 30 minutos. El formulario mantiene sus cinco niveles y el servidor conserva también el valor heredado 30.
 - Posterior: `α=μκ+Σwy`, `β=(1−μ)κ+Σw(1−y)`, ocupación `round(100·α/(α+β))`.
 - Confianza: fracción de precisión aportada por reportes `Σw/(κ+Σw)`. Cero significa ausencia de evidencia colaborativa reciente; **no** es una probabilidad calibrada de acierto. El 1 de un cierre expresa certeza según el horario disponible.
 
@@ -99,3 +99,33 @@ npm run build
 ```
 
 `tests/test_csv_sync.py` comprueba limpieza, horarios, coincidencias ambiguas, CSV real, RPC mockeada y parseo SQL con `pglast`. `tests/csv_bayesian_smoke.sql` ejecuta vectores Beta, vida media, deduplicación, calendario, cercanía, CET/CEST, cierres, trigger público, permisos, sync repetido y rollback del lote inválido. CI aplica todas las migraciones en PostgreSQL 16 y ejecuta esos casos mediante `tests/test_database.py`; localmente ese test se omite si no hay `TEST_DATABASE_URL` y `psql`.
+
+## Prioridad de reportes y sala completa
+
+La migración `202610290011_report_priority.sql` aumenta el peso inicial de cada
+reporte a 40, manteniendo su vida media de 40 minutos, ventana de 90 minutos y
+cooldown de envío de 30 minutos. Solo participa el último reporte por dispositivo.
+
+Un reporte de 100 activa un estado operativo de sala completa durante 10 minutos.
+Durante los 5 minutos siguientes, el porcentaje mostrado vuelve linealmente al
+posterior bayesiano. `bayesian_occupancy` conserva el posterior sin este ajuste;
+`final_occupancy_pct` es el valor operativo que consumen mapas, filtros y plazas
+libres. `full_reported_at` conserva la fecha del reporte, no la del último cron.
+El ajuste no se realimenta ni al prior ni al ancla de inercia.
+
+Para decidir el estado se toman los últimos votos por dispositivo: un nuevo 100
+lo activa inmediatamente. Si existen avisos de 100 de los últimos 15 minutos,
+los votos de disponibilidad posteriores al último aviso deben igualar o superar
+el número de esos apoyos para retirarlo. Por tanto, un aviso de 100 sin más apoyos
+se retira con un nuevo reporte inferior a 100; varios apoyos requieren varios
+dispositivos posteriores. Los reportes futuros o caducados no participan.
+
+Los cierres conocidos prevalecen. La interfaz indica «Reportada completa hace X
+min», y durante la transición explica que vuelve a la estimación. Reproduce la
+misma función temporal de SQL cada tick de reloj, sin esperar al cron; nunca
+aplica el ajuste dos veces. El cálculo estadístico permanece en Supabase.
+
+`tests/report_priority_smoke.sql` prueba el trigger público, peso, consenso,
+deduplicación, cierre y caducidad en una transacción que termina en rollback.
+La referencia pura de Python y los tests de frontend comprueban las mismas
+fronteras temporales; los fixtures de prueba no son reportes reales.

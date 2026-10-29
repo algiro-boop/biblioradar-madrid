@@ -96,11 +96,13 @@ def test_postgresql_migrations_smoke_and_python_parity():
     execute((ROOT / "supabase/migrations/202610280005_csv_bayesian.sql").read_text())
     execute((ROOT / "supabase/migrations/202610280008_catalog_expansion.sql").read_text())
     execute((ROOT / "supabase/migrations/202610290009_archetype_precision.sql").read_text())
+    execute((ROOT / "supabase/migrations/202610290011_report_priority.sql").read_text())
     execute((ROOT / "tests/archetype_smoke.sql").read_text())
     execute((ROOT / "tests/feedback_smoke.sql").read_text())
     execute((ROOT / "supabase/migrations/202610280006_feedback_cooldown.sql").read_text())
     execute((ROOT / "supabase/migrations/202610290010_official_capacities.sql").read_text())
     execute((ROOT / "tests/capacities_smoke.sql").read_text())
+    execute((ROOT / "tests/report_priority_smoke.sql").read_text())
     sql, expected = parity_case()
     output = execute(sql)
     # jsonb_agg (PostgreSQL 16) separa los elementos con saltos de línea: decodificar el bloque

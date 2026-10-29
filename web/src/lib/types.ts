@@ -47,6 +47,8 @@ export type OccupancyStatus = {
   library_id: string;
   prior_occupancy?: number | null;
   bayesian_occupancy?: number | null;
+  /** Último aviso de sala completa respaldado por los reportes recientes. */
+  full_reported_at?: string | null;
   confidence_score?: number | null;
   is_open_now?: boolean | null;
   google_live_pct: number | null;
