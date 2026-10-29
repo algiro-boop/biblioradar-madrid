@@ -24,7 +24,7 @@ La incidencia previa de Gloria Fuertes se ha corregido separando las identidades
 
 ## Tamaño y sincronización
 
-El cliente exige 95 filas completas por defecto y rechaza catálogos truncados. Una futura ampliación explícita puede usar `--expected-rows N`. La migración `202610280008_catalog_expansion.sql` sustituye el requisito fijo de 88 por un mínimo de 88 y comprueba que el número de UUID, nombres y centros activos coincida con la longitud del lote. Mantiene permisos, atomicidad, reportes, coordenadas existentes y el cron de cinco minutos.
+El cliente exige 97 filas completas por defecto y rechaza catálogos truncados. Una futura ampliación explícita puede usar `--expected-rows N`. La migración `202610280008_catalog_expansion.sql` sustituye el requisito fijo de 88 por un mínimo de 88 y comprueba que el número de UUID, nombres y centros activos coincida con la longitud del lote. Mantiene permisos, atomicidad, reportes, coordenadas existentes y el cron de cinco minutos.
 
 SHA256 del CSV anterior de 94 filas: `1c7ee48f7a22215c582cdd84864ac87aaef0c8469be0dc31f737bb3d19f6bdf1`.
 
@@ -40,4 +40,19 @@ Las coordenadas de Rivas proceden del mapa de su [ficha municipal](https://sede-
 
 Las correspondencias de ambos UUID son explícitas. Las altas con UUID verificado pueden sembrarse aunque aún exista el nombre ambiguo anterior; las siguientes sincronizaciones reutilizan ese UUID, sin duplicar centros ni cambiar coordenadas existentes. Los reportes conservan su biblioteca física original. El cron continúa recalculando todas las fichas activas cada cinco minutos.
 
-SHA256 actual del CSV de 95 filas: `b87370e9025a9716d927cac6c6ad760edf1f858d739b6e4a4115de2aba61de84`.
+SHA256 del CSV anterior de 95 filas: `b87370e9025a9716d927cac6c6ad760edf1f858d739b6e4a4115de2aba61de84`.
+
+
+## Julio Cortázar y La Fortuna — 29 de octubre de 2026
+
+El catálogo pasa a 97 activos: se reactiva Centro Cultural Julio Cortázar con su UUID `8721aec8-df5d-4c86-9562-78601e7045d9` y sus coordenadas originales. Se añade Biblioteca Enrique Tierno Galván (La Fortuna) con UUID determinista `4666cc9b-c2ee-5513-9721-d8efef9d079f`, ubicación `40.35824, -3.78453`, distrito `La Fortuna (Leganés)` e institución `otra`, tal como indicó el usuario. La URL de Leganés se guarda como URL HTTPS normal, sin la sintaxis Markdown del mensaje.
+
+Las 95 filas anteriores permanecen intactas. Los horarios, valoraciones, reseñas, teléfonos, direcciones y coordenadas nuevos son los suministrados por el usuario. Los porcentajes son supuestos arquetípicos, no Popular Times observados:
+
+- Julio Cortázar abre todos los días de 09:00 a 21:00. Puntos 09–20: `18, 30, 42, 45, 35, 24, 28, 40, 55, 62, 50, 28`.
+- La Fortuna abre L–V 15:00–21:00. Puntos 15–20: `25, 40, 58, 70, 58, 35`.
+- La Fortuna abre sábados y domingos 10:30–19:30. Puntos 10–19: `20, 32, 45, 42, 28, 30, 45, 58, 52, 25`. Los puntos 10 y 19 incluyen franjas parcialmente abiertas; el motor evalúa la hora exacta y muestra cerrado antes de 10:30 o desde 19:30.
+
+El resto de los puntos queda a cero. `curve_provenance.json` registra el método y `kind: archetype, kappa: 6` para ambos centros. El importador valida esa precisión explícita. La migración 009 mantiene κ=6 en el motor SQL aunque la curva esté completa, sin cambiar la precisión del resto del catálogo. `tests/archetype_smoke.sql` lo verifica con un reporte de peso 20: confianza `20/(6+20)`, seguida de una comprobación de la precisión normal y de la expiración del reporte. Se ejecuta con rollback en la base de pruebas, no inserta reportes de prueba en producción.
+
+SHA256 actual del CSV de 97 filas: `d95bd5038d0329b7c3c512607f4efc4f9808d953cc0342a397d2ae4a0e38d8d5`.

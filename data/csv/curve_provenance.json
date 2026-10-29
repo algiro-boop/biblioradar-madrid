@@ -90,5 +90,19 @@
     ],
     "method": "Horario idéntico al centro de referencia; variación determinista de -3, -2, +2 o +3 puntos solo en franjas abiertas.",
     "metadata_source": "Datos y coordenadas proporcionados por el usuario; curva estimada, no medición de este centro."
+  },
+  "Centro Cultural Julio Cortázar": {
+    "kind": "archetype",
+    "kappa": 6,
+    "created_on": "2026-10-29",
+    "method": "Perfil genérico de centro cultural, todos los días de 09:00 a 21:00. Valores horarios 09–20: 18, 30, 42, 45, 35, 24, 28, 40, 55, 62, 50, 28. Cero fuera del horario. Sin Popular Times observados.",
+    "metadata_source": "Horarios y metadatos suministrados por el usuario; porcentajes arquetípicos estimados."
+  },
+  "Biblioteca Enrique Tierno Galván (La Fortuna)": {
+    "kind": "archetype",
+    "kappa": 6,
+    "created_on": "2026-10-29",
+    "method": "Perfil municipal de tarde L–V, horas 15–20: 25, 40, 58, 70, 58, 35. Fin de semana continuo 10:30–19:30, puntos 10–19: 20, 32, 45, 42, 28, 30, 45, 58, 52, 25. Los puntos 10 y 19 representan franjas parcialmente abiertas. Cero fuera del horario.",
+    "metadata_source": "Horarios, coordenadas y metadatos suministrados por el usuario; porcentajes arquetípicos estimados."
   }
 }

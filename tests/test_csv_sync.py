@@ -106,7 +106,7 @@ def test_matching_preserves_ids_ambiguity_requires_override():
 def test_real_csv_and_verified_matches():
     with (ROOT / "data/csv/bibliotecas_madrid_popular_times.csv").open(newline="") as f:
         prepared = sync.prepare(list(csv.DictReader(f)))
-    assert len(prepared) == 95
+    assert len(prepared) == 97
     assert all(len(r["historical_popularity"]["days"]) == 7 for r in prepared)
     elipa = next(r for r in prepared if "La Elipa" in r["name"])
     assert elipa["opening_hours"]["requires_review"] is False
@@ -120,7 +120,7 @@ def test_real_csv_and_verified_matches():
     for day in ["6", "7"]:
         assert elipa["opening_hours"]["weekly"][day] == []
         assert all(v == 0.0 for v in elipa["historical_popularity"]["days"][day].values())
-    assert len(json.loads((ROOT / "data/csv/verified_locations.json").read_text())) == 9
+    assert len(json.loads((ROOT / "data/csv/verified_locations.json").read_text())) == 10
 
 
 def test_six_additions_have_complete_reference_curves_and_distinct_ids():
@@ -128,10 +128,10 @@ def test_six_additions_have_complete_reference_curves_and_distinct_ids():
         raw = list(csv.DictReader(f))
     rows = sync.prepare(raw)
     provenance = json.loads((ROOT / "data/csv/curve_provenance.json").read_text())
-    assert len(provenance) == 6
+    assert sum(p["kind"] == "reference_estimate" for p in provenance.values()) == 6
     sync.apply_curve_provenance(rows, provenance)
     by_name = {r["name"]: r for r in rows}
-    for name in provenance:
+    for name in (n for n, p in provenance.items() if p["kind"] == "reference_estimate"):
         library = by_name[name]
         assert library["opening_hours"]["requires_review"] is False
         assert library["historical_popularity"]["provenance"]["kind"] == "reference_estimate"
@@ -182,12 +182,72 @@ def test_six_additions_have_complete_reference_curves_and_distinct_ids():
 
 
 def test_catalog_count_guard_and_explicit_future_expansion():
-    records = [{**row(), "nombre": f"Biblioteca {i}"} for i in range(96)]
+    records = [{**row(), "nombre": f"Biblioteca {i}"} for i in range(98)]
     with pytest.raises(ValueError):
         sync.prepare(records)
-    assert len(sync.prepare(records, expected_rows=96)) == 96
+    assert len(sync.prepare(records, expected_rows=98)) == 98
     with pytest.raises(ValueError):
         sync.prepare(records[:88])  # Un CSV truncado no debe archivar seis centros por accidente.
+
+
+def test_julio_and_fortuna_archetypes_have_low_precision_and_exact_schedules():
+    with (ROOT / "data/csv/bibliotecas_madrid_popular_times.csv").open(newline="") as f:
+        rows = sync.prepare(list(csv.DictReader(f)))
+    provenance = json.loads((ROOT / "data/csv/curve_provenance.json").read_text())
+    sync.apply_curve_provenance(rows, provenance)
+    by_name = {r["name"]: r for r in rows}
+    julio = by_name["Centro Cultural Julio Cortázar"]
+    fortuna = by_name["Biblioteca Enrique Tierno Galván (La Fortuna)"]
+    for library in [julio, fortuna]:
+        assert library["historical_popularity"]["provenance"]["kind"] == "archetype"
+        assert library["historical_popularity"]["provenance"]["kappa"] == 6
+        assert not library["opening_hours"]["requires_review"]
+        for day in map(str, range(1, 8)):
+            slots = library["opening_hours"]["weekly"][day]
+            for hour, value in library["historical_popularity"]["days"][day].items():
+                assert value is not None and 0 <= value <= 100
+                opened = any(
+                    (int(hour) + 1) * 60 > sync.minute(a) and int(hour) * 60 < sync.minute(b)
+                    for a, b in slots
+                )
+                assert (value > 0) == opened
+    assert all(v == [["09:00", "21:00"]] for v in julio["opening_hours"]["weekly"].values())
+    for day in map(str, range(1, 6)):
+        assert fortuna["opening_hours"]["weekly"][day] == [["15:00", "21:00"]]
+    for day in ["6", "7"]:
+        assert fortuna["opening_hours"]["weekly"][day] == [["10:30", "19:30"]]
+    for time, expected in [("10:29", False), ("10:30", True), ("19:29", True), ("19:30", False)]:
+        assert (
+            opening_status(
+                fortuna["opening_hours"], datetime.fromisoformat(f"2026-10-31T{time}+01:00")
+            )
+            is expected
+        )
+    mappings = json.loads((ROOT / "data/csv/name_matches.json").read_text())
+    assert mappings[julio["name"]] == "8721aec8-df5d-4c86-9562-78601e7045d9"
+    location = json.loads((ROOT / "data/csv/verified_locations.json").read_text())[fortuna["name"]]
+    assert (location["lat"], location["lng"], location["institution"]) == (
+        40.35824,
+        -3.78453,
+        "otra",
+    )
+    assert location["source_url"].startswith("https://www.leganes.org/")
+    assert "[" not in location["source_url"]
+
+
+@pytest.mark.parametrize("precision", [None, 0, 8, "6", True])
+def test_archetypes_require_explicit_kappa_six(precision):
+    with pytest.raises(ValueError):
+        sync.apply_curve_provenance(
+            sync.prepare([row()], expected_rows=1),
+            {
+                "Biblioteca Prueba": {
+                    "kind": "archetype",
+                    "kappa": precision,
+                    "method": "Perfil genérico",
+                }
+            },
+        )
 
 
 def gloria_source():
@@ -365,6 +425,8 @@ def test_migration_and_smoke_parse():
         ROOT / "supabase/migrations/202610280005_csv_bayesian.sql",
         ROOT / "supabase/migrations/202610280007_occupancy_cron.sql",
         ROOT / "supabase/migrations/202610280008_catalog_expansion.sql",
+        ROOT / "supabase/migrations/202610290009_archetype_precision.sql",
+        ROOT / "tests/archetype_smoke.sql",
         ROOT / "tests/occupancy_cron_smoke.sql",
         ROOT / "tests/csv_bayesian_smoke.sql",
     ]:
@@ -382,7 +444,7 @@ def test_csv_cron_uses_rpc_and_dry_run(monkeypatch):
         assert request.url.path == "/rest/v1/rpc/refresh_csv_occupancy"
         assert json.loads(request.content) == {"p_dry_run": True}
         assert request.headers["apikey"] == "server-test"
-        return httpx.Response(200, json={"libraries": 95, "dry_run": True})
+        return httpx.Response(200, json={"libraries": 97, "dry_run": True})
 
     monkeypatch.setattr(
         csv_job.httpx,

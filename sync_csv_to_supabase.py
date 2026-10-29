@@ -26,7 +26,7 @@ from pathlib import Path
 from uuid import NAMESPACE_URL, UUID, uuid5
 
 DAYS = ("lun", "mar", "mie", "jue", "vie", "sab", "dom")
-CATALOG_SIZE = 95
+CATALOG_SIZE = 97
 META = (
     "nombre tipo valoracion num_resenas direccion telefono horario_lun horario_mar horario_mie "
     "horario_jue horario_vie horario_sab horario_dom nota_horario_domingo"
@@ -320,14 +320,20 @@ def apply_curve_provenance(rows: list[dict], provenance: dict) -> None:
         if (
             name not in names
             or not isinstance(source, dict)
-            or source.get("kind") != "reference_estimate"
+            or source.get("kind") not in ("reference_estimate", "archetype")
             or not isinstance(source.get("method"), str)
             or not source["method"].strip()
-            or not isinstance(source.get("references"), list)
+        ):
+            raise ValueError(f"Procedencia de curva inválida: {name}")
+        if source["kind"] == "archetype":
+            if source.get("kappa") != 6:
+                raise ValueError(f"Las curvas arquetípicas requieren kappa=6: {name}")
+        elif (
+            not isinstance(source.get("references"), list)
             or not source["references"]
             or any(not isinstance(ref, str) or ref not in names for ref in source["references"])
         ):
-            raise ValueError(f"Procedencia de curva inválida: {name}")
+            raise ValueError(f"Referencias de curva inválidas: {name}")
     for row in rows:
         if row["name"] in provenance:
             row["historical_popularity"]["provenance"] = provenance[row["name"]]

@@ -73,5 +73,14 @@
     "source_url": "https://sede-electronica.rivasciudad.es/equipamiento/biblioteca-gloria-fuertes/",
     "coordinate_source": "official_municipal_map",
     "verification_note": "Coordenadas del mapa de la ficha del Ayuntamiento de Rivas; dirección corroborada en el directorio de la Comunidad de Madrid."
+  },
+  "Biblioteca Enrique Tierno Galván (La Fortuna)": {
+    "lat": 40.35824,
+    "lng": -3.78453,
+    "district": "La Fortuna (Leganés)",
+    "institution": "otra",
+    "source_url": "https://www.leganes.org/portal/leganes/contenedor1.jsp?seccion=s_fdes_d4_v1.jsp&codbusqueda=269&language=es&codResi=1&codMenuPN=3&codMenuSN=49&codMenuTN=166",
+    "coordinate_source": "user_supplied",
+    "verification_note": "Coordenadas, horarios y datos proporcionados por el usuario."
   }
 }
