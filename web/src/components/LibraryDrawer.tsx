@@ -15,7 +15,6 @@ import type { LibraryWithOccupancy, ReportValue, UserPosition } from "@/lib/type
 import { InstitutionBadge } from "./Badges";
 import { ActiveTags, LiveStatusBadge } from "./CommunityStatus";
 import { CapacityText } from "./CapacityText";
-import { GoogleBusyness } from "./GoogleBusyness";
 import { FullReportNotice } from "./FullReportNotice";
 import { ReportButtons } from "./ReportButtons";
 import { ShareButtons } from "./ShareButtons";
@@ -252,8 +251,6 @@ export function LibraryDrawer({
                   <ShareButtons library={library} />
                 </div>
               </section>
-
-              {open && <GoogleBusyness key={library.id} library={library} />}
 
               <section aria-label="Desglose de la estimación" className="grid grid-cols-2 gap-2.5">
                 <Breakdown
