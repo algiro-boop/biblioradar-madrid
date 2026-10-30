@@ -11,6 +11,7 @@ import {
   LEVEL_STYLES,
   LEVEL_TEXT,
 } from "@/lib/occupancy";
+import { useCountUp } from "@/hooks/useCountUp";
 import type { LibraryWithOccupancy, ReportValue, UserPosition } from "@/lib/types";
 import { InstitutionBadge } from "./Badges";
 import { ActiveTags, LiveStatusBadge } from "./CommunityStatus";
@@ -24,6 +25,16 @@ function directionsUrl(library: LibraryWithOccupancy): string {
   if (library.google_place_id) params.set("destination_place_id", library.google_place_id);
   return `https://www.google.com/maps/dir/?${params.toString()}`;
 }
+
+// Degradado suave del color del nivel en la tarjeta principal (literales para Tailwind).
+const LEVEL_GLOW: Record<ReturnType<typeof getOccupancyLevel>, string> = {
+  free: "bg-gradient-to-br from-emerald-50 via-white to-white",
+  moderate: "bg-gradient-to-br from-amber-50 via-white to-white",
+  high: "bg-gradient-to-br from-orange-50 via-white to-white",
+  full: "bg-gradient-to-br from-red-50 via-white to-white",
+  closed: "bg-white",
+  unknown: "bg-white",
+};
 
 function Breakdown({
   title,
@@ -129,6 +140,8 @@ export function LibraryDrawer({
   const level = getOccupancyLevel(status);
   const styles = LEVEL_STYLES[level];
   const pct = status?.final_occupancy_pct ?? null;
+  // Al abrir otra biblioteca el número cuenta desde 0; un cambio en vivo se desliza desde el actual.
+  const shownPct = useCountUp(level === "closed" ? null : pct, library?.id);
   const validUntil = formatClock(status?.base_valid_until);
   const hours = library?.opening_hours.normalized_text || library?.opening_hours.raw_text || "";
 
@@ -139,7 +152,7 @@ export function LibraryDrawer({
   return (
     <>
       <div
-        className={`fixed inset-0 z-[1100] bg-slate-950/30 transition-opacity lg:hidden ${
+        className={`fixed inset-0 z-[1100] bg-slate-950/30 backdrop-blur-[2px] transition-opacity duration-300 lg:hidden ${
           open ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
         onClick={onClose}
@@ -153,7 +166,7 @@ export function LibraryDrawer({
         aria-hidden={!open}
         inert={!open}
         style={dragY ? { transform: `translateY(${dragY}px)`, transition: "none" } : undefined}
-        className={`fixed inset-x-0 bottom-0 z-[1200] flex max-h-[88dvh] flex-col sm:max-h-[65dvh] rounded-t-3xl bg-white shadow-2xl transition-transform duration-300 ease-out lg:inset-x-auto lg:top-3 lg:right-3 lg:bottom-3 lg:max-h-none lg:w-[360px] xl:w-[420px] lg:rounded-3xl ${
+        className={`fixed inset-x-0 bottom-0 z-[1200] flex max-h-[88dvh] flex-col sm:max-h-[65dvh] rounded-t-3xl bg-white shadow-2xl transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] lg:inset-x-auto lg:top-3 lg:right-3 lg:bottom-3 lg:max-h-none lg:w-[360px] xl:w-[420px] lg:rounded-3xl ${
           open ? "translate-y-0 lg:translate-x-0" : "translate-y-full lg:translate-x-[calc(100%+1.5rem)] lg:translate-y-0"
         }`}
       >
@@ -190,7 +203,7 @@ export function LibraryDrawer({
               </button>
             </div>
 
-            <div data-scroll className="flex-1 space-y-5 overflow-y-auto overscroll-contain px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+            <div key={library.id} data-scroll className="drawer-stagger flex-1 space-y-5 overflow-y-auto overscroll-contain px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
               <div className="flex items-center gap-2 text-sm text-slate-600">
                 <MapPin className="size-4 shrink-0 text-slate-400" />
                 <span className="min-w-0 flex-1">
@@ -211,7 +224,7 @@ export function LibraryDrawer({
                 </a>
               </div>
 
-              <section aria-label="Ocupación actual" className="rounded-3xl p-4 ring-1 ring-inset ring-slate-200">
+              <section aria-label="Ocupación actual" className={`relative overflow-hidden rounded-3xl p-4 ring-1 ring-inset ring-slate-200 ${LEVEL_GLOW[level]}`}>
                 <div className="flex items-end justify-between gap-3">
                   <div>
                     <p className="text-xs font-medium tracking-wide text-slate-500 uppercase">Ocupación ahora</p>
@@ -220,13 +233,14 @@ export function LibraryDrawer({
                         pct === null || level === "closed" ? "text-2xl text-slate-400" : "text-5xl text-slate-900"
                       }`}
                     >
-                      {level === "closed" ? "Cerrada" : formatOccupancy(pct)}
+                      {level === "closed" ? "Cerrada" : formatOccupancy(shownPct ?? pct)}
                     </p>
                     <CapacityText library={library} className="mt-1 block text-sm font-medium text-slate-600" />
                     <FullReportNotice status={status} now={now} />
                   </div>
                   <span
-                    className={`mb-1 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold ring-1 ring-inset ${styles.soft}`}
+                    key={level}
+                    className={`anim-pop mb-1 inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold whitespace-nowrap ring-1 ring-inset ${styles.soft}`}
                   >
                     <span className={`size-2 rounded-full ${styles.dot}`} aria-hidden />
                     {level === "closed" ? "Cerrada" : pct === null ? "Sin datos" : LEVEL_TEXT[level]}
@@ -234,7 +248,10 @@ export function LibraryDrawer({
                 </div>
                 <div className="mt-3 h-2.5 overflow-hidden rounded-full bg-slate-100" aria-hidden>
                   {pct !== null && level !== "closed" && (
-                    <div className={`h-full rounded-full ${styles.bar} transition-all`} style={{ width: `${Math.max(pct, 3)}%` }} />
+                    <div
+                      className={`anim-bar h-full rounded-full ${styles.bar} transition-[width] duration-700 ease-[var(--ease-out-soft)]`}
+                      style={{ width: `${Math.max(pct, 3)}%` }}
+                    />
                   )}
                 </div>
                 <div className="mt-3"><LiveStatusBadge status={status} now={now} onReport={focusReport} /><ActiveTags status={status} now={now} /></div>

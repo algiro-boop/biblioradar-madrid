@@ -63,7 +63,7 @@ export function LiveActivityButton({ reports, now, onSelect, loading = false, er
       onClick={() => { restoreFocus.current = true; setOpen(true); onRefresh?.(); }}
       className="inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-xl px-2 text-xs font-medium text-slate-600 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-emerald-600">
       <Radio aria-hidden className="size-4 text-emerald-600" /> Actividad
-      {count > 0 && <span className="grid min-w-4 place-items-center rounded-full bg-emerald-100 px-1 text-[10px] font-semibold text-emerald-800">{count}</span>}
+      {count > 0 && <span key={count} className="anim-pop grid min-w-4 place-items-center rounded-full bg-emerald-100 px-1 text-[10px] font-semibold text-emerald-800">{count}</span>}
     </button>
     <dialog ref={dialogRef} aria-labelledby="activity-title" aria-describedby="activity-description"
       onCancel={() => setOpen(false)}

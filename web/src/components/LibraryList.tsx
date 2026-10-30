@@ -4,18 +4,20 @@ import { ChevronRight, RotateCw, SearchX } from "lucide-react";
 import type { LibraryListItem } from "@/lib/filters";
 import { formatDistance } from "@/lib/geo";
 import { formatRelativeTime, hasRoom } from "@/lib/occupancy";
-import { InstitutionBadge, LevelText, OccupancyPill } from "./Badges";
+import { useCountUp } from "@/hooks/useCountUp";
+import { staggerDelay } from "@/lib/motion";
+import { InstitutionBadge, LevelText, OccupancyRing } from "./Badges";
 import { CapacityText } from "./CapacityText";
 import { ActiveTags, LiveStatusBadge } from "./CommunityStatus";
 import { FullReportNotice } from "./FullReportNotice";
 
 function SkeletonCard() {
   return (
-    <li className="flex animate-pulse items-center gap-3 rounded-2xl bg-white p-3.5 ring-1 ring-slate-200">
-      <span className="h-10 w-14 rounded-full bg-slate-200" />
+    <li className="flex items-center gap-3 rounded-2xl bg-white p-3.5 ring-1 ring-slate-200" aria-hidden>
+      <span className="skeleton size-[52px] rounded-full" />
       <span className="flex-1 space-y-2">
-        <span className="block h-3.5 w-3/4 rounded bg-slate-200" />
-        <span className="block h-3 w-1/2 rounded bg-slate-100" />
+        <span className="skeleton block h-3.5 w-3/4 rounded" />
+        <span className="skeleton block h-3 w-1/2 rounded" />
       </span>
     </li>
   );
@@ -47,6 +49,7 @@ export function LibraryList({
   onRetry: () => void;
 }) {
   const withRoom = items.filter((i) => hasRoom(i.library.occupancy)).length;
+  const withRoomShown = useCountUp(items.length > 0 ? withRoom : null);
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
@@ -54,9 +57,17 @@ export function LibraryList({
         {loading && total === 0 ? (
           <span>Cargando bibliotecas…</span>
         ) : (
-          <span>
-            {items.length === total ? `${total} bibliotecas` : `${items.length} de ${total} bibliotecas`}
-            {items.length > 0 && ` · ${withRoom} con sitio`}
+          <span className="flex items-center gap-2">
+            <span>{items.length === total ? `${total} bibliotecas` : `${items.length} de ${total} bibliotecas`}</span>
+            {items.length > 0 && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2 py-0.5 font-semibold text-emerald-800 ring-1 ring-inset ring-emerald-200">
+                <span className="relative flex size-1.5" aria-hidden>
+                  <span className="absolute inline-flex size-full rounded-full bg-emerald-400 opacity-70 motion-safe:animate-ping" />
+                  <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" />
+                </span>
+                <span className="tabular-nums">{withRoomShown ?? withRoom}</span> con sitio ahora
+              </span>
+            )}
           </span>
         )}
       </div>
@@ -93,19 +104,21 @@ export function LibraryList({
           </li>
         )}
 
-        {items.map(({ library, distanceM }) => {
+        {items.map(({ library, distanceM }, index) => {
           const selected = library.id === selectedId;
           return (
-            <li key={library.id} className={`rounded-2xl bg-white ${selected ? "ring-2 ring-slate-900" : "ring-1 ring-slate-200"}`}>
+            <li
+              key={library.id}
+              style={{ animationDelay: `${staggerDelay(index)}ms` }}
+              className={`anim-rise rounded-2xl bg-white shadow-sm shadow-slate-900/[0.03] transition-shadow hover:shadow-md hover:shadow-slate-900/5 ${selected ? "ring-2 ring-slate-900" : "ring-1 ring-slate-200 hover:ring-slate-300"}`}
+            >
               <button
                 type="button"
                 onClick={() => onSelect(library.id)}
                 aria-current={selected ? "true" : undefined}
-                className={`flex w-full items-center gap-3 rounded-2xl bg-white p-3.5 text-left ring-1 transition hover:ring-slate-300 focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:outline-none ${
-                  selected ? "ring-2 ring-slate-900" : "ring-slate-200"
-                }`}
+                className="group flex w-full items-center gap-3 rounded-2xl bg-white p-3.5 text-left transition active:scale-[0.985] focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:outline-none"
               >
-                <OccupancyPill status={library.occupancy} />
+                <OccupancyRing status={library.occupancy} />
                 <span className="min-w-0 flex-1">
                   <span className="line-clamp-2 text-sm leading-snug font-semibold text-slate-900">{library.name}</span>
                   <span className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
@@ -124,7 +137,7 @@ export function LibraryList({
                   </span>
                   <FullReportNotice status={library.occupancy} now={now} />
                 </span>
-                <ChevronRight className="size-4 shrink-0 text-slate-300" />
+                <ChevronRight className="size-4 shrink-0 text-slate-300 transition-transform group-hover:translate-x-0.5" />
               </button>
               {library.occupancy?.is_open_now === true && <div className="px-3.5 pb-3">
                 <LiveStatusBadge status={library.occupancy} now={now} onReport={() => (onRequestReport ?? onSelect)(library.id)} />

@@ -41,10 +41,10 @@ function Pill({
       onClick={onClick}
       aria-pressed={active}
       disabled={busy}
-      className={`inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-sm font-medium whitespace-nowrap ring-1 transition focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:outline-none ${
+      className={`inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-sm font-medium whitespace-nowrap ring-1 transition active:scale-95 focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:outline-none ${
         active
-          ? "bg-slate-900 text-white ring-slate-900"
-          : "bg-white text-slate-700 ring-slate-200 hover:bg-slate-50"
+          ? "bg-slate-900 text-white shadow-md shadow-slate-900/20 ring-slate-900"
+          : "bg-white text-slate-700 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300"
       }`}
     >
       {children}
@@ -87,7 +87,16 @@ export function Header({
     <header className="pointer-events-auto relative z-10 rounded-3xl bg-white/95 p-3 shadow-lg ring-1 ring-slate-900/5 backdrop-blur lg:rounded-none lg:bg-transparent lg:px-4 lg:pt-4 lg:pb-2 lg:shadow-none lg:ring-0">
       <div className="flex items-center justify-between gap-2 px-1 pb-2.5">
         <h1 className="flex min-w-0 items-center gap-2 text-base font-extrabold tracking-tight text-slate-900">
-          <img src={BRAND_ICON_SRC} alt="" width={28} height={28} className="size-7 shrink-0 rounded-lg" />
+          <span className="relative size-7 shrink-0 overflow-hidden rounded-lg">
+            <img src={BRAND_ICON_SRC} alt="" width={28} height={28} className="size-7" />
+            {/* Barrido de radar sobre el logo mientras llegan datos en vivo. */}
+            {connection === "live" && (
+              <span
+                className="absolute inset-[3px] rounded-full bg-[conic-gradient(from_0deg,transparent_0deg,rgb(52_211_153/0.55)_40deg,transparent_70deg)] mix-blend-screen motion-safe:animate-[radar-spin_3.2s_linear_infinite] motion-reduce:hidden"
+                aria-hidden
+              />
+            )}
+          </span>
           <span className="truncate">
             BiblioRadar <span className="font-semibold text-slate-400 max-[379px]:hidden">Madrid</span>
           </span>
@@ -147,7 +156,7 @@ export function Header({
               role="tab"
               aria-selected={view === value}
               onClick={() => onViewChange(value)}
-              className={`flex items-center gap-1 rounded-xl px-2.5 text-xs font-semibold transition ${
+              className={`flex items-center gap-1 rounded-xl px-2.5 text-xs font-semibold transition-all duration-200 ${
                 view === value ? "bg-white text-slate-900 shadow-sm" : "text-slate-500"
               }`}
             >

@@ -41,6 +41,60 @@ export function OccupancyPill({
   );
 }
 
+// Color del trazo del anillo por nivel (literal para que Tailwind lo detecte).
+const RING_STROKE: Record<ReturnType<typeof getOccupancyLevel>, string> = {
+  free: "stroke-emerald-500",
+  moderate: "stroke-amber-400",
+  high: "stroke-orange-500",
+  full: "stroke-red-600",
+  closed: "stroke-slate-300",
+  unknown: "stroke-slate-300",
+};
+
+/**
+ * Anillo de ocupación: se rellena al aparecer y se desliza al cambiar en vivo.
+ * NULL se muestra como "?" y cerrada como icono de candado textual, nunca "0%".
+ */
+export function OccupancyRing({ status, size = 52 }: { status: OccupancyStatus | null; size?: number }) {
+  const level = getOccupancyLevel(status);
+  const pct = status?.final_occupancy_pct ?? null;
+  const shown = level === "closed" || pct === null ? 0 : Math.max(pct, 4);
+  const r = 21;
+  const circumference = 2 * Math.PI * r;
+  return (
+    <span
+      className="relative grid shrink-0 place-items-center"
+      style={{ width: size, height: size }}
+      aria-label={level === "closed" ? "Biblioteca cerrada" : pct === null ? "Sin datos de ocupación" : `Ocupación ${pct} por ciento, ${LEVEL_TEXT[level]}`}
+      title={LEVEL_TEXT[level]}
+      role="img"
+    >
+      <svg viewBox="0 0 48 48" className="absolute inset-0 size-full -rotate-90" aria-hidden>
+        <circle cx="24" cy="24" r={r} fill="none" strokeWidth="5" className="stroke-slate-100" />
+        <circle
+          cx="24"
+          cy="24"
+          r={r}
+          fill="none"
+          strokeWidth="5"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={circumference * (1 - shown / 100)}
+          className={`${RING_STROKE[level]} anim-ring transition-[stroke-dashoffset] duration-700 ease-[var(--ease-out-soft)]`}
+          style={{ ["--ring-from" as string]: circumference }}
+        />
+      </svg>
+      <span
+        className={`relative font-bold tabular-nums leading-none ${
+          level === "closed" ? "text-[9px] tracking-tight text-slate-500 uppercase" : pct === null ? "text-sm text-slate-400" : "text-[13px] text-slate-900"
+        }`}
+      >
+        {level === "closed" ? "Cerrada" : formatPinText(pct)}
+      </span>
+    </span>
+  );
+}
+
 export function LevelText({ status }: { status: OccupancyStatus | null }) {
   const level = getOccupancyLevel(status);
   return (
