@@ -27,12 +27,12 @@ do $$ declare v_id uuid:='00000000-0000-0000-0000-000000000998'; begin
    raise exception 'Cron extended full TTL'; end if;
  perform public.recalculate_csv_occupancy(v_id,'2027-07-15T10:12:30Z');
  if not exists(select 1 from public.occupancy_status where library_id=v_id
-   and final_occupancy_pct=public.report_display_pct(bayesian_occupancy,'2027-07-15T10:00Z','2027-07-15T10:12:30Z')
-   and final_occupancy_pct<100 and final_occupancy_pct>bayesian_occupancy) then
+   and final_occupancy_pct=public.report_display_pct(coalesce(report_memory_pct,bayesian_occupancy),'2027-07-15T10:00Z','2027-07-15T10:12:30Z')
+   and final_occupancy_pct<=100 and final_occupancy_pct>=coalesce(report_memory_pct,bayesian_occupancy)) then
    raise exception 'Missing smooth fade'; end if;
  perform public.recalculate_csv_occupancy(v_id,'2027-07-15T10:15Z');
  if not exists(select 1 from public.occupancy_status where library_id=v_id
-   and final_occupancy_pct=bayesian_occupancy and full_reported_at is null) then
+   and final_occupancy_pct=coalesce(report_memory_pct,bayesian_occupancy) and full_reported_at is null) then
    raise exception 'Full flag did not expire'; end if;
  if public.report_display_pct(80,'2027-07-15T10:00Z','2027-07-15T10:10Z')<>100
    or public.report_display_pct(80,'2027-07-15T10:00Z','2027-07-15T10:12:30Z')<>90
@@ -47,7 +47,7 @@ where library_id='00000000-0000-0000-0000-000000000998' and device_hash=repeat('
 select public.recalculate_csv_occupancy('00000000-0000-0000-0000-000000000998','2027-07-15T10:02Z');
 do $$ begin
  if not exists(select 1 from public.occupancy_status where library_id='00000000-0000-0000-0000-000000000998'
-   and full_reported_at is null and final_occupancy_pct=bayesian_occupancy) then
+   and full_reported_at is null and final_occupancy_pct=coalesce(report_memory_pct,bayesian_occupancy)) then
    raise exception 'New availability did not cancel single full vote'; end if;
 end $$;
 -- Two full devices retain consensus against one newer contrary device.

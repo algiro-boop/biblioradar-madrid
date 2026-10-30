@@ -1,4 +1,5 @@
 import type { OccupancyStatus } from "./types";
+import { formatRelativeTime } from "./occupancy";
 
 /** A new server snapshot can arrive between the UI's 30-second clock ticks. */
 function evaluationTime(status: OccupancyStatus, now: number): number {
@@ -7,8 +8,21 @@ function evaluationTime(status: OccupancyStatus, now: number): number {
 }
 
 export function currentReportPct(status: OccupancyStatus, now: number): number | null {
-  if (status.is_open_now !== true || !status.full_reported_at || status.bayesian_occupancy == null) return null;
-  return reportDisplayPct(status.bayesian_occupancy, status.full_reported_at, evaluationTime(status, now));
+  if (status.is_open_now !== true) return null;
+  const time = evaluationTime(status, now);
+  const age = time - Date.parse(status.report_memory_at ?? "");
+  const hasMemory = status.report_memory_pct != null && age >= 0 && age < 21_600_000;
+  const base = hasMemory ? status.report_memory_pct! : status.bayesian_occupancy;
+  if (base == null || (!status.full_reported_at && status.report_memory_pct == null)) return null;
+  return reportDisplayPct(base, status.full_reported_at, time);
+}
+
+export function reportMemoryNotice(status: OccupancyStatus | null, now: number): string | null {
+  if (status?.is_open_now !== true || status.report_memory_pct == null) return null;
+  const time = evaluationTime(status, now);
+  const age = time - Date.parse(status.report_memory_at ?? "");
+  if (!Number.isFinite(age) || age < 900_000 || age >= 21_600_000) return null;
+  return `Estimación apoyada en reportes de ${formatRelativeTime(status.report_memory_at, time)}`;
 }
 
 /** Identical to SQL report_display_pct: hold 10 min and fade for 5 min. */

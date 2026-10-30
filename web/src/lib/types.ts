@@ -49,6 +49,10 @@ export type OccupancyStatus = {
   bayesian_occupancy?: number | null;
   /** Último aviso de sala completa respaldado por los reportes recientes. */
   full_reported_at?: string | null;
+  /** Proyección de observaciones anteriores sobre la curva, distinta del posterior reciente. */
+  report_memory_pct?: number | null;
+  report_memory_at?: string | null;
+  report_memory_count?: number;
   confidence_score?: number | null;
   is_open_now?: boolean | null;
   google_live_pct: number | null;

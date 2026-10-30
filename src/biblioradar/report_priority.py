@@ -1,4 +1,4 @@
-"""Pure reference for the CSV report fusion and temporary full-room state."""
+"""Raw report fusion reference; curve-relative memory is composed separately."""
 
 from dataclasses import dataclass
 from datetime import datetime, timedelta

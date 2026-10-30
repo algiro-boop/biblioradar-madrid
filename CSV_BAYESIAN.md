@@ -80,7 +80,7 @@ Los puntos horarios representan franjas: una apertura a las 08:30 permite el pun
 - Vecindad: reportes directos de hoy y de los últimos 90 minutos en centros activos a menos de 2,5 km; último reporte por centro/dispositivo. Compara contra la curva del vecino a la hora del reporte. Ignora desviaciones inferiores a 10 puntos, limita cada anomalía a ±15 puntos y traslada una cuarta parte de la media ponderada por proximidad y `ln(2+num_resenas)`. No usa posteriores vecinos, evitando ciclos de realimentación.
 - Inercia: 80% prior nuevo y 20% ancla del **prior** anterior corregida por el cambio de curva, si ese estado abierto tiene menos de tres horas. El ancla se fija por bloques de 30 minutos. Usar el prior evita incorporar dos veces reportes ya fusionados.
 - Media del prior recortada a `[0,02;0,98]`; precisión `κ=min(24,8+2·ln(1+num_resenas))`, o 6 si la curva está incompleta o identificada como arquetípica. Las reseñas son un indicador aproximado, no el número de observaciones de Popular Times.
-- Likelihood: solo último reporte por dispositivo, entre ahora−90 minutos y ahora. Cada uno pesa `40·exp(−ln(2)·edad_min/40)`. Se mantienen la proximidad de 250 m, el bloqueo asesor antispam y el límite existente de un reporte cada 30 minutos. El formulario mantiene sus cinco niveles y el servidor conserva también el valor heredado 30.
+- Likelihood: solo último reporte por dispositivo del tramo actual de apertura, entre ahora−90 minutos y ahora. Cada uno pesa `40·exp(−ln(2)·edad_min/40)`. Se mantienen la proximidad de 250 m, el bloqueo asesor antispam y el límite existente de un reporte cada 30 minutos. El formulario mantiene sus cinco niveles y el servidor conserva también el valor heredado 30.
 - Posterior: `α=μκ+Σwy`, `β=(1−μ)κ+Σw(1−y)`, ocupación `round(100·α/(α+β))`.
 - Confianza: fracción de precisión aportada por reportes `Σw/(κ+Σw)`. Cero significa ausencia de evidencia colaborativa reciente; **no** es una probabilidad calibrada de acierto. El 1 de un cierre expresa certeza según el horario disponible.
 
@@ -107,8 +107,8 @@ reporte a 40, manteniendo su vida media de 40 minutos, ventana de 90 minutos y
 cooldown de envío de 30 minutos. Solo participa el último reporte por dispositivo.
 
 Un reporte de 100 activa un estado operativo de sala completa durante 10 minutos.
-Durante los 5 minutos siguientes, el porcentaje mostrado vuelve linealmente al
-posterior bayesiano. `bayesian_occupancy` conserva el posterior sin este ajuste;
+Durante los 5 minutos siguientes, el porcentaje mostrado vuelve linealmente a la
+proyección con memoria cuando existe, o al posterior reciente en caso contrario. `bayesian_occupancy` conserva el posterior sin este ajuste;
 `final_occupancy_pct` es el valor operativo que consumen mapas, filtros y plazas
 libres. `full_reported_at` conserva la fecha del reporte, no la del último cron.
 El ajuste no se realimenta ni al prior ni al ancla de inercia.
@@ -129,3 +129,42 @@ aplica el ajuste dos veces. El cálculo estadístico permanece en Supabase.
 deduplicación, cierre y caducidad en una transacción que termina en rollback.
 La referencia pura de Python y los tests de frontend comprueban las mismas
 fronteras temporales; los fixtures de prueba no son reportes reales.
+
+## Memoria según la curva del centro
+
+La migración `202610300012_report_memory.sql` conserva una proyección de los
+reportes más allá de la ventana reciente de 90 minutos. No fija horas universales
+de salida ni modifica las curvas originales, los puestos oficiales o los reportes.
+
+- Solo usa observaciones del intervalo continuo de apertura actual, del mismo día
+  local de Madrid y de las últimas seis horas. Una pausa, cierre o nueva fecha
+  impide reutilizar la memoria anterior. Los tramos contiguos sin pausa se unen.
+- Deduplica por dispositivo y selecciona la cohorte de los 15 minutos anteriores al
+  último reporte. Un grupo nuevo de observaciones sustituye la referencia anterior;
+  un reporte bajo no hereda la corrección alta de dos horas antes.
+- Calcula la diferencia entre cada observación y la curva contextual correspondiente
+  a su instante original. Promedia esas diferencias con vida media de 15 minutos
+  dentro de la cohorte. Proyecta esa corrección sobre la base contextual actual.
+- La corrección tiene vida media de dos horas. Una curva actual inferior a la de
+  referencia debilita adicionalmente las correcciones positivas con el cuadrado de
+  su cociente. Entre las horas cinco y seis, la corrección se reduce suavemente a cero.
+- Son parámetros de producto, no mediciones del tiempo real que permanece cada
+  estudiante en una biblioteca; requieren calibración con observaciones futuras.
+
+`report_memory_pct`, `report_memory_at` y `report_memory_count` exponen el pronóstico,
+la fecha real de su referencia y el número de dispositivos de su cohorte. El motor
+lo calcula de nuevo desde reportes originales en cada ejecución: nunca incorpora
+su propia predicción al prior ni suma memoria y likelihood como observaciones
+independientes. `bayesian_occupancy`, `crowd_pct`, `confidence_score` y
+`active_reports_count` siguen describiendo la fusión reciente de 90 minutos, para
+auditoría; la menor confianza reciente no obliga a bajar el pronóstico de ocupación.
+
+`final_occupancy_pct` utiliza la proyección con memoria cuando existe y conserva la
+regla de 100% inmediato durante diez minutos. El desvanecimiento posterior apunta
+a la proyección, evitando volver al histórico por error. La web muestra
+«Estimación apoyada en reportes de hace…» para distinguir evidencia anterior de un
+aviso actual de sala completa. El servidor conserva la autoridad sobre la curva.
+
+Las pruebas de Python, PostgreSQL y frontend cubren mañana, tarde, descenso de la
+curva, nuevos reportes bajos, deduplicación, recálculos repetidos, pausas, cierres,
+cambio de día y caducidad, usando únicamente fixtures sintéticos aislados.

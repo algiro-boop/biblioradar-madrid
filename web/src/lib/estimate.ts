@@ -354,7 +354,8 @@ export function currentOccupancy(library: LibraryWithOccupancy, now: number): Oc
   if (status && current) {
     if (csvModel && libraryOpenNow(library, now) === false && status.is_open_now !== false) {
       return { ...status, is_open_now: false, final_occupancy_pct: 0, bayesian_occupancy: 0,
-        full_reported_at: null, status_label: null, primary_source: "Cerrada según horario revisado" };
+        full_reported_at: null, report_memory_pct: null, report_memory_at: null, report_memory_count: 0,
+        status_label: null, primary_source: "Cerrada según horario revisado" };
     }
     const pct = currentReportPct(status, now);
     if (pct !== null && pct !== status.final_occupancy_pct) return { ...status, final_occupancy_pct: pct, status_label: labelFromPct(pct) };
