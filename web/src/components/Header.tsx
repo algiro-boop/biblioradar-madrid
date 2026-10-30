@@ -65,8 +65,10 @@ export function Header({
   view,
   onViewChange,
   libraries,
+  activityAction,
 }: {
   libraries: Pick<Library, "id" | "name">[];
+  activityAction?: React.ReactNode;
   filters: LibraryFilters;
   onQueryChange: (q: string) => void;
   onToggleRoom: () => void;
@@ -175,7 +177,10 @@ export function Header({
         ))}
       </div>
 
-      <FeedbackButton libraries={libraries} />
+      <div className="mt-2 flex items-center justify-between gap-1">
+        <FeedbackButton libraries={libraries} compact />
+        {activityAction}
+      </div>
 
       {geoMessage && (
         <div className="mt-2 flex items-center gap-2 rounded-xl bg-amber-50 px-3 py-2 text-xs text-amber-900" role="alert">

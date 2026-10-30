@@ -9,7 +9,7 @@ import type { Library } from "@/lib/types";
 type Choice = Pick<Library, "id" | "name">;
 
 /** El diálogo nativo aporta foco contenido, Escape y fondo inerte también en Safari. */
-export function FeedbackButton({ libraries }: { libraries: Choice[] }) {
+export function FeedbackButton({ libraries, compact = false }: { libraries: Choice[]; compact?: boolean }) {
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState<FeedbackCategory>("sugerencia");
   const [message, setMessage] = useState("");
@@ -65,10 +65,11 @@ export function FeedbackButton({ libraries }: { libraries: Choice[] }) {
   return (
     <>
       <button ref={openerRef} type="button" onClick={show} aria-haspopup="dialog"
-        className="mt-2 flex min-h-9 items-center gap-2 rounded-xl px-2 text-xs font-medium text-slate-600 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-sky-600"
+        aria-label="¿Falta una biblio o hay un error?"
+        className={`${compact ? "" : "mt-2"} flex min-h-9 items-center gap-2 rounded-xl px-2 text-xs font-medium text-slate-600 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-sky-600`}
         title="¿Falta una biblio o hay un error?">
         <MessageSquarePlus className="size-4" aria-hidden />
-        ¿Falta una biblio o hay un error?
+        {compact ? "Sugerencias" : "¿Falta una biblio o hay un error?"}
       </button>
       <dialog ref={dialogRef} aria-labelledby="feedback-title" aria-describedby="feedback-description"
         onCancel={() => setOpen(false)} onClose={() => { setOpen(false); openerRef.current?.focus({ preventScroll: true }); }}

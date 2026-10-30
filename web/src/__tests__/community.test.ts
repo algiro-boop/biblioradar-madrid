@@ -2,7 +2,7 @@ import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { ActiveTags, LiveStatusBadge, ReportTagSelector } from "@/components/CommunityStatus";
-import { LiveActivityTicker } from "@/components/LiveActivityTicker";
+import { LiveActivityFeed } from "@/components/LiveActivityButton";
 import { activeTags, liveLabel, parseCommunityReports, recentAt, toggleTag, validTags, type CommunityReport, type ReportTag } from "@/lib/community";
 import { parseOccupancyStatus } from "@/lib/occupancy";
 const now = Date.parse("2026-10-30T12:00:00Z");
@@ -58,13 +58,13 @@ describe("optional tags", () => {
 });
 describe("activity ticker", () => {
   it("renders public activity with library and tags", () => {
-    const html = renderToStaticMarkup(h(LiveActivityTicker, { reports: [report], now, onSelect() {} }));
+    const html = renderToStaticMarkup(h(LiveActivityFeed, { reports: [report], now, onSelect() {} }));
     expect(html).toContain("Hace 8 min"); expect(html).toContain("BPM Prueba");
     expect(html).toContain("75% ocupada"); expect(html).toContain("Enchufes libres");
     expect(html).toContain("<button");
   });
   it.each([[], [{ ...report, created_at: ago(180) }], [{ ...report, created_at: ago(-1) }]].map((reports) => [reports]))("renders motivating empty state without fresh reports", (reports) => {
-    const html = renderToStaticMarkup(h(LiveActivityTicker, { reports, now, onSelect() {} }));
+    const html = renderToStaticMarkup(h(LiveActivityFeed, { reports, now, onSelect() {} }));
     expect(html).toContain("Sé el primero"); expect(html).not.toContain("75%");
   });
   it("only retains the explicit public allowlist, rejects malformed records", () => {

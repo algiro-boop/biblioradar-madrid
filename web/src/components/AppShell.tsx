@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useCallback, useDeferredValue, useMemo, useRef, useState } from "react";
 import { useCommunityActivity } from "@/hooks/useCommunityActivity";
-import { LiveActivityTicker } from "./LiveActivityTicker";
+import { LiveActivityButton } from "./LiveActivityButton";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useLibraries } from "@/hooks/useLibraries";
 import { useNow } from "@/hooks/useNow";
@@ -212,9 +212,9 @@ export function AppShell() {
             view={view}
             onViewChange={setView}
             libraries={snapshot}
+            activityAction={<LiveActivityButton reports={activity} now={now} onSelect={openActivity} />}
           />
         </div>
-        <LiveActivityTicker reports={activity} now={now} onSelect={openActivity} />
         <div className={`min-h-0 flex-1 flex-col ${view === "list" ? "flex" : "hidden"} lg:flex`}>
           <LibraryList
             items={items}

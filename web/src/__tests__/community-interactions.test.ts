@@ -4,7 +4,7 @@ import { act, createElement as h } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { LiveStatusBadge } from "@/components/CommunityStatus";
-import { LiveActivityTicker } from "@/components/LiveActivityTicker";
+import { LiveActivityButton } from "@/components/LiveActivityButton";
 import { LibraryList } from "@/components/LibraryList";
 import { parseLibraryRow } from "@/lib/occupancy";
 import { ReportButtons } from "@/components/ReportButtons";
@@ -86,14 +86,34 @@ describe("library card integration", () => {
   });
 });
 describe("activity interactions and recovery", () => {
-  it("selects the correct library and navigates the carousel", async () => {
+  it("keeps the feed hidden until requested and closes it when selecting a library", async () => {
     const onSelect = vi.fn(); const now = Date.now();
     const first = { library_id: "one", library_name: "First", district: "Test", reported_value: 75, tags: [] as [], created_at: new Date(now).toISOString() };
-    await act(async () => root.render(h(LiveActivityTicker, { reports: [first, { ...first, library_id: "two", library_name: "Second" }], now, onSelect })));
-    await click("First"); expect(onSelect).toHaveBeenLastCalledWith("one");
-    await act(async () => container.querySelector<HTMLButtonElement>('[aria-label="Actividad siguiente"]')!.click());
+    await act(async () => root.render(h(LiveActivityButton, { reports: [first, { ...first, library_id: "two", library_name: "Second" }], now, onSelect })));
+    expect(container.textContent).not.toContain("First");
+    expect(container.querySelector("dialog")?.open).toBe(false);
+    await click("Actividad");
+    expect(container.querySelector("dialog")?.open).toBe(true);
+    expect(container.textContent).toContain("First");
     await click("Second"); expect(onSelect).toHaveBeenLastCalledWith("two");
-    await click("Pausar"); expect(button("Reanudar")).toBeDefined();
+    expect(container.querySelector("dialog")?.open).toBe(false);
+    expect(container.textContent).not.toContain("Second");
+  });
+  it("opens the empty state on demand, closes with Escape and restores focus", async () => {
+    await act(async () => root.render(h(LiveActivityButton, { reports: [], now: Date.now(), onSelect() {} })));
+    const opener = button("Actividad");
+    expect(opener.getAttribute("aria-expanded")).toBe("false");
+    expect(container.textContent).not.toContain("Radar en directo listo");
+    await click("Actividad");
+    expect(opener.getAttribute("aria-expanded")).toBe("true");
+    expect(container.textContent).toContain("Sé el primero");
+    await act(async () => container.querySelector("dialog")!.dispatchEvent(new Event("cancel", { cancelable: true })));
+    expect(container.querySelector("dialog")?.open).toBe(false);
+    expect(document.activeElement).toBe(opener);
+    await click("Actividad");
+    await act(async () => container.querySelector<HTMLButtonElement>('[aria-label="Cerrar actividad"]')!.click());
+    expect(container.querySelector("dialog")?.open).toBe(false);
+    expect(document.activeElement).toBe(opener);
   });
   it("refreshes after Realtime invalidation and preserves data on temporary errors", async () => {
     const report = { library_id: "one", library_name: "Fresh", district: "Test", reported_value: 75, tags: [], created_at: new Date().toISOString() };
