@@ -42,14 +42,14 @@ export function LocationHelpModal({
   }, [onClose]);
 
   return (
-    <div className="fixed inset-0 z-[1300] flex items-end justify-center bg-slate-950/40 p-3 md:items-center" onClick={onClose}>
+    <div className="anim-backdrop fixed inset-0 z-[1300] flex items-end justify-center bg-slate-950/40 p-3 md:items-center" onClick={onClose}>
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="location-help-title"
         aria-describedby="location-help-why"
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md rounded-3xl bg-white p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-2xl"
+        className="anim-dialog w-full max-w-md rounded-3xl bg-white p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-2xl"
       >
         <div className="flex items-start gap-3">
           <span className="grid size-10 shrink-0 place-items-center rounded-2xl bg-sky-50 text-sky-700" aria-hidden>

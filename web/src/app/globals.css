@@ -7,11 +7,11 @@
 @keyframes banner-in {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(16px) scale(0.98);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 }
 
@@ -81,12 +81,21 @@ body {
   overflow: hidden;
 }
 .feedback-dialog:not([open]) { display: none; }
+.feedback-dialog[open] {
+  animation: dialog-in 240ms var(--ease-out-quint);
+}
+.feedback-dialog[open]::backdrop {
+  animation: fade-in 200ms ease-out;
+}
 
 /* ── Movimiento ─────────────────────────────────────────────────────────────
    Curva tipo iOS para entradas; todo se anula con prefers-reduced-motion (arriba). */
 :root {
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Entradas rápidas y salidas aún más breves (≈75 % de la entrada). */
+  --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-cubic: cubic-bezier(0.32, 0, 0.67, 0);
 }
 
 @keyframes rise-in {
@@ -258,3 +267,45 @@ body {
 .drawer-stagger > :nth-child(3) { animation-delay: 120ms; }
 .drawer-stagger > :nth-child(4) { animation-delay: 170ms; }
 .drawer-stagger > :nth-child(n + 5) { animation-delay: 220ms; }
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    translate: 0 16px;
+    scale: 0.97;
+  }
+}
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    translate: 0 -4px;
+    scale: 0.95;
+  }
+}
+@keyframes view-in {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+}
+/* Modales propios (no <dialog>): la capa se funde y la tarjeta sube un poco. */
+.anim-backdrop {
+  animation: fade-in 200ms ease-out both;
+}
+.anim-dialog {
+  animation: dialog-in 240ms var(--ease-out-quint) both;
+}
+/* Menús desplegables: crecen desde el botón que los abre. */
+.anim-menu {
+  transform-origin: top right;
+  animation: menu-in 160ms var(--ease-out-quint) both;
+}
+/* Cambio Mapa ↔ Lista en móvil. */
+.anim-view {
+  animation: view-in 260ms var(--ease-out-quint) both;
+}

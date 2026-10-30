@@ -55,7 +55,8 @@ export function ShareAppButton() {
   };
 
   return (
-    <div ref={rootRef} className="relative">
+    // En móvil el menú se ancla a la cabecera (no al botón) para que no se salga por la izquierda.
+    <div ref={rootRef} className="lg:relative">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
@@ -74,7 +75,7 @@ export function ShareAppButton() {
         <div
           role="menu"
           aria-label="Compartir BiblioRadar"
-          className="absolute top-full right-0 z-20 mt-2 w-64 rounded-2xl bg-white p-1.5 shadow-xl ring-1 ring-slate-900/10"
+          className="anim-menu absolute top-full right-0 z-20 mt-2 w-64 rounded-2xl bg-white p-1.5 shadow-xl ring-1 ring-slate-900/10"
         >
           <p className="px-2.5 pt-1.5 pb-1 text-xs font-medium text-slate-500">Recomienda BiblioRadar a tus amigos</p>
           <a

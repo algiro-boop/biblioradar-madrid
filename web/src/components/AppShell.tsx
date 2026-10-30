@@ -17,6 +17,7 @@ import { LibraryDrawer } from "./LibraryDrawer";
 import { LibraryList } from "./LibraryList";
 import { LocationHelpModal } from "./LocationHelpModal";
 import { ProximityBanner } from "./ProximityBanner";
+import { ViewToggle } from "./ViewToggle";
 
 const MapView = dynamic(() => import("./MapView"), {
   ssr: false,
@@ -50,7 +51,17 @@ export function AppShell() {
 
   const [filters, setFilters] = useState<LibraryFilters>(EMPTY_FILTERS);
   const [nearMe, setNearMe] = useState(false);
-  const [view, setView] = useState<ViewMode>("map");
+  const [view, setViewState] = useState<ViewMode>("map");
+  /** Móvil: la cabecera se pliega al arrastrar el mapa para dejarlo a la vista. */
+  const [headerCollapsed, setHeaderCollapsed] = useState(false);
+  const setView = useCallback((v: ViewMode) => {
+    setViewState(v);
+    setHeaderCollapsed(false);
+  }, []);
+  const collapseHeader = useCallback(() => {
+    if (window.matchMedia("(max-width: 1023px)").matches) setHeaderCollapsed(true);
+  }, []);
+  const expandHeader = useCallback(() => setHeaderCollapsed(false), []);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [reportFocusKey, setReportFocusKey] = useState(0);
   const activityKey = snapshot.map((l) => l.occupancy?.latest_report_at ?? "").join("|");
@@ -212,13 +223,14 @@ export function AppShell() {
             onGeoRetry={geoRetryable ? () => void findNearMe() : undefined}
             connection={connection}
             view={view}
-            onViewChange={setView}
+            collapsed={headerCollapsed && view === "map"}
+            onExpand={expandHeader}
             libraries={snapshot}
-            activityAction={<LiveActivityButton reports={activity} now={now} onSelect={openActivity}
-              loading={activityLoading} error={activityError} onRefresh={refreshActivity} />}
+            activityAction={(compact) => <LiveActivityButton reports={activity} now={now} onSelect={openActivity}
+              loading={activityLoading} error={activityError} onRefresh={refreshActivity} compact={compact} />}
           />
         </div>
-        <div className={`min-h-0 flex-1 flex-col ${view === "list" ? "flex" : "hidden"} lg:flex`}>
+        <div className={`anim-view min-h-0 flex-1 flex-col lg:animate-none ${view === "list" ? "flex" : "hidden"} lg:flex`}>
           <LibraryList
             items={items}
             total={libraries.length}
@@ -243,10 +255,14 @@ export function AppShell() {
           focusUserKey={focusUserKey}
           onSelect={(id) => { setReportFocusKey(0); setSelectedId(id); }}
           onDeselect={closeDrawer}
+          onUserPan={collapseHeader}
         />
       </section>
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-[1050] px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] lg:left-[320px] xl:left-[400px]">
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-[1050] flex flex-col gap-2 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] lg:left-[320px] xl:left-[400px]">
+        <div className="lg:hidden">
+          <ViewToggle view={view} onChange={setView} />
+        </div>
         <ProximityBanner
           libraries={libraries}
           position={geo.position}

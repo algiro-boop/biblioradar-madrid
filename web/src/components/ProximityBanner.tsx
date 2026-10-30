@@ -96,13 +96,21 @@ export function ProximityBanner({
 
   return (
     <aside
-      className="pointer-events-auto mx-auto w-full max-w-md rounded-3xl bg-white p-4 shadow-2xl ring-1 ring-slate-900/10 animate-[banner-in_300ms_ease-out]"
+      className="pointer-events-auto mx-auto w-full max-w-md rounded-3xl bg-white p-3 shadow-2xl ring-1 ring-slate-900/10 animate-[banner-in_320ms_var(--ease-out-quint)]"
       aria-label="Reporte rápido de ocupación"
     >
-      <div className="mb-3 flex items-start gap-2">
-        <p className="flex-1 text-sm leading-snug text-slate-800">
-          📍 Parece que estás en <strong className="font-semibold text-slate-900">{candidate.name}</strong>.
-          ¿Confirmas con un toque si hay sitio?
+      <div className="mb-2 flex items-start gap-2">
+        <p className="min-w-0 flex-1 pl-1 text-[13px] leading-snug text-slate-800">
+          📍 ¿Estás en{" "}
+          <button
+            type="button"
+            onClick={() => onOpen(candidate.id)}
+            className="inline-flex items-center font-semibold text-slate-900 underline decoration-slate-300 underline-offset-2 hover:decoration-slate-900"
+          >
+            {candidate.name}
+            <ChevronRight className="size-3.5 shrink-0" aria-hidden />
+          </button>
+          ? Confirma si hay sitio:
         </p>
         <button
           type="button"
@@ -114,13 +122,6 @@ export function ProximityBanner({
         </button>
       </div>
       <ReportButtons tagsEnabled={tagsEnabled} key={candidate.id} library={candidate} locate={locate} locationGranted onReported={handleReported} compact />
-      <button
-        type="button"
-        onClick={() => onOpen(candidate.id)}
-        className="mt-2 inline-flex items-center gap-0.5 text-xs font-medium text-slate-500 hover:text-slate-900"
-      >
-        Ver detalle <ChevronRight className="size-3.5" />
-      </button>
     </aside>
   );
 }

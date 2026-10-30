@@ -91,7 +91,12 @@ export function LibraryDrawer({
     reportRef.current?.focus({ preventScroll: true });
   };
   const dragStartRef = useRef<number | null>(null);
+  const draggedRef = useRef(false);
+  const dragYRef = useRef(0); // el último movimiento puede llegar en el mismo frame que el pointerup
   const [dragY, setDragY] = useState(0);
+  // Móvil: se abre a media altura (el pin sigue a la vista) y se amplía al arrastrar o desplazar.
+  const [expanded, setExpanded] = useState(false);
+  const [peekOffset, setPeekOffset] = useState(0);
   // Se conserva la última biblioteca para que el contenido no desaparezca durante la animación de cierre.
   const [last, setLast] = useState(selected);
   if (selected && selected !== last) setLast(selected);
@@ -110,31 +115,77 @@ export function LibraryDrawer({
 
   useEffect(() => {
     setDragY(0);
+    setExpanded(false);
     panelRef.current?.querySelector("[data-scroll]")?.scrollTo({ top: 0 });
   }, [library?.id]);
 
+  // Cuánto se baja el panel en modo «media altura»: 0 si su contenido ya cabe.
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return;
+    const measure = () => {
+      const peekHeight = Math.max(360, window.innerHeight * 0.5);
+      setPeekOffset(Math.max(0, Math.round(panel.offsetHeight - peekHeight)));
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(panel);
+    window.addEventListener("resize", measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
+
   useEffect(() => {
     if (open && reportFocusKey > 0) {
+      setExpanded(true);
       reportRef.current?.scrollIntoView({ block: "start" });
       reportRef.current?.focus({ preventScroll: true });
     }
   }, [open, library?.id, reportFocusKey]);
 
-  // Gesto "deslizar hacia abajo para cerrar" desde el asa del bottom sheet.
+  // Gestos del bottom sheet: arriba amplía; abajo reduce a media altura y, desde ahí, cierra.
+  // A media altura se arrastra desde cualquier punto; ampliado, solo desde el asa y la cabecera
+  // (el contenido se desplaza con normalidad).
   const onPointerDown = (e: ReactPointerEvent) => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    if (window.matchMedia("(min-width: 1024px)").matches) return; // En escritorio es un panel lateral fijo.
+    const target = e.target as HTMLElement;
+    if (target.closest("a, input, label, button:not([data-sheet-handle])")) return;
+    if (expanded && target.closest("[data-scroll]")) return;
     dragStartRef.current = e.clientY;
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    draggedRef.current = false;
   };
   const onPointerMove = (e: ReactPointerEvent) => {
     if (dragStartRef.current === null) return;
-    setDragY(Math.max(0, e.clientY - dragStartRef.current));
+    const dy = e.clientY - dragStartRef.current;
+    if (!draggedRef.current) {
+      if (Math.abs(dy) < 6) return;
+      // La captura se toma solo al empezar a arrastrar, para no robar el clic de un toque.
+      draggedRef.current = true;
+      e.currentTarget.setPointerCapture(e.pointerId);
+      window.getSelection()?.removeAllRanges(); // con ratón, el arrastre empezaba a seleccionar texto
+    }
+    dragYRef.current = dy;
+    setDragY(dy);
   };
   const onPointerUp = () => {
     if (dragStartRef.current === null) return;
     dragStartRef.current = null;
-    if (dragY > 90) onClose();
+    const dy = dragYRef.current;
+    dragYRef.current = 0;
     setDragY(0);
+    if (!draggedRef.current) return;
+    // El clic sintético que sigue al arrastre no debe alternar el asa; después se vuelve a permitir.
+    window.setTimeout(() => (draggedRef.current = false));
+    if (dy < -50) setExpanded(true);
+    else if (dy > 70) {
+      if (expanded && peekOffset > 0) setExpanded(false);
+      else onClose();
+    }
   };
+  const sheetY = Math.max(0, (expanded ? 0 : peekOffset) + dragY);
 
   const status = library?.occupancy ?? null;
   const level = getOccupancyLevel(status);
@@ -151,9 +202,10 @@ export function LibraryDrawer({
 
   return (
     <>
+      {/* A media altura el mapa sigue siendo usable (tocar otro pin cambia de biblioteca). */}
       <div
-        className={`fixed inset-0 z-[1100] bg-slate-950/30 backdrop-blur-[2px] transition-opacity duration-300 lg:hidden ${
-          open ? "opacity-100" : "pointer-events-none opacity-0"
+        className={`fixed inset-0 z-[1100] bg-slate-950/30 transition-opacity lg:hidden ${
+          open && expanded ? "opacity-100 duration-300" : "pointer-events-none opacity-0 duration-200"
         }`}
         onClick={onClose}
         aria-hidden
@@ -165,24 +217,37 @@ export function LibraryDrawer({
         aria-labelledby="library-drawer-title"
         aria-hidden={!open}
         inert={!open}
-        style={dragY ? { transform: `translateY(${dragY}px)`, transition: "none" } : undefined}
-        className={`fixed inset-x-0 bottom-0 z-[1200] flex max-h-[88dvh] flex-col sm:max-h-[65dvh] rounded-t-3xl bg-white shadow-2xl transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] lg:inset-x-auto lg:top-3 lg:right-3 lg:bottom-3 lg:max-h-none lg:w-[360px] xl:w-[420px] lg:rounded-3xl ${
-          open ? "translate-y-0 lg:translate-x-0" : "translate-y-full lg:translate-x-[calc(100%+1.5rem)] lg:translate-y-0"
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+        style={{ "--sheet-y": `${sheetY}px`, ...(dragY ? { transition: "none" } : {}) } as React.CSSProperties}
+        className={`fixed inset-x-0 bottom-0 z-[1200] flex max-h-[88dvh] flex-col sm:max-h-[65dvh] rounded-t-3xl bg-white shadow-2xl transition-transform max-lg:[transform:translateY(var(--sheet-y))] lg:inset-x-auto lg:top-3 lg:right-3 lg:bottom-3 lg:max-h-none lg:w-[360px] xl:w-[420px] lg:rounded-3xl ${
+          open
+            ? "translate-y-0 duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] lg:translate-x-0"
+            : "translate-y-full duration-300 ease-[var(--ease-in-cubic)] lg:translate-x-[calc(100%+1.5rem)] lg:translate-y-0"
         }`}
       >
         {library && (
           <>
-            <div
-              className="flex touch-none cursor-grab justify-center pt-2.5 pb-1 lg:hidden"
-              onPointerDown={onPointerDown}
-              onPointerMove={onPointerMove}
-              onPointerUp={onPointerUp}
-              onPointerCancel={onPointerUp}
+            <button
+              type="button"
+              data-sheet-handle
+              onClick={() => {
+                if (draggedRef.current) return;
+                setExpanded((v) => !v);
+              }}
+              aria-expanded={expanded}
+              aria-label={expanded ? "Reducir detalle" : "Ampliar detalle"}
+              className="group flex w-full touch-none cursor-grab justify-center pt-2.5 pb-1.5 focus-visible:outline-none lg:hidden"
             >
-              <span className="h-1.5 w-10 rounded-full bg-slate-300" aria-hidden />
-            </div>
+              <span
+                className="h-1.5 w-10 rounded-full bg-slate-300 transition-[background-color,scale] duration-150 group-hover:bg-slate-400 group-active:scale-x-125 group-focus-visible:ring-2 group-focus-visible:ring-slate-400"
+                aria-hidden
+              />
+            </button>
 
-            <div className="flex items-start gap-3 px-5 pt-2 pb-3 lg:pt-5">
+            <div className="flex touch-none items-start gap-3 px-5 pt-1 pb-3 lg:touch-auto lg:pt-5">
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-1.5">
                   <InstitutionBadge institution={library.institution} />
@@ -203,7 +268,19 @@ export function LibraryDrawer({
               </button>
             </div>
 
-            <div key={library.id} data-scroll className="drawer-stagger flex-1 space-y-5 overflow-y-auto overscroll-contain px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+            <div
+              key={library.id}
+              data-scroll
+              onScroll={(e) => {
+                if (!expanded && e.currentTarget.scrollTop > 4) setExpanded(true);
+              }}
+              onWheel={(e) => {
+                if (!expanded && e.deltaY > 0) setExpanded(true);
+              }}
+              className={`drawer-stagger flex-1 space-y-5 overflow-y-auto overscroll-contain px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] ${
+                expanded ? "" : "max-lg:touch-none"
+              }`}
+            >
               <div className="flex items-center gap-2 text-sm text-slate-600">
                 <MapPin className="size-4 shrink-0 text-slate-400" />
                 <span className="min-w-0 flex-1">

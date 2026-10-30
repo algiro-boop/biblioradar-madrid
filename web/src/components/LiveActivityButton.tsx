@@ -35,9 +35,11 @@ export function LiveActivityFeed({ reports, now, onSelect }: {
 }
 
 /** A single header action; the feed only occupies the screen after an explicit request. */
-export function LiveActivityButton({ reports, now, onSelect, loading = false, error = null, onRefresh }: {
+export function LiveActivityButton({ reports, now, onSelect, loading = false, error = null, onRefresh, compact = false }: {
   reports: CommunityReport[]; now: number; onSelect: (id: string) => void;
   loading?: boolean; error?: string | null; onRefresh?: () => void;
+  /** Solo el icono, para la fila superior de la cabecera en móvil. */
+  compact?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -61,9 +63,14 @@ export function LiveActivityButton({ reports, now, onSelect, loading = false, er
     <button ref={openerRef} type="button" aria-haspopup="dialog" aria-expanded={open}
       aria-label="Ver actividad en vivo en Madrid"
       onClick={() => { restoreFocus.current = true; setOpen(true); onRefresh?.(); }}
-      className="inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-xl px-2 text-xs font-medium text-slate-600 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-emerald-600">
-      <Radio aria-hidden className="size-4 text-emerald-600" /> Actividad
-      {count > 0 && <span key={count} className="anim-pop grid min-w-4 place-items-center rounded-full bg-emerald-100 px-1 text-[10px] font-semibold text-emerald-800">{count}</span>}
+      title={compact ? "Actividad en vivo" : undefined}
+      className={compact
+        ? "relative grid size-8 shrink-0 place-items-center rounded-full bg-white text-emerald-600 ring-1 ring-inset ring-slate-200 transition hover:bg-emerald-50 active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:outline-none"
+        : "inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-xl px-2 text-xs font-medium text-slate-600 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-emerald-600"}>
+      <Radio aria-hidden className="size-4 text-emerald-600" /> {!compact && "Actividad"}
+      {count > 0 && <span key={count} className={`anim-pop grid min-w-4 place-items-center rounded-full font-semibold ${compact
+        ? "absolute -top-1 -right-1 h-4 bg-emerald-600 px-1 text-[10px] text-white ring-2 ring-white"
+        : "bg-emerald-100 px-1 text-[10px] text-emerald-800"}`}>{count}</span>}
     </button>
     <dialog ref={dialogRef} aria-labelledby="activity-title" aria-describedby="activity-description"
       onCancel={() => setOpen(false)}

@@ -37,18 +37,21 @@ function MapController({
   userPosition,
   focusUserKey,
   onBackgroundClick,
+  onUserPan,
 }: {
   selected: LibraryWithOccupancy | null;
   userPosition: UserPosition | null;
   focusUserKey: number;
   onBackgroundClick: () => void;
+  onUserPan?: () => void;
 }) {
   const map = useMap();
   useEffect(() => observeMapSize(map), [map]);
   const userRef = useRef(userPosition);
   userRef.current = userPosition;
 
-  useMapEvents({ click: onBackgroundClick });
+  // `dragstart` solo lo dispara el usuario al arrastrar (no los flyTo de selección o «Cerca de mí»).
+  useMapEvents({ click: onBackgroundClick, dragstart: () => onUserPan?.() });
 
   // Centra la biblioteca seleccionada dejando hueco al drawer (abajo en móvil, derecha en escritorio).
   useEffect(() => {
@@ -86,6 +89,7 @@ export default function MapView({
   focusUserKey,
   onSelect,
   onDeselect,
+  onUserPan,
 }: {
   libraries: LibraryWithOccupancy[];
   selectedId: string | null;
@@ -93,6 +97,8 @@ export default function MapView({
   focusUserKey: number;
   onSelect: (id: string) => void;
   onDeselect: () => void;
+  /** El usuario empezó a arrastrar el mapa. */
+  onUserPan?: () => void;
 }) {
   const selected = useMemo(
     () => libraries.find((l) => l.id === selectedId) ?? null,
@@ -184,6 +190,7 @@ export default function MapView({
         userPosition={userPosition}
         focusUserKey={focusUserKey}
         onBackgroundClick={onDeselect}
+        onUserPan={onUserPan}
       />
     </MapContainer>
   );

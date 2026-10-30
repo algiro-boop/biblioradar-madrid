@@ -58,6 +58,8 @@ export function ReportButtons({
   const [tags, setTags] = useState<ReportTag[]>([]);
   const busy = phase === "locating" || phase === "sending";
   const coolingDown = cooldownMinutes > 0 && phase !== "success";
+  // En el banner compacto, ambiente y «Enviar» aparecen al elegir una opción: ocupa menos mapa.
+  const showSubmit = !compact || selectedValue !== null || phase !== "idle";
 
   return (
     <div className="space-y-3">
@@ -86,7 +88,7 @@ export function ReportButtons({
                 styles.button
               } ${isActive ? "opacity-100! scale-[1.02] shadow-md ring-2 ring-offset-1 ring-slate-900/20" : ""} ${
                 compact
-                  ? "flex min-h-16 flex-col items-center justify-center gap-1 px-1 py-2 text-center text-[11px] leading-tight"
+                  ? "flex min-h-14 flex-col items-center justify-center gap-1 px-1 py-1.5 text-center text-[11px] leading-tight"
                   : "flex min-h-14 items-center gap-3 px-3.5 py-2.5 text-left"
               }`}
             >
@@ -107,16 +109,18 @@ export function ReportButtons({
         })}
       </div>
 
-      {tagsEnabled && <ReportTagSelector selected={tags} onToggle={(tag) => setTags((old) => toggleTag(old, tag))} disabled={busy || cooldownMinutes > 0} />}
-      <button type="button" disabled={selectedValue === null || busy || cooldownMinutes > 0}
+      {tagsEnabled && showSubmit && <div className={compact ? "anim-rise" : ""}>
+        <ReportTagSelector selected={tags} onToggle={(tag) => setTags((old) => toggleTag(old, tag))} disabled={busy || cooldownMinutes > 0} />
+      </div>}
+      {showSubmit && <button type="button" disabled={selectedValue === null || busy || cooldownMinutes > 0}
         onClick={() => selectedValue !== null && void submit(selectedValue, tagsEnabled ? tags : [])}
-        className={`w-full rounded-2xl px-4 py-3 text-sm font-semibold text-white shadow-sm transition active:scale-[0.98] disabled:opacity-40 disabled:shadow-none ${
+        className={`${compact ? "anim-rise " : ""}w-full rounded-2xl px-4 py-3 text-sm font-semibold text-white shadow-sm transition active:scale-[0.98] disabled:opacity-40 disabled:shadow-none ${
           selectedValue !== null && !busy && cooldownMinutes === 0
             ? "bg-gradient-to-r from-slate-900 to-emerald-800 hover:shadow-md hover:shadow-emerald-900/20"
             : "bg-slate-900"
         }`}>
         Enviar reporte
-      </button>
+      </button>}
 
       <div aria-live="polite" className="min-h-0 text-sm">
         {phase === "locating" &&
