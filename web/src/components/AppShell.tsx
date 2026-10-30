@@ -54,7 +54,8 @@ export function AppShell() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [reportFocusKey, setReportFocusKey] = useState(0);
   const activityKey = snapshot.map((l) => l.occupancy?.latest_report_at ?? "").join("|");
-  const { reports: activity, available: communityAvailable } = useCommunityActivity(activityKey);
+  const { reports: activity, available: communityAvailable, loading: activityLoading,
+    error: activityError, refresh: refreshActivity } = useCommunityActivity(activityKey);
   const [focusUserKey, setFocusUserKey] = useState(0);
   const [geoMessage, setGeoMessage] = useState<string | null>(null);
   /** El aviso de «Cerca de mí» admite reintento (tiempo agotado, ubicación no disponible). */
@@ -171,8 +172,9 @@ export function AppShell() {
     (libraryId: string) => {
       // Respaldo por si el WebSocket no está conectado: Realtime normalmente llega antes.
       void refreshLibrary(libraryId);
+      refreshActivity();
     },
-    [refreshLibrary],
+    [refreshLibrary, refreshActivity],
   );
 
   const requestReport = (id: string) => {
@@ -212,7 +214,8 @@ export function AppShell() {
             view={view}
             onViewChange={setView}
             libraries={snapshot}
-            activityAction={<LiveActivityButton reports={activity} now={now} onSelect={openActivity} />}
+            activityAction={<LiveActivityButton reports={activity} now={now} onSelect={openActivity}
+              loading={activityLoading} error={activityError} onRefresh={refreshActivity} />}
           />
         </div>
         <div className={`min-h-0 flex-1 flex-col ${view === "list" ? "flex" : "hidden"} lg:flex`}>

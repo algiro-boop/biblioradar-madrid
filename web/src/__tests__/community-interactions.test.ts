@@ -115,6 +115,65 @@ describe("activity interactions and recovery", () => {
     expect(container.querySelector("dialog")?.open).toBe(false);
     expect(document.activeElement).toBe(opener);
   });
+  it("does not disguise a missing backend RPC as an empty feed, and recovers on retry", async () => {
+    api.activity.mockResolvedValue({ data: null, error: { code: "PGRST202" } });
+    const report = { library_id: "one", library_name: "Recovered library", district: "Test", reported_value: 40,
+      tags: [], created_at: new Date().toISOString() };
+    function Activity() {
+      const { reports, available, loading, error, refresh } = useCommunityActivity("initial");
+      return h("div", null, h("output", null, String(available)),
+        h(LiveActivityButton, { reports, now: Date.now(), loading, error, onRefresh: refresh, onSelect() {} }));
+    }
+    await act(async () => root.render(h(Activity)));
+    await click("Actividad");
+    expect(container.querySelector("[role=alert]")?.textContent).toContain("No se ha podido cargar");
+    expect(container.textContent).not.toContain("Sé el primero");
+    expect(container.querySelector("output")?.textContent).toBe("false");
+    api.activity.mockResolvedValue({ data: [report], error: null });
+    await click("Reintentar");
+    expect(container.textContent).toContain("Recovered library");
+    expect(container.querySelector("output")?.textContent).toBe("true");
+    expect(container.querySelector("[role=alert]")).toBeNull();
+  });
+  it("shows loading instead of an empty result, then handles a genuinely empty response", async () => {
+    let finish!: (value: { data: []; error: null }) => void;
+    api.activity.mockReturnValue(new Promise((resolve) => { finish = resolve; }));
+    function Activity() {
+      const { reports, loading, error } = useCommunityActivity("initial");
+      return h(LiveActivityButton, { reports, now: Date.now(), loading, error, onSelect() {} });
+    }
+    await act(async () => root.render(h(Activity)));
+    await click("Actividad");
+    expect(container.textContent).toContain("Actualizando actividad");
+    expect(container.textContent).not.toContain("Sé el primero");
+    await act(async () => finish({ data: [], error: null }));
+    expect(container.textContent).not.toContain("Actualizando actividad");
+    expect(container.textContent).toContain("Sé el primero");
+  });
+  it("rejects malformed responses rather than claiming there are no reports", async () => {
+    api.activity.mockResolvedValue({ data: [{ bad: true }], error: null });
+    function Probe() {
+      const { reports, available, loading, error } = useCommunityActivity("initial");
+      return h("p", null, `${available}/${loading}/${reports.length}/${error}`);
+    }
+    await act(async () => root.render(h(Probe)));
+    expect(container.textContent).toContain("false/false/0/No se ha podido cargar");
+  });
+  it("refreshes immediately after a successful report, without waiting for Realtime or polling", async () => {
+    const report = { library_id: "one", library_name: "Reported library", district: "Test", reported_value: 75,
+      tags: [], created_at: new Date().toISOString() };
+    function ActivityAndReport() {
+      const { reports, refresh } = useCommunityActivity("initial");
+      return h("div", null, h("output", null, reports.map((r) => r.library_name).join()),
+        h(ReportButtons, { library, locate, onReported: refresh }));
+    }
+    await act(async () => root.render(h(ActivityAndReport)));
+    expect(api.activity).toHaveBeenCalledOnce();
+    api.activity.mockResolvedValue({ data: [report], error: null });
+    await click("75%"); await click("Enviar reporte");
+    expect(api.activity).toHaveBeenCalledTimes(2);
+    expect(container.querySelector("output")?.textContent).toBe("Reported library");
+  });
   it("refreshes after Realtime invalidation and preserves data on temporary errors", async () => {
     const report = { library_id: "one", library_name: "Fresh", district: "Test", reported_value: 75, tags: [], created_at: new Date().toISOString() };
     api.activity.mockResolvedValue({ data: [report], error: null });

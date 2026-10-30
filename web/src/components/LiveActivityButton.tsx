@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight, Radio, X } from "lucide-react";
+import { ArrowUpRight, LoaderCircle, Radio, RotateCw, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { TAG_LABELS, recentAt, type CommunityReport } from "@/lib/community";
 
@@ -35,8 +35,9 @@ export function LiveActivityFeed({ reports, now, onSelect }: {
 }
 
 /** A single header action; the feed only occupies the screen after an explicit request. */
-export function LiveActivityButton({ reports, now, onSelect }: {
+export function LiveActivityButton({ reports, now, onSelect, loading = false, error = null, onRefresh }: {
   reports: CommunityReport[]; now: number; onSelect: (id: string) => void;
+  loading?: boolean; error?: string | null; onRefresh?: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -59,7 +60,7 @@ export function LiveActivityButton({ reports, now, onSelect }: {
   return <>
     <button ref={openerRef} type="button" aria-haspopup="dialog" aria-expanded={open}
       aria-label="Ver actividad en vivo en Madrid"
-      onClick={() => { restoreFocus.current = true; setOpen(true); }}
+      onClick={() => { restoreFocus.current = true; setOpen(true); onRefresh?.(); }}
       className="inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-xl px-2 text-xs font-medium text-slate-600 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-emerald-600">
       <Radio aria-hidden className="size-4 text-emerald-600" /> Actividad
       {count > 0 && <span className="grid min-w-4 place-items-center rounded-full bg-emerald-100 px-1 text-[10px] font-semibold text-emerald-800">{count}</span>}
@@ -83,12 +84,18 @@ export function LiveActivityButton({ reports, now, onSelect }: {
             className="grid size-11 shrink-0 place-items-center rounded-full hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-emerald-600 dark:hover:bg-slate-800"><X className="size-5" /></button>
         </div>
         <div className="min-h-0 overflow-y-auto overscroll-contain p-0.5">
-          <LiveActivityFeed reports={reports} now={now} onSelect={(id) => {
+          {loading && <p role="status" className="mb-3 flex items-center gap-2 text-sm text-slate-500"><LoaderCircle aria-hidden className="size-4 animate-spin" />Actualizando actividad…</p>}
+          {error && <p role="alert" className="mb-3 rounded-xl bg-amber-50 p-3 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-100">{error}</p>}
+          {(reports.length > 0 || (!loading && !error)) && <LiveActivityFeed reports={reports} now={now} onSelect={(id) => {
             restoreFocus.current = false;
             close();
             onSelect(id);
-          }} />
+          }} />}
         </div>
+        {onRefresh && <button type="button" onClick={onRefresh} disabled={loading}
+          className="mt-4 inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-slate-100 px-3 py-2 text-sm font-medium text-slate-700 disabled:opacity-50 dark:bg-slate-800 dark:text-slate-200">
+          <RotateCw aria-hidden className="size-4" />{error ? "Reintentar" : "Actualizar actividad"}
+        </button>}
       </div>}
     </dialog>
   </>;
