@@ -101,3 +101,38 @@ npm run build
 ```
 
 Los tests incluyen manifest, Android, Safari iOS/iPadOS, fallback por URL, primera apertura frente a recarga, aislamiento de instalación/apertura, reintentos con el mismo ID, recuperación de pendientes, almacenamiento bloqueado, cambio de modo, SSR y validación del endpoint. Para comprobar un dispositivo real: instala desde la web, abre el icono y consulta los logs; verifica evidencia `ios_standalone` o `display_mode`, una sola primera apertura y accesos posteriores. En una pestaña normal sin query param debe aparecer `browser_open`. Estas pruebas reales requieren iOS/Android; las pruebas automatizadas simulan sus señales.
+
+## Afluencia oficial de Google (opcional)
+
+En el detalle de cada biblioteca, «Ver afluencia de Google» abre la ficha de Google Maps
+si no hay clave configurada. Con `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` carga Places UI Kit
+estándar dentro del detalle, únicamente tras pulsar el botón. No modifica la ocupación
+calculada por BiblioRadar ni extrae o guarda porcentajes de Google.
+
+Configuración:
+
+1. En un proyecto de Google Cloud con facturación habilitada, activar **Maps JavaScript API**
+   y **Places UI Kit API**. Crear una clave de navegador restringida a estas APIs y a los
+   referentes `https://biblioradar-madrid.vercel.app/*` y, para desarrollo, `http://localhost:3000/*`.
+2. Añadir `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` a `web/.env.local` y a las variables del proyecto
+   en Vercel; desplegar de nuevo. Es una clave pública de navegador, nunca una credencial
+   de servicio. No debe guardarse en Git.
+3. Si `google_place_id` está disponible, se carga la ficha directamente. Si falta, se muestra
+   una búsqueda por nombre y dirección para que el usuario confirme el centro. Esta búsqueda
+   y la ficha seleccionada son **dos solicitudes** de UI Kit. No se elige automáticamente
+   un local por cercanía ni se usa Place Details REST.
+
+El script se comparte entre bibliotecas, no hay polling ni precarga al abrir el detalle,
+y plegar/desplegar un panel ya cargado no crea otra instancia. Cambiar de biblioteca o cerrar
+el detalle descarta el componente; la próxima consulta requiere pulsar de nuevo.
+Google puede no publicar horas punta o actividad en directo para un centro. Se muestra un
+mensaje cuando el componente no tiene Popular Times o falla y siempre hay enlace a Maps.
+Los tests simulan el DOM, la carga del script y los eventos públicos de Google, sin navegador
+ni peticiones reales. Para validar la integración con una cuenta real hace falta su clave.
+
+Documentación: [Place Details](https://developers.google.com/maps/documentation/javascript/places-ui-kit/place-details),
+[Place Search](https://developers.google.com/maps/documentation/javascript/places-ui-kit/place-search),
+[tarifas](https://developers.google.com/maps/billing-and-pricing/pricing).
+La franquicia gratuita es compartida por SKU/cuenta de facturación; no es un límite automático
+de gasto. Configurar cuotas acordes al uso deseado en Google Cloud; las alertas de presupuesto
+avisan pero no detienen por sí solas la facturación.
