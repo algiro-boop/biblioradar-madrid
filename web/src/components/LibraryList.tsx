@@ -6,6 +6,7 @@ import { formatDistance } from "@/lib/geo";
 import { formatRelativeTime, hasRoom } from "@/lib/occupancy";
 import { InstitutionBadge, LevelText, OccupancyPill } from "./Badges";
 import { CapacityText } from "./CapacityText";
+import { ActiveTags, LiveStatusBadge } from "./CommunityStatus";
 import { FullReportNotice } from "./FullReportNotice";
 
 function SkeletonCard() {
@@ -29,6 +30,7 @@ export function LibraryList({
   selectedId,
   filtersActive,
   onSelect,
+  onRequestReport,
   onClearFilters,
   onRetry,
 }: {
@@ -40,6 +42,7 @@ export function LibraryList({
   selectedId: string | null;
   filtersActive: boolean;
   onSelect: (id: string) => void;
+  onRequestReport?: (id: string) => void;
   onClearFilters: () => void;
   onRetry: () => void;
 }) {
@@ -93,7 +96,7 @@ export function LibraryList({
         {items.map(({ library, distanceM }) => {
           const selected = library.id === selectedId;
           return (
-            <li key={library.id}>
+            <li key={library.id} className={`rounded-2xl bg-white ${selected ? "ring-2 ring-slate-900" : "ring-1 ring-slate-200"}`}>
               <button
                 type="button"
                 onClick={() => onSelect(library.id)}
@@ -123,6 +126,10 @@ export function LibraryList({
                 </span>
                 <ChevronRight className="size-4 shrink-0 text-slate-300" />
               </button>
+              {library.occupancy?.is_open_now === true && <div className="px-3.5 pb-3">
+                <LiveStatusBadge status={library.occupancy} now={now} onReport={() => (onRequestReport ?? onSelect)(library.id)} />
+                <ActiveTags status={library.occupancy} now={now} />
+              </div>}
             </li>
           );
         })}

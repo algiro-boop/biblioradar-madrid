@@ -1,5 +1,8 @@
 "use client";
 
+import { useState } from "react";
+import { toggleTag, type ReportTag } from "@/lib/community";
+import { ReportTagSelector } from "./CommunityStatus";
 import { CircleAlert, CircleCheck, LoaderCircle, MapPin, RotateCw, TriangleAlert } from "lucide-react";
 import { useReport } from "@/hooks/useReport";
 import { REPORT_OPTIONS, reportSummary } from "@/lib/reports";
@@ -35,6 +38,7 @@ export function ReportButtons({
   locationGranted = false,
   onReported,
   compact = false,
+  tagsEnabled = true,
 }: {
   library: Pick<Library, "id" | "lat" | "lng" | "name">;
   locate: () => Promise<UserPosition>;
@@ -42,12 +46,15 @@ export function ReportButtons({
   locationGranted?: boolean;
   onReported?: (libraryId: string, value: ReportValue) => void;
   compact?: boolean;
+  tagsEnabled?: boolean;
 }) {
   const { phase, error, activeValue, recent, cooldownMinutes, submit } = useReport({
     library,
     locate,
     onReported,
   });
+  const [selectedValue, setSelectedValue] = useState<ReportValue | null>(null);
+  const [tags, setTags] = useState<ReportTag[]>([]);
   const busy = phase === "locating" || phase === "sending";
   const coolingDown = cooldownMinutes > 0 && phase !== "success";
 
@@ -59,7 +66,7 @@ export function ReportButtons({
         aria-label="Enviar reporte de ocupación"
       >
         {REPORT_OPTIONS.map((opt) => {
-          const isActive = activeValue === opt.value && (busy || phase === "success");
+          const isActive = (selectedValue ?? activeValue) === opt.value;
           const styles = BUTTON_STYLES[opt.value];
           const dot = isActive && busy ? (
             <LoaderCircle className="size-4 shrink-0 animate-spin" />
@@ -71,7 +78,8 @@ export function ReportButtons({
               key={opt.value}
               type="button"
               disabled={busy || cooldownMinutes > 0}
-              onClick={() => void submit(opt.value)}
+              onClick={() => setSelectedValue(opt.value)}
+              aria-pressed={isActive}
               aria-label={`${opt.label}: ${opt.description} (${opt.value}%)`}
               className={`rounded-2xl border font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
                 styles.button
@@ -97,6 +105,13 @@ export function ReportButtons({
           );
         })}
       </div>
+
+      {tagsEnabled && <ReportTagSelector selected={tags} onToggle={(tag) => setTags((old) => toggleTag(old, tag))} disabled={busy || cooldownMinutes > 0} />}
+      <button type="button" disabled={selectedValue === null || busy || cooldownMinutes > 0}
+        onClick={() => selectedValue !== null && void submit(selectedValue, tagsEnabled ? tags : [])}
+        className="w-full rounded-2xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white disabled:opacity-40">
+        Enviar reporte
+      </button>
 
       <div aria-live="polite" className="min-h-0 text-sm">
         {phase === "locating" &&
@@ -144,7 +159,7 @@ export function ReportButtons({
             {error.kind === "geo_unavailable" && activeValue != null && (
               <button
                 type="button"
-                onClick={() => void submit(activeValue)}
+                onClick={() => void submit(activeValue, tagsEnabled ? tags : [])}
                 className="inline-flex shrink-0 items-center gap-1 rounded-full bg-red-900 px-2.5 py-1 text-xs font-semibold text-white hover:bg-red-800"
               >
                 <RotateCw className="size-3" /> Reintentar

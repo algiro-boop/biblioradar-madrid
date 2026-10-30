@@ -2,6 +2,8 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useDeferredValue, useMemo, useRef, useState } from "react";
+import { useCommunityActivity } from "@/hooks/useCommunityActivity";
+import { LiveActivityTicker } from "./LiveActivityTicker";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useLibraries } from "@/hooks/useLibraries";
 import { useNow } from "@/hooks/useNow";
@@ -40,7 +42,8 @@ function ConfigNotice({ message }: { message: string }) {
 export function AppShell() {
   const { libraries: snapshot, loading, error, configError, connection, reload, refreshLibrary } = useLibraries();
   const geo = useGeolocation();
-  const now = useNow();
+  const clock = useNow();
+  const now = Math.max(clock, Date.now());
   // Si la base del cron caducó (p. ej. a las 09:00, al abrir) se muestra la estimación horaria
   // vigente calculada aquí, sin esperar a la siguiente ejecución ni avisar de desactualización.
   const libraries = useMemo(() => withCurrentOccupancy(snapshot, now), [snapshot, now]);
@@ -49,6 +52,9 @@ export function AppShell() {
   const [nearMe, setNearMe] = useState(false);
   const [view, setView] = useState<ViewMode>("map");
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [reportFocusKey, setReportFocusKey] = useState(0);
+  const activityKey = snapshot.map((l) => l.occupancy?.latest_report_at ?? "").join("|");
+  const { reports: activity, available: communityAvailable } = useCommunityActivity(activityKey);
   const [focusUserKey, setFocusUserKey] = useState(0);
   const [geoMessage, setGeoMessage] = useState<string | null>(null);
   /** El aviso de «Cerca de mí» admite reintento (tiempo agotado, ubicación no disponible). */
@@ -169,6 +175,17 @@ export function AppShell() {
     [refreshLibrary],
   );
 
+  const requestReport = (id: string) => {
+    setSelectedId(id);
+    setReportFocusKey((key) => key + 1);
+  };
+  const openActivity = (id: string) => {
+    clearFilters();
+    setView("map");
+    setReportFocusKey(0);
+    setSelectedId(id);
+  };
+
   const closeDrawer = useCallback(() => setSelectedId(null), []);
 
   if (configError) return <ConfigNotice message={error ?? ""} />;
@@ -197,6 +214,7 @@ export function AppShell() {
             libraries={snapshot}
           />
         </div>
+        <LiveActivityTicker reports={activity} now={now} onSelect={openActivity} />
         <div className={`min-h-0 flex-1 flex-col ${view === "list" ? "flex" : "hidden"} lg:flex`}>
           <LibraryList
             items={items}
@@ -206,7 +224,8 @@ export function AppShell() {
             now={now}
             selectedId={selectedId}
             filtersActive={nearMe || hasActiveFilters(filters)}
-            onSelect={setSelectedId}
+            onSelect={(id) => { setReportFocusKey(0); setSelectedId(id); }}
+            onRequestReport={requestReport}
             onClearFilters={clearFilters}
             onRetry={reload}
           />
@@ -219,7 +238,7 @@ export function AppShell() {
           selectedId={selectedId}
           userPosition={geo.position}
           focusUserKey={focusUserKey}
-          onSelect={setSelectedId}
+          onSelect={(id) => { setReportFocusKey(0); setSelectedId(id); }}
           onDeselect={closeDrawer}
         />
       </section>
@@ -232,7 +251,8 @@ export function AppShell() {
           now={now}
           locate={locateForReport}
           onReported={handleReported}
-          onOpen={setSelectedId}
+          onOpen={(id) => { setReportFocusKey(0); setSelectedId(id); }}
+          tagsEnabled={communityAvailable}
         />
       </div>
 
@@ -244,6 +264,8 @@ export function AppShell() {
         locationGranted={geo.status === "granted"}
         onReported={handleReported}
         onClose={closeDrawer}
+        reportFocusKey={reportFocusKey}
+        tagsEnabled={communityAvailable}
       />
 
       {blockedPurpose && (

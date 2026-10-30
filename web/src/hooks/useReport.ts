@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReportTag } from "@/lib/community";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   getDeviceHash,
@@ -26,7 +27,7 @@ export interface ReportState {
   activeValue: ReportValue | null;
   recent: RecentReport | null;
   cooldownMinutes: number;
-  submit: (value: ReportValue) => Promise<void>;
+  submit: (value: ReportValue, tags?: ReportTag[]) => Promise<void>;
   reset: () => void;
 }
 
@@ -71,7 +72,7 @@ export function useReport(options: {
   }, []);
 
   const submit = useCallback(
-    async (value: ReportValue) => {
+    async (value: ReportValue, tags: ReportTag[] = []) => {
       if (busyRef.current) return;
       const wait = minutesUntilNextReport(library.id);
       if (wait > 0) {
@@ -116,6 +117,7 @@ export function useReport(options: {
         const result = await submitReport({
           libraryId: library.id,
           value,
+          tags,
           deviceHash,
           lat: position.lat,
           lng: position.lng,

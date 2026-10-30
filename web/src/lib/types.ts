@@ -1,3 +1,4 @@
+import type { CommunityReport, ReportTag } from "./community";
 // Contrato Supabase: esquema original y campos aditivos del motor CSV/Beta.
 
 export type InstitutionType = "ayuntamiento" | "comunidad" | "ucm" | "otra";
@@ -53,6 +54,9 @@ export type OccupancyStatus = {
   report_memory_pct?: number | null;
   report_memory_at?: string | null;
   report_memory_count?: number;
+  latest_report_at?: string | null;
+  active_tags?: ReportTag[];
+  active_tag_times?: Partial<Record<ReportTag, string>>;
   confidence_score?: number | null;
   is_open_now?: boolean | null;
   google_live_pct: number | null;
@@ -162,6 +166,7 @@ export interface Database {
         };
         Returns: string;
       };
+      get_recent_reports: { Args: { limit_count?: number }; Returns: CommunityReport[] };
       submit_report: {
         Args: {
           p_library_id: string;
@@ -169,6 +174,7 @@ export interface Database {
           p_device_hash: string;
           p_user_lat: number;
           p_user_lng: number;
+          p_tags?: ReportTag[];
         };
         Returns: string;
       };

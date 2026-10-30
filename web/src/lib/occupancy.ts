@@ -1,3 +1,4 @@
+import { isReportTag } from "./community";
 import type {
   InstitutionType,
   Library,
@@ -201,6 +202,10 @@ export function parseOccupancyStatus(raw: unknown): OccupancyStatus | null {
     report_memory_pct: toPct(r.report_memory_pct),
     report_memory_at: asNullableString(r.report_memory_at),
     report_memory_count: Math.max(0, Math.floor(asFiniteNumber(r.report_memory_count) ?? 0)),
+    latest_report_at: asNullableString(r.latest_report_at),
+    active_tags: Array.isArray(r.active_tags) ? r.active_tags.filter(isReportTag) : [],
+    active_tag_times: Object.fromEntries(Object.entries(asRecord(r.active_tag_times) ?? {})
+      .filter(([tag, at]) => isReportTag(tag) && typeof at === "string")),
     confidence_score: confidence !== null && confidence >= 0 && confidence <= 1 ? confidence : null,
     is_open_now: typeof r.is_open_now === "boolean" ? r.is_open_now : null,
     google_live_pct: toPct(r.google_live_pct),

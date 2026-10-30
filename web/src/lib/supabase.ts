@@ -1,3 +1,4 @@
+import { validTags, type ReportTag } from "./community";
 import {
   createClient,
   type RealtimeChannel,
@@ -142,11 +143,13 @@ export type SubmitReportResult =
 export async function submitReport(input: {
   libraryId: string;
   value: ReportValue;
+  tags?: ReportTag[];
   deviceHash: string;
   lat: number;
   lng: number;
 }): Promise<SubmitReportResult> {
   if (
+    !validTags(input.tags ?? []) ||
     !isReportValue(input.value) ||
     !isValidDeviceHash(input.deviceHash) ||
     !Number.isFinite(input.lat) ||
@@ -161,6 +164,7 @@ export async function submitReport(input: {
       p_device_hash: input.deviceHash,
       p_user_lat: input.lat,
       p_user_lng: input.lng,
+      ...(input.tags?.length ? { p_tags: input.tags } : {}),
     });
     if (error) return { ok: false, error: mapReportError(error) };
     return { ok: true, reportId: String(data) };

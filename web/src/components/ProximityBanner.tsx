@@ -37,6 +37,7 @@ export function ProximityBanner({
   locate,
   onReported,
   onOpen,
+  tagsEnabled = true,
 }: {
   libraries: LibraryWithOccupancy[];
   position: UserPosition | null;
@@ -45,6 +46,7 @@ export function ProximityBanner({
   locate: () => Promise<UserPosition>;
   onReported: (libraryId: string, value: ReportValue) => void;
   onOpen: (libraryId: string) => void;
+  tagsEnabled?: boolean;
 }) {
   const [dismissed, setDismissed] = useState<Set<string>>(() => new Set());
   // Biblioteca recién reportada desde el banner: se mantiene visible para mostrar la confirmación.
@@ -111,7 +113,7 @@ export function ProximityBanner({
           <X className="size-4" />
         </button>
       </div>
-      <ReportButtons library={candidate} locate={locate} locationGranted onReported={handleReported} compact />
+      <ReportButtons tagsEnabled={tagsEnabled} key={candidate.id} library={candidate} locate={locate} locationGranted onReported={handleReported} compact />
       <button
         type="button"
         onClick={() => onOpen(candidate.id)}

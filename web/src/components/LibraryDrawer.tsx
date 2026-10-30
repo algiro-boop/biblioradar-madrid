@@ -13,6 +13,7 @@ import {
 } from "@/lib/occupancy";
 import type { LibraryWithOccupancy, ReportValue, UserPosition } from "@/lib/types";
 import { InstitutionBadge } from "./Badges";
+import { ActiveTags, LiveStatusBadge } from "./CommunityStatus";
 import { CapacityText } from "./CapacityText";
 import { FullReportNotice } from "./FullReportNotice";
 import { ReportButtons } from "./ReportButtons";
@@ -57,6 +58,8 @@ export function LibraryDrawer({
   locationGranted,
   onReported,
   onClose,
+  reportFocusKey = 0,
+  tagsEnabled = true,
 }: {
   library: LibraryWithOccupancy | null;
   distanceM: number | null;
@@ -66,9 +69,16 @@ export function LibraryDrawer({
   locationGranted: boolean;
   onReported: (libraryId: string, value: ReportValue) => void;
   onClose: () => void;
+  reportFocusKey?: number;
+  tagsEnabled?: boolean;
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const reportRef = useRef<HTMLElement>(null);
+  const focusReport = () => {
+    reportRef.current?.scrollIntoView({ block: "start", behavior: "smooth" });
+    reportRef.current?.focus({ preventScroll: true });
+  };
   const dragStartRef = useRef<number | null>(null);
   const [dragY, setDragY] = useState(0);
   // Se conserva la última biblioteca para que el contenido no desaparezca durante la animación de cierre.
@@ -91,6 +101,13 @@ export function LibraryDrawer({
     setDragY(0);
     panelRef.current?.querySelector("[data-scroll]")?.scrollTo({ top: 0 });
   }, [library?.id]);
+
+  useEffect(() => {
+    if (open && reportFocusKey > 0) {
+      reportRef.current?.scrollIntoView({ block: "start" });
+      reportRef.current?.focus({ preventScroll: true });
+    }
+  }, [open, library?.id, reportFocusKey]);
 
   // Gesto "deslizar hacia abajo para cerrar" desde el asa del bottom sheet.
   const onPointerDown = (e: ReactPointerEvent) => {
@@ -220,6 +237,7 @@ export function LibraryDrawer({
                     <div className={`h-full rounded-full ${styles.bar} transition-all`} style={{ width: `${Math.max(pct, 3)}%` }} />
                   )}
                 </div>
+                <div className="mt-3"><LiveStatusBadge status={status} now={now} onReport={focusReport} /><ActiveTags status={status} now={now} /></div>
                 <div className="mt-3 space-y-1 text-xs text-slate-500">
                   <p className="font-medium text-slate-700">{status?.primary_source ?? "Sin datos de ocupación"}</p>
                   <p className="flex items-center gap-1.5">
@@ -271,12 +289,12 @@ export function LibraryDrawer({
                 )}
               </section>
 
-              <section aria-labelledby="report-title" className="rounded-3xl bg-slate-50 p-4 ring-1 ring-inset ring-slate-200">
+              <section ref={reportRef} tabIndex={-1} aria-labelledby="report-title" className="rounded-3xl bg-slate-50 p-4 ring-1 ring-inset ring-slate-200">
                 <h3 id="report-title" className="text-base font-bold text-slate-900">
                   ¿Estás aquí? Ayuda a otros estudiantes
                 </h3>
                 <p className="mt-0.5 mb-3 text-sm text-slate-500">Dinos cómo está la sala ahora mismo.</p>
-                <ReportButtons library={library} locate={locate} locationGranted={locationGranted} onReported={onReported} />
+                <ReportButtons tagsEnabled={tagsEnabled} key={library.id} library={library} locate={locate} locationGranted={locationGranted} onReported={onReported} />
               </section>
             </div>
           </>
