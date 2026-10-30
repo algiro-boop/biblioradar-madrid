@@ -1,4 +1,5 @@
 """Parse the migration AND function/trigger bodies; execute behavior in PostgreSQL smoke tests."""
+
 from pathlib import Path
 
 from pglast import parse_plpgsql, parse_sql
