@@ -4,6 +4,8 @@
  * la pestaña o salir de «Mi Biblioteca».
  */
 
+import type { SfxKind } from "./sfx";
+
 export type Track = "lofi" | "jazz" | "rain";
 
 const NOTE = (n: number) => 440 * Math.pow(2, (n - 69) / 12);
@@ -234,38 +236,108 @@ class Engine {
     o.stop(t + 0.12);
   }
 
-  /** Efectos breves de la interfaz (independientes de la música). */
-  sfx(kind: "coin" | "place" | "level" | "click" | "error") {
+  /** Crea o reanuda el contexto tras el primer gesto del usuario (política de autoplay). */
+  unlock() {
+    void this.ensure().resume();
+  }
+
+  /** Efectos breves de la interfaz (independientes de la música), cada uno con su carácter. */
+  sfx(kind: SfxKind, volume = 0.6) {
     const ctx = this.ensure();
-    void ctx.resume();
+    if (ctx.state === "suspended") void ctx.resume();
     const t = ctx.currentTime + 0.01;
     const out = ctx.createGain();
-    out.gain.value = 0.25;
+    out.gain.value = 0.32 * volume;
     out.connect(this.master!);
-    const blip = (freq: number, at: number, dur: number, type: OscillatorType = "square", peak = 0.18) => {
+    const blip = (freq: number, at: number, dur: number, type: OscillatorType = "square", peak = 0.18, to?: number) => {
       const g = ctx.createGain();
-      g.gain.setValueAtTime(peak, at);
+      g.gain.setValueAtTime(0.0001, at);
+      g.gain.linearRampToValueAtTime(peak, at + 0.006);
       g.gain.exponentialRampToValueAtTime(0.0001, at + dur);
       g.connect(out);
       const o = ctx.createOscillator();
       o.type = type;
-      o.frequency.value = freq;
+      o.frequency.setValueAtTime(freq, at);
+      if (to) o.frequency.exponentialRampToValueAtTime(to, at + dur);
       o.connect(g);
       o.start(at);
       o.stop(at + dur + 0.02);
     };
-    if (kind === "coin") {
-      blip(NOTE(83), t, 0.08);
-      blip(NOTE(88), t + 0.07, 0.22);
-    } else if (kind === "place") {
-      blip(140, t, 0.12, "triangle", 0.4);
-      blip(90, t + 0.02, 0.1, "sine", 0.3);
-    } else if (kind === "level") {
-      [72, 76, 79, 84].forEach((n, i) => blip(NOTE(n), t + i * 0.1, 0.3, "square", 0.14));
-    } else if (kind === "error") {
-      blip(160, t, 0.15, "sawtooth", 0.1);
-    } else {
-      blip(NOTE(91), t, 0.03, "square", 0.08);
+    const hiss = (at: number, dur: number, peak: number, type: BiquadFilterType, freq: number, to?: number) => {
+      const src = ctx.createBufferSource();
+      src.buffer = this.noiseBuf;
+      const f = ctx.createBiquadFilter();
+      f.type = type;
+      f.frequency.setValueAtTime(freq, at);
+      if (to) f.frequency.exponentialRampToValueAtTime(to, at + dur);
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, at);
+      g.gain.linearRampToValueAtTime(peak, at + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, at + dur);
+      src.connect(f).connect(g).connect(out);
+      src.start(at, Math.random());
+      src.stop(at + dur + 0.05);
+    };
+    switch (kind) {
+      case "tab": // pestaña: «tic» de madera
+        blip(NOTE(84), t, 0.05, "triangle", 0.16);
+        blip(NOTE(79), t + 0.03, 0.06, "sine", 0.1);
+        break;
+      case "select": // selección: burbuja ascendente
+        blip(NOTE(76), t, 0.09, "sine", 0.2, NOTE(83));
+        break;
+      case "click":
+        blip(NOTE(91), t, 0.03, "square", 0.06);
+        break;
+      case "buy": // compra: caja registradora (campanita + monedas)
+        blip(NOTE(88), t, 0.12, "square", 0.1);
+        blip(NOTE(95), t + 0.08, 0.25, "square", 0.09);
+        hiss(t + 0.02, 0.12, 0.08, "highpass", 6000);
+        break;
+      case "coin":
+        blip(NOTE(83), t, 0.08, "square", 0.14);
+        blip(NOTE(88), t + 0.07, 0.22, "square", 0.14);
+        break;
+      case "sell": // venta: monedas que caen
+        [91, 88, 84].forEach((n, i) => blip(NOTE(n), t + i * 0.06, 0.1, "square", 0.09));
+        break;
+      case "place": // dejar un mueble: golpe sordo de madera
+        blip(150, t, 0.13, "triangle", 0.45, 70);
+        hiss(t, 0.06, 0.12, "lowpass", 900);
+        break;
+      case "rotate": // girar: «swish»
+        hiss(t, 0.16, 0.12, "bandpass", 900, 2600);
+        break;
+      case "pickup": // levantar: «pop» hacia arriba
+        blip(220, t, 0.1, "sine", 0.28, 520);
+        break;
+      case "store": // guardar en el inventario: cajón que se cierra
+        hiss(t, 0.1, 0.12, "lowpass", 1600, 400);
+        blip(110, t + 0.06, 0.1, "triangle", 0.3, 80);
+        break;
+      case "expansion": // ampliación: tablones y escala ascendente
+        blip(120, t, 0.12, "triangle", 0.35, 80);
+        blip(120, t + 0.14, 0.12, "triangle", 0.35, 80);
+        [67, 71, 74, 79].forEach((n, i) => blip(NOTE(n), t + 0.28 + i * 0.07, 0.22, "triangle", 0.14));
+        break;
+      case "level": // subir de nivel: fanfarria
+        [72, 76, 79, 84].forEach((n, i) => blip(NOTE(n), t + i * 0.1, 0.3, "square", 0.12));
+        blip(NOTE(88), t + 0.42, 0.5, "triangle", 0.12);
+        break;
+      case "unlock": // sala nueva: arpegio con brillo
+        [60, 67, 72, 76, 79].forEach((n, i) => blip(NOTE(n), t + i * 0.06, 0.4, "sine", 0.14));
+        hiss(t + 0.3, 0.4, 0.05, "highpass", 8000);
+        break;
+      case "mission": // misión cumplida: dos notas alegres
+        blip(NOTE(79), t, 0.12, "square", 0.11);
+        blip(NOTE(86), t + 0.1, 0.28, "square", 0.11);
+        break;
+      case "achievement": // logro: campana
+        [84, 91, 96].forEach((n, i) => blip(NOTE(n), t + i * 0.05, 0.7 - i * 0.15, "sine", 0.13));
+        break;
+      case "error":
+        blip(180, t, 0.16, "sawtooth", 0.07, 120);
+        break;
     }
   }
 }

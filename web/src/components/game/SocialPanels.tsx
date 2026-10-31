@@ -7,6 +7,7 @@ import { NEIGHBORS } from "@/game/data/neighbors";
 import type { GameState, MusicSettings } from "@/game/engine";
 import { run } from "@/game/store";
 import { madridDateKey } from "@/game/time";
+import { sfx } from "@/game/sfx";
 import { report } from "./ShopPanel";
 import { Button, Section } from "./ui";
 
@@ -14,10 +15,12 @@ type Notify = (m: string, k?: "ok" | "error") => void;
 
 // ---------------------------------------------------------------- visitas
 
-export function VisitPanel({ state, now, onVisit }: { state: GameState; now: number; onVisit: (id: string) => void }) {
+export function VisitPanel({ state, now, onVisit, notify }: { state: GameState; now: number; onVisit: (id: string) => void; notify: Notify }) {
   const today = madridDateKey(now);
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      <PublicLibrary key={state.settings.alias} state={state} notify={notify} />
+      <Section title="Otras bibliotecas">
       <p className="text-xs text-slate-500">
         Bibliotecas virtuales públicas <strong>ficticias</strong> del entorno de pruebas, para probar visitas y «me gusta». Solo se puede mirar: nadie toca la biblioteca de nadie.
       </p>
@@ -40,7 +43,54 @@ export function VisitPanel({ state, now, onVisit }: { state: GameState; now: num
           );
         })}
       </div>
+      </Section>
     </div>
+  );
+}
+
+/**
+ * «Mi biblioteca pública»: privada por defecto. Publicarla exige alias y una confirmación
+ * explícita; dejar de publicarla es inmediato y no borra nada. Sin rankings.
+ */
+function PublicLibrary({ state, notify }: { state: GameState; notify: Notify }) {
+  const [alias, setAlias] = useState(state.settings.alias);
+  const [confirming, setConfirming] = useState(false);
+  const published = state.settings.publish;
+  const saveAlias = () => {
+    run({ type: "set_settings", alias: alias.trim() });
+    notify("Alias guardado", "ok");
+  };
+  return (
+    <Section title="Mi biblioteca pública" aside={published ? <span className="font-semibold text-emerald-700">Publicada</span> : <span className="font-semibold">Privada</span>}>
+      <div className="space-y-3 rounded-2xl bg-white p-3 ring-1 ring-slate-200">
+        <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); saveAlias(); }}>
+          <input value={alias} onChange={(e) => setAlias(e.target.value)} maxLength={24} placeholder="Alias público" aria-label="Alias público"
+            className="min-w-0 flex-1 rounded-xl bg-slate-50 px-3 py-2 text-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-sky-500 focus:outline-none" />
+          <Button type="submit" variant="secondary" disabled={alias.trim() === state.settings.alias}>Guardar</Button>
+        </form>
+        {published ? (
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-xs text-slate-600">Otras personas pueden verla (solo mirar) como «{state.settings.alias}».</p>
+            <Button variant="secondary" onClick={() => { run({ type: "set_settings", publish: false }); notify("Tu biblioteca vuelve a ser privada.", "ok"); }}>Hacer privada</Button>
+          </div>
+        ) : confirming ? (
+          <div className="space-y-2 rounded-xl bg-amber-50 p-3 ring-1 ring-amber-200">
+            <p className="text-xs text-amber-900">
+              Vas a publicar tu biblioteca con el alias «{state.settings.alias}». Se verán tus salas y muebles; nunca tu ubicación, tus reportes ni tu nombre real. Puedes hacerla privada cuando quieras.
+            </p>
+            <div className="flex gap-2">
+              <Button onClick={() => { run({ type: "set_settings", publish: true }); setConfirming(false); notify("Biblioteca publicada", "ok"); }}>Sí, publicarla</Button>
+              <Button variant="ghost" onClick={() => setConfirming(false)}>Cancelar</Button>
+            </div>
+          </div>
+        ) : (
+          <Button className="w-full" disabled={!state.settings.alias} onClick={() => setConfirming(true)}>
+            {state.settings.alias ? "Publicar mi biblioteca…" : "Elige un alias para poder publicarla"}
+          </Button>
+        )}
+        <p className="text-[11px] text-slate-500">Es privada por defecto. En este entorno de pruebas no se envía a ningún sitio.</p>
+      </div>
+    </Section>
   );
 }
 
@@ -55,7 +105,6 @@ const TRACKS: { id: MusicSettings["track"]; name: string }[] = [
 export function SettingsPanel({ state, notify }: { state: GameState; notify: Notify }) {
   const [name, setName] = useState(state.name);
   const [cat, setCat] = useState(state.catName);
-  const [alias, setAlias] = useState(state.settings.alias);
   const music = state.settings.music;
   return (
     <div className="space-y-6">
@@ -90,31 +139,24 @@ export function SettingsPanel({ state, notify }: { state: GameState; notify: Not
           </div>
           <label className="flex items-center gap-2 text-xs text-slate-600">
             <Volume2 className="size-4" aria-hidden />
-            <input type="range" min={0} max={1} step={0.05} value={music.volume} aria-label="Volumen"
+            <input type="range" min={0} max={1} step={0.05} value={music.volume} aria-label="Volumen de la música"
               onChange={(e) => run({ type: "set_settings", music: { volume: Number(e.target.value) } })} className="flex-1 accent-emerald-600" />
           </label>
-          <p className="text-[11px] text-slate-500">Composiciones originales generadas en tu dispositivo. Nunca suenan solas y se pausan al salir de la biblioteca o cambiar de pestaña.</p>
+          <p className="text-[11px] text-slate-500">Composiciones originales generadas en tu dispositivo. Empiezan a sonar tras tu primer toque y se pausan al salir de la biblioteca o cambiar de pestaña.</p>
         </div>
-        <label className="flex items-center justify-between gap-2 rounded-2xl bg-white p-3 text-sm font-semibold ring-1 ring-slate-200">
-          Efectos de sonido
-          <input type="checkbox" role="switch" checked={state.settings.sfx} onChange={(e) => run({ type: "set_settings", sfx: e.target.checked })} className="size-5 accent-emerald-600" />
-        </label>
+        <div className="space-y-3 rounded-2xl bg-white p-3 ring-1 ring-slate-200">
+          <label className="flex items-center justify-between gap-2 text-sm font-semibold">
+            <span className="inline-flex items-center gap-2"><Volume2 className="size-4" aria-hidden />Efectos de sonido</span>
+            <input type="checkbox" role="switch" checked={state.settings.sfx} onChange={(e) => run({ type: "set_settings", sfx: e.target.checked })} className="size-5 accent-emerald-600" />
+          </label>
+          <label className="flex items-center gap-2 text-xs text-slate-600">
+            <Volume2 className="size-4" aria-hidden />
+            <input type="range" min={0} max={1} step={0.05} value={state.settings.sfxVolume} aria-label="Volumen de los efectos" disabled={!state.settings.sfx}
+              onChange={(e) => run({ type: "set_settings", sfxVolume: Number(e.target.value) })} onPointerUp={() => sfx("select")} className="flex-1 accent-emerald-600 disabled:opacity-40" />
+          </label>
+        </div>
       </Section>
 
-      <Section title="Privacidad">
-        <div className="space-y-2 rounded-2xl bg-white p-3 ring-1 ring-slate-200">
-          <label className="flex items-center justify-between gap-2 text-sm font-semibold">
-            Biblioteca pública
-            <input type="checkbox" role="switch" checked={state.settings.publish} onChange={(e) => run({ type: "set_settings", publish: e.target.checked })} className="size-5 accent-emerald-600" />
-          </label>
-          <p className="text-[11px] text-slate-500">Si la publicas, otros podrán verla (solo mirar) con tu alias. Nunca se muestra tu ubicación ni tus reportes. En pruebas no se envía a ningún sitio.</p>
-          <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); run({ type: "set_settings", alias }); notify("Alias guardado", "ok"); }}>
-            <input value={alias} onChange={(e) => setAlias(e.target.value)} maxLength={24} placeholder="Alias público" aria-label="Alias público"
-              className="min-w-0 flex-1 rounded-xl bg-slate-50 px-3 py-2 text-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-sky-500 focus:outline-none" />
-            <Button type="submit" variant="secondary" disabled={alias === state.settings.alias}>Guardar</Button>
-          </form>
-        </div>
-      </Section>
     </div>
   );
 }

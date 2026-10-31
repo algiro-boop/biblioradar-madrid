@@ -425,8 +425,13 @@ function apply(state: GameState, cmd: Command, now: number, today: string): { me
       }
       if (cmd.sfx !== undefined) state.settings.sfx = cmd.sfx;
       if (cmd.sfxVolume !== undefined) state.settings.sfxVolume = Math.min(1, Math.max(0, cmd.sfxVolume));
-      if (cmd.publish !== undefined) state.settings.publish = cmd.publish;
       if (cmd.alias !== undefined) state.settings.alias = cmd.alias.trim().slice(0, 24);
+      if (cmd.publish !== undefined) {
+        // Publicar es una decisión explícita y siempre con alias (nunca con datos personales).
+        if (cmd.publish && !state.settings.alias) throw new GameError("Elige un alias antes de publicar tu biblioteca.");
+        state.settings.publish = cmd.publish;
+      }
+      if (!state.settings.alias) state.settings.publish = false;
       return {};
     }
 

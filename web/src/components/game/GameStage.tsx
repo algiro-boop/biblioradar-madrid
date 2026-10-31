@@ -6,6 +6,7 @@ import { Scene, type Cinematic, type Overlay, type SceneInput, type TileHit } fr
 
 export interface StageHandle {
   play: (kind: Cinematic) => void;
+  burst: () => void;
   catSleeping: () => boolean;
 }
 
@@ -20,9 +21,12 @@ export interface StageTap {
  * o coloca. El dibujo lo hace `Scene`; aquí solo se traducen los gestos.
  */
 export function GameStage({
-  input, overlay, onTap, onHover, onCatNap, label, ref,
+  input, overview, onOpenRoom, overlay, onTap, onHover, onCatNap, label, ref,
 }: {
   input: SceneInput;
+  /** Vista general (casa de muñecas): todas las salas a la vez. */
+  overview?: SceneInput[] | null;
+  onOpenRoom?: (room: string) => void;
   overlay: Overlay;
   onTap: (tap: StageTap) => void;
   onHover?: (tap: StageTap) => void;
@@ -52,9 +56,10 @@ export function GameStage({
   useEffect(() => {
     const scene = sceneRef.current;
     if (!scene) return;
-    scene.setInput(input);
+    if (overview?.length) scene.setOverview(overview);
+    else scene.setInput(input);
     scene.resize();
-  }, [input]);
+  }, [input, overview]);
 
   useEffect(() => {
     sceneRef.current?.setOverlay(overlay);
@@ -62,6 +67,7 @@ export function GameStage({
 
   useImperativeHandle(ref, () => ({
     play: (kind) => sceneRef.current?.play(kind),
+    burst: () => sceneRef.current?.burst(),
     catSleeping: () => sceneRef.current?.catSleeping() ?? false,
   }));
 
@@ -113,7 +119,12 @@ export function GameStage({
         }}
         onPointerUp={(e) => {
           const had = pointers.current.delete(e.pointerId);
-          if (had && pointers.current.size === 0 && !gesture.current.moved) onTap(tapAt(e.clientX, e.clientY));
+          if (!had || pointers.current.size > 0 || gesture.current.moved) return;
+          const scene = sceneRef.current;
+          if (scene?.isOverview) {
+            const room = scene.roomAt(e.clientX, e.clientY);
+            if (room) onOpenRoom?.(room);
+          } else onTap(tapAt(e.clientX, e.clientY));
         }}
         onPointerCancel={(e) => pointers.current.delete(e.pointerId)}
         onWheel={(e) => sceneRef.current?.zoomBy(e.deltaY < 0 ? 1.12 : 1 / 1.12)}
@@ -125,7 +136,7 @@ export function GameStage({
         <button type="button" aria-label="Alejar" className="grid size-10 place-items-center text-slate-700 hover:bg-slate-100" onClick={() => sceneRef.current?.zoomBy(0.8)}>
           <Minus className="size-4" aria-hidden />
         </button>
-        <button type="button" aria-label="Encuadrar la sala" className="grid size-10 place-items-center text-slate-700 hover:bg-slate-100" onClick={() => sceneRef.current?.resetCamera()}>
+        <button type="button" aria-label={overview?.length ? "Encuadrar la biblioteca" : "Encuadrar la sala"} className="grid size-10 place-items-center text-slate-700 hover:bg-slate-100" onClick={() => sceneRef.current?.resetCamera()}>
           <Scan className="size-4" aria-hidden />
         </button>
       </div>

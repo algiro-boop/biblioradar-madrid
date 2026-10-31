@@ -1,21 +1,21 @@
 "use client";
 
 import {
-  Archive, ArrowLeft, Check, Flame, Heart, ListChecks, Lock, Move, Music, Package, Paintbrush, Pencil, RotateCw, Settings,
-  Store, TrendingUp, Trophy, Users, Wrench, X,
+  Archive, ArrowLeft, Building2, Check, Flame, Heart, Layers, ListChecks, Lock, Maximize2, Move, Music, Package, Paintbrush, Pencil,
+  RotateCw, Settings, Store, TrendingUp, Trophy, Users, Wrench, X,
 } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { getAchievement } from "@/game/data/achievements";
 import { findItem } from "@/game/data/catalog";
-import { DEFAULT_STYLE, getRoom, hasFeature, LEVELS, roomAt, ROOMS, roomsForLevel, STYLES, studentsForLevel } from "@/game/data/levels";
+import { DEFAULT_STYLE, getRoom, hasFeature, LEVELS, nextExpansionPrice, roomAt, roomMax, ROOMS, roomsForLevel, STYLES, studentsForLevel, type RoomDef } from "@/game/data/levels";
 import { NEIGHBORS } from "@/game/data/neighbors";
 import { gameNow, type Celebration, type GameState } from "@/game/engine";
 import { itemLookup } from "@/game/engine/layout";
 import { activeMissions, availableStyles } from "@/game/engine/missions";
 import type { SceneInput } from "@/game/render/scene";
-import type { ScenePlacement } from "@/game/render/sim";
-import { sfx } from "@/game/sfx";
+import { SEAT_Z, type ScenePlacement } from "@/game/render/sim";
+import { sfx, unlockAudioOnGesture } from "@/game/sfx";
 import { getGameState, run, useGameState } from "@/game/store";
 import { madridDateKey } from "@/game/time";
 import { GAME_DEV_TOOLS } from "@/lib/gamification-flag";
@@ -55,6 +55,34 @@ function useDesktop(): boolean {
 
 const reducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+/**
+ * Reparte el alumnado del nivel entre las salas en proporción a sus asientos (un sofá de tres
+ * cuenta tres). Una sala sin asientos recibe a quien hojea estanterías; el total nunca crece.
+ */
+function studentsByRoom(level: number, rooms: RoomDef[], placements: ScenePlacement[]): Record<string, number> {
+  const total = studentsForLevel(level);
+  const seats = rooms.map((r) => placements.filter((p) => p.room === r.id).reduce((n, p) => {
+    const item = findItem(p.itemId);
+    if (!item || item.layer !== "floor" || SEAT_Z[item.kind] === undefined) return n;
+    return n + (item.kind === "sofa" || item.kind === "bench" ? Math.max(item.w, item.h) : 1);
+  }, 0));
+  const sum = seats.reduce((a, b) => a + b, 0);
+  const out: Record<string, number> = {};
+  if (!sum) {
+    rooms.forEach((r, i) => (out[r.id] = Math.floor(total / rooms.length) + (i < total % rooms.length ? 1 : 0)));
+    return out;
+  }
+  let left = total;
+  rooms.forEach((r, i) => {
+    out[r.id] = Math.min(left, Math.floor((total * seats[i]!) / sum));
+    left -= out[r.id]!;
+  });
+  // El resto, a las salas con más asientos libres.
+  const order = rooms.map((r, i) => ({ id: r.id, free: seats[i]! - out[r.id]! })).sort((a, b) => b.free - a.free);
+  for (let i = 0; left > 0 && order.length; i = (i + 1) % order.length, left--) out[order[i]!.id]! += 1;
+  return out;
+}
+
 export default function LibraryGame() {
   const state = useGameState();
   const desktop = useDesktop();
@@ -70,6 +98,8 @@ export default function LibraryGame() {
   const [previewCat, setPreviewCat] = useState(false);
   const [stylesOpen, setStylesOpen] = useState(false);
   const [audible, setAudible] = useState(false);
+  const [overview, setOverview] = useState(false);
+  const [expandOpen, setExpandOpen] = useState(false);
   const stageRef = useRef<StageHandle>(null);
   const activeTab = tab ?? (desktop ? "missions" : null);
 
@@ -80,6 +110,9 @@ export default function LibraryGame() {
   }, []);
 
   const editor = useEditor(state, notify, () => sfx("place"));
+
+  // Audio: activado por defecto, pero el navegador solo deja sonar tras el primer gesto.
+  useEffect(() => unlockAudioOnGesture(() => setAudible(true)), []);
 
   // Reloj: liquidación periódica (medianoche, caducidades, misiones) y cuentas atrás.
   useEffect(() => {
@@ -107,19 +140,31 @@ export default function LibraryGame() {
   const minute = Math.floor(now / 60_000) * 60_000;
   const catHere = (hasFeature(state.level, "cat") || previewCat) && !roomLocked;
 
-  const ownInput = useMemo<SceneInput>(() => {
-    // Mientras se mueve un mueble, solo se ve su fantasma.
-    const moving = editor.ghost && !editor.ghost.fresh ? editor.ghost.uid : null;
-    const placements: ScenePlacement[] = editor.placements.filter((p) => p.room === room.id && p.uid !== moving).flatMap((p) => {
+  // Mientras se mueve un mueble (o un grupo), solo se ven sus fantasmas.
+  const allPlacements = useMemo<ScenePlacement[]>(() => {
+    const moving = new Set(editor.ghosts.filter((g) => !g.fresh).map((g) => g.uid));
+    return editor.placements.filter((p) => !moving.has(p.uid)).flatMap((p) => {
       const item = itemOf(p.uid);
       return item ? [{ uid: p.uid, itemId: item.id, room: p.room, x: p.x, y: p.y, rot: p.rot }] : [];
     });
-    return {
-      room, placements, style: { ...DEFAULT_STYLE, ...editor.styles[room.id] }, level: roomLocked ? Math.max(1, state.level) : state.level,
-      trophies: state.showcase.length, students: roomLocked ? 0 : studentsForLevel(state.level),
-      librarian: hasFeature(state.level, "librarian") && !roomLocked, cat: catHere, now: minute,
-    };
-  }, [editor.placements, editor.styles, editor.ghost, room, roomLocked, itemOf, state.level, state.showcase.length, catHere, minute]);
+  }, [editor.placements, editor.ghosts, itemOf]);
+  const unlocked = useMemo(() => (state.level === 0 ? [] : roomsForLevel(state.level, state.expansions)), [state.level, state.expansions]);
+  const students = useMemo(() => studentsByRoom(state.level, unlocked, allPlacements), [state.level, unlocked, allPlacements]);
+  // El gato y la bibliotecaria viven en la sala principal en la vista general.
+  const inputFor = useCallback(
+    (r: RoomDef, locked: boolean, home: boolean): SceneInput => ({
+      room: r, placements: allPlacements.filter((p) => p.room === r.id), style: { ...DEFAULT_STYLE, ...editor.styles[r.id] },
+      level: locked ? Math.max(1, state.level) : state.level, trophies: state.showcase.length, students: locked ? 0 : students[r.id] ?? 0,
+      librarian: hasFeature(state.level, "librarian") && !locked && home, cat: catHere && home, now: minute,
+    }),
+    [allPlacements, editor.styles, state.level, state.showcase.length, students, catHere, minute],
+  );
+  const ownInput = useMemo<SceneInput>(() => inputFor(room, roomLocked, true), [inputFor, room, roomLocked]);
+  const canOverview = unlocked.length > 1 && !visiting && !editing;
+  const overviewInputs = useMemo(
+    () => (overview && canOverview ? unlocked.map((r) => inputFor(r, false, r.id === "r1")) : null),
+    [overview, canOverview, unlocked, inputFor],
+  );
 
   const visitInput = useMemo<SceneInput | null>(() => {
     if (!neighbor) return null;
@@ -132,10 +177,11 @@ export default function LibraryGame() {
   }, [neighbor, visitRoom, minute]);
 
   const input = visitInput ?? ownInput;
-  const ghost = editor.ghost && editor.ghost.room === room.id ? editor.ghost : null;
   const overlay = useMemo(
-    () => (editing && !visiting ? { editing: true, selected: editor.selected, ghost } : { editing: false, selected: null, ghost: null }),
-    [editing, visiting, editor.selected, ghost],
+    () => (editing && !visiting
+      ? { editing: true, selected: editor.selected, ghosts: editor.ghosts.filter((g) => g.room === room.id) }
+      : { editing: false, selected: [], ghosts: [] }),
+    [editing, visiting, editor.selected, editor.ghosts, room.id],
   );
 
   const canEdit = hasFeature(state.level, "editor") && !roomLocked && !visiting;
@@ -180,9 +226,17 @@ export default function LibraryGame() {
           return;
         }
         if (tap.hit && tap.hit !== "cat") {
-          if (tap.hit === editor.selected) editor.startMove(tap.hit);
-          else editor.setSelected(tap.hit);
-        } else editor.setSelected(null);
+          if (editor.multi) {
+            editor.toggleSelected(tap.hit);
+            sfx("select");
+          } else if (editor.selected.includes(tap.hit)) {
+            editor.startMove(tap.hit);
+            sfx("pickup");
+          } else {
+            editor.setSelected(tap.hit);
+            sfx("select");
+          }
+        } else if (!editor.multi) editor.setSelected(null);
         return;
       }
       if (tap.hit === "cat") notify(`${state.catName} ronronea. 🐾`);
@@ -218,13 +272,14 @@ export default function LibraryGame() {
       } else if (e.key === "r" || e.key === "R") {
         if (g) editor.rotateGhost();
         else editor.rotateSelected();
+        sfx("rotate");
       } else if (e.key === "Enter" && g) {
         e.preventDefault();
         editor.placeGhost();
-      } else if ((e.key === "m" || e.key === "M") && editor.selected) editor.startMove(editor.selected);
-      else if ((e.key === "Delete" || e.key === "Backspace") && editor.selected) editor.storeSelected();
+      } else if ((e.key === "m" || e.key === "M") && editor.selected.length) editor.startMove(editor.selected[0]!);
+      else if ((e.key === "Delete" || e.key === "Backspace") && editor.selected.length) editor.storeSelected();
       else if (e.key === "Escape") {
-        if (g || editor.selected) editor.cancel();
+        if (g || editor.selected.length) editor.cancel();
         else setEditing(false);
       }
     };
@@ -247,6 +302,7 @@ export default function LibraryGame() {
   useEffect(() => {
     // Activarla en Ajustes es un gesto del usuario: a partir de ahí puede sonar.
     if (music.enabled && !prevEnabled.current) setAudible(true);
+    void import("@/game/audio").then(({ audio }) => audio().setVolume(music.volume));
     prevEnabled.current = music.enabled;
   }, [music.enabled]);
   useEffect(() => {
@@ -276,11 +332,8 @@ export default function LibraryGame() {
   audibleRef.current = audible;
 
   const toggleMusic = () => {
-    if (!music.enabled) {
-      run({ type: "set_settings", music: { enabled: true } });
-      setAudible(true);
-    } else if (!audible) setAudible(true);
-    else run({ type: "set_settings", music: { enabled: false } });
+    setAudible(true);
+    run({ type: "set_settings", music: { enabled: !music.enabled } });
   };
 
   // ------------------------------------------------------------ celebraciones
@@ -289,7 +342,9 @@ export default function LibraryGame() {
   useEffect(() => {
     if (!celebration) return;
     const def = celebration.type === "level" ? LEVELS[celebration.level] : null;
-    if (celebration.type === "level") sfx("level");
+    const sound = ({ level: "level", achievement: "achievement", room: "unlock", expansion: "expansion", streak: "mission", protector: "mission", relocated: "store" } as const)[celebration.type];
+    if (sound) sfx(sound);
+    if (celebration.type === "expansion" && celebration.room === room.id) stageRef.current?.burst();
     if (def?.cinematic) {
       if (def.cinematic === "expansion" || def.cinematic === "floor" || def.cinematic === "final") {
         const target = ROOMS.find((r) => r.level === def.level);
@@ -323,6 +378,12 @@ export default function LibraryGame() {
 
   const today = madridDateKey(now);
   const claimable = useMemo(() => activeMissions(state, today, now).filter((m) => m.assignment.completedAt && !m.assignment.claimedAt).length, [state, today, now]);
+  const completedMissions = useMemo(() => activeMissions(state, today, now).filter((m) => m.assignment.completedAt).length, [state, today, now]);
+  const prevCompleted = useRef(completedMissions);
+  useEffect(() => {
+    if (completedMissions > prevCompleted.current) sfx("mission");
+    prevCompleted.current = completedMissions;
+  }, [completedMissions]);
   const levelDef = LEVELS[state.level]!;
   const placedHere = input.placements.length;
   const stageLabel = `${neighbor ? `${neighbor.libraryName}, de ${neighbor.alias}` : state.name}: ${input.room.name} con ${placedHere} objetos${placedHere ? `: ${input.placements.slice(0, 12).map((p) => findItem(p.itemId)?.name).join(", ")}` : ""}.`;
@@ -334,15 +395,17 @@ export default function LibraryGame() {
         <InventoryPanel state={state} placements={editor.placements} notify={notify} onPlace={(uid) => {
           if (roomLocked || !hasFeature(state.level, "editor")) return notify("Esa sala aún no está desbloqueada.", "error");
           setVisiting(null);
+          setOverview(false);
           setEditing(true);
-          editor.startPlace(uid, room.id);
+          editor.startPlace(uid, room.id, true);
+          sfx("pickup");
           if (!desktop) setTab(null);
         }} />
       )}
       {activeTab === "missions" && <MissionsPanel state={state} now={now} notify={notify} />}
       {activeTab === "achievements" && <AchievementsPanel state={state} notify={notify} />}
       {activeTab === "progress" && <ProgressPanel state={state} now={now} notify={notify} />}
-      {activeTab === "visit" && <VisitPanel state={state} now={now} onVisit={visit} />}
+      {activeTab === "visit" && <VisitPanel state={state} now={now} onVisit={visit} notify={notify} />}
       {activeTab === "settings" && <SettingsPanel key={`${state.name}|${state.catName}`} state={state} notify={notify} />}
       {activeTab === "dev" && GAME_DEV_TOOLS && (
         <DevPanel state={state} now={now} notify={notify} showAllRooms={showAllRooms} setShowAllRooms={setShowAllRooms} previewCat={previewCat} setPreviewCat={setPreviewCat} />
@@ -354,7 +417,7 @@ export default function LibraryGame() {
     <nav aria-label="Secciones de Mi Biblioteca" className={`flex shrink-0 gap-0.5 overflow-x-auto bg-white px-1.5 ring-1 ring-slate-200 ${desktop ? "py-1.5" : "pt-1 pb-[max(0.35rem,env(safe-area-inset-bottom))]"}`}>
       {TABS.map((t) => (
         <button key={t.id} type="button" aria-pressed={activeTab === t.id}
-          onClick={() => setTab(activeTab === t.id && !desktop ? null : t.id)}
+          onClick={() => { sfx("tab"); setTab(activeTab === t.id && !desktop ? null : t.id); }}
           className={`relative flex min-w-12 flex-1 flex-col items-center gap-0.5 rounded-xl px-1.5 py-1.5 text-[10px] font-semibold transition-colors ${activeTab === t.id ? "bg-emerald-50 text-emerald-700" : "text-slate-500 hover:bg-slate-100"}`}>
           {t.icon}
           {t.label}
@@ -368,7 +431,9 @@ export default function LibraryGame() {
     <main className={`app-viewport flex w-full overflow-hidden bg-[#2b211b] text-slate-900 ${desktop ? "flex-row" : "flex-col"}`}>
       {/* Escenario */}
       <div className="relative min-h-0 min-w-0 flex-1 bg-[radial-gradient(ellipse_at_center,#4a3426_0%,#2b211b_70%)]">
-        <GameStage key={visiting ?? "own"} ref={stageRef} input={input} overlay={overlay} onTap={onTap} onHover={onHover} onCatNap={onCatNap} label={stageLabel} />
+        <GameStage key={visiting ?? "own"} ref={stageRef} input={input} overview={overviewInputs} overlay={overlay} onTap={onTap} onHover={onHover} onCatNap={onCatNap}
+          onOpenRoom={(r) => { setRoomId(r); setOverview(false); sfx("tab"); }}
+          label={overviewInputs ? `${state.name}: vista general con ${overviewInputs.length} salas. Toca una sala para entrar.` : stageLabel} />
 
         {/* Barra superior */}
         <header className="pointer-events-none absolute inset-x-0 top-0 flex items-start gap-2 p-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
@@ -412,9 +477,15 @@ export default function LibraryGame() {
             </div>
           ) : rooms.length > 1 && (
             <div className="pointer-events-auto flex gap-1 overflow-x-auto rounded-2xl bg-white/90 p-1 shadow-lg ring-1 ring-black/10 backdrop-blur">
+              {canOverview && (
+                <button type="button" aria-pressed={overview} onClick={() => { setOverview(true); sfx("tab"); }} title="Vista general de toda la biblioteca"
+                  className={`inline-flex shrink-0 items-center gap-1 rounded-xl px-2.5 py-1 text-xs font-semibold ${overview ? "bg-amber-500 text-amber-950" : "text-slate-600 hover:bg-slate-100"}`}>
+                  <Building2 className="size-3.5" aria-hidden />Todo
+                </button>
+              )}
               {rooms.map((r) => (
-                <button key={r.id} type="button" aria-pressed={room.id === r.id} onClick={() => { setRoomId(r.id); editor.cancel(); }}
-                  className={`inline-flex shrink-0 items-center gap-1 rounded-xl px-2.5 py-1 text-xs font-semibold ${room.id === r.id ? "bg-slate-900 text-white" : "text-slate-600 hover:bg-slate-100"}`}>
+                <button key={r.id} type="button" aria-pressed={!overviewInputs && room.id === r.id} onClick={() => { setRoomId(r.id); setOverview(false); editor.cancel(); sfx("tab"); }}
+                  className={`inline-flex shrink-0 items-center gap-1 rounded-xl px-2.5 py-1 text-xs font-semibold ${!overviewInputs && room.id === r.id ? "bg-slate-900 text-white" : "text-slate-600 hover:bg-slate-100"}`}>
                   {r.level > state.level && <Lock className="size-3" aria-hidden />}
                   {r.floor ? "1.ª planta · " : ""}{r.name}
                 </button>
@@ -438,16 +509,21 @@ export default function LibraryGame() {
             <Link href="/" className="mt-3 inline-flex rounded-xl bg-emerald-600 px-3 py-2 text-sm font-semibold text-white">Ir al mapa a reportar</Link>
           </div>
         )}
-        {roomLocked && !neighbor && (
+        {overviewInputs && (
+          <p className="pointer-events-none absolute inset-x-4 bottom-4 mx-auto max-w-xs rounded-2xl bg-slate-900/85 px-3 py-2 text-center text-xs font-semibold text-white">
+            Vista general · pellizca o usa +/− para acercar y toca una sala para entrar.
+          </p>
+        )}
+        {roomLocked && !neighbor && !overviewInputs && (
           <p className="absolute inset-x-4 bottom-20 mx-auto max-w-sm rounded-2xl bg-slate-900/90 p-3 text-center text-sm font-semibold text-white">
             <Lock className="mr-1 inline size-4" aria-hidden />Vista previa: {room.name} se desbloquea en el nivel {room.level}.
           </p>
         )}
 
         {/* Acceso al editor y siesta accesible */}
-        {!editing && canEdit && (
+        {!editing && canEdit && !overviewInputs && (
           <div className="absolute bottom-3 left-3 flex flex-col gap-2">
-            <Button onClick={() => { setEditing(true); setTab(desktop ? tab : null); }} className="shadow-lg">
+            <Button onClick={() => { setEditing(true); setOverview(false); setTab(desktop ? tab : null); sfx("tab"); }} className="shadow-lg">
               <Pencil className="size-4" aria-hidden />Decorar
             </Button>
             {hasFeature(state.level, "cat") && !state.catNapSeen && reducedMotion() && (
@@ -456,8 +532,8 @@ export default function LibraryGame() {
           </div>
         )}
 
-        {editing && <EditorBar state={state} editor={editor} roomId={room.id} onDone={() => { editor.flush(); editor.cancel(); setEditing(false); }}
-          onInventory={() => setTab("inventory")} onStyles={() => setStylesOpen(true)} />}
+        {editing && <EditorBar state={state} editor={editor} room={room} onDone={() => { editor.flush(); editor.cancel(); setEditing(false); }}
+          onInventory={() => setTab("inventory")} onStyles={() => setStylesOpen(true)} onExpand={() => setExpandOpen(true)} />}
       </div>
 
       {/* Panel lateral (escritorio) u hoja inferior (móvil) */}
@@ -479,6 +555,7 @@ export default function LibraryGame() {
         </>
       )}
 
+      {expandOpen && <ExpansionDialog state={state} room={room} notify={notify} onClose={() => setExpandOpen(false)} onBought={() => stageRef.current?.burst()} />}
       {stylesOpen && <StylesDialog state={state} roomId={room.id} styles={{ ...DEFAULT_STYLE, ...editor.styles[room.id] }} onPick={(kind, id) => editor.setStyle(room.id, kind, id)} onClose={() => setStylesOpen(false)} />}
       {celebration && revealed === celebration.id && <CelebrationCard c={celebration} state={state} more={state.celebrations.length - 1} onAck={() => ack()} onSkipAll={() => ack(true)} onGoRoom={(r) => { setRoomId(r); setVisiting(null); ack(); }} />}
     </main>
@@ -487,55 +564,135 @@ export default function LibraryGame() {
 
 // ---------------------------------------------------------------- barra del editor
 
-function EditorBar({ state, editor, roomId, onDone, onInventory, onStyles }: {
+function EditorBar({ state, editor, room, onDone, onInventory, onStyles, onExpand }: {
   state: GameState;
   editor: ReturnType<typeof useEditor>;
-  roomId: string;
+  room: RoomDef;
   onDone: () => void;
   onInventory: () => void;
   onStyles: () => void;
+  onExpand: () => void;
 }) {
   const g = editor.ghost;
-  const selectedItem = editor.selected ? itemLookup(state)(editor.selected) : undefined;
-  const owned = editor.selected ? state.inventory.find((o) => o.uid === editor.selected) : undefined;
+  const group = editor.ghosts.length;
+  const sel = editor.selected;
+  const selectedItem = sel.length === 1 ? itemLookup(state)(sel[0]!) : undefined;
+  const owned = sel.length === 1 ? state.inventory.find((o) => o.uid === sel[0]) : undefined;
+  const price = nextExpansionPrice(room.id, room.bought);
   return (
     <div className="absolute inset-x-3 bottom-3 mx-auto max-w-xl rounded-3xl bg-white/95 p-3 shadow-2xl ring-1 ring-black/10 backdrop-blur" role="toolbar" aria-label="Editor de la biblioteca">
       {g ? (
         <>
-          <p className="text-sm font-semibold">{findItem(g.itemId)?.name}</p>
+          <div className="flex items-baseline justify-between gap-2">
+            <p className="text-sm font-semibold">{group > 1 ? `Grupo de ${group} objetos` : findItem(g.itemId)?.name}</p>
+            {editor.series && editor.remaining > 0 && (
+              <span className="shrink-0 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-900">Quedan {editor.remaining}</span>
+            )}
+          </div>
           <p className={`text-xs ${g.valid ? "text-emerald-700" : "text-rose-600"}`}>
             {g.valid ? "Toca otra casilla para moverlo; toca de nuevo o pulsa Colocar para dejarlo." : g.reason}
           </p>
           <div className="mt-2 flex flex-wrap gap-1.5">
-            <Button variant="secondary" onClick={editor.rotateGhost}><RotateCw className="size-4" aria-hidden />Girar</Button>
+            <Button variant="secondary" onClick={() => { editor.rotateGhost(); sfx("rotate"); }}><RotateCw className="size-4" aria-hidden />Girar</Button>
             <Button onClick={editor.placeGhost} disabled={!g.valid}><Check className="size-4" aria-hidden />Colocar</Button>
-            <Button variant="ghost" onClick={editor.cancel}>Cancelar</Button>
+            <Button variant="ghost" onClick={editor.cancel}>{editor.series ? "Salir" : "Cancelar"}</Button>
           </div>
         </>
-      ) : selectedItem ? (
+      ) : sel.length > 1 ? (
+        <>
+          <p className="text-sm font-semibold">{sel.length} objetos seleccionados</p>
+          <p className="text-xs text-slate-500">{editor.multi ? "Toca más muebles para añadirlos o quitarlos del grupo." : "Se mueven y giran juntos, como una mesa con sus sillas."}</p>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            <Button variant="secondary" onClick={() => { editor.setMulti(false); editor.startMove(sel[0]!); sfx("pickup"); }}><Move className="size-4" aria-hidden />Mover grupo</Button>
+            <Button variant="secondary" onClick={() => { editor.setMulti(false); editor.rotateSelected(); sfx("rotate"); }}><RotateCw className="size-4" aria-hidden />Girar grupo</Button>
+            <Button variant="secondary" onClick={() => { editor.storeSelected(); sfx("store"); }}><Archive className="size-4" aria-hidden />Guardar todo</Button>
+            <Button variant="ghost" onClick={() => { editor.setMulti(false); editor.setSelected(null); }}>Listo</Button>
+          </div>
+        </>
+      ) : selectedItem && !editor.multi ? (
         <>
           <p className="text-sm font-semibold">{selectedItem.name}</p>
           <p className="text-xs text-slate-500">{owned?.resellable ? "Comprado: se puede vender desde el inventario." : "Regalo: no se vende."}</p>
           <div className="mt-2 flex flex-wrap gap-1.5">
-            <Button variant="secondary" onClick={() => editor.startMove(editor.selected!)}><Move className="size-4" aria-hidden />Mover</Button>
-            <Button variant="secondary" onClick={editor.rotateSelected}><RotateCw className="size-4" aria-hidden />Girar</Button>
-            <Button variant="secondary" onClick={editor.storeSelected}><Archive className="size-4" aria-hidden />Guardar</Button>
+            <Button variant="secondary" onClick={() => { editor.startMove(sel[0]!); sfx("pickup"); }}><Move className="size-4" aria-hidden />Mover</Button>
+            <Button variant="secondary" onClick={() => { editor.rotateSelected(); sfx("rotate"); }}><RotateCw className="size-4" aria-hidden />Girar</Button>
+            <Button variant="secondary" onClick={() => { editor.storeSelected(); sfx("store"); }}><Archive className="size-4" aria-hidden />Guardar</Button>
+            <Button variant="secondary" onClick={() => editor.setMulti(true)}><Layers className="size-4" aria-hidden />Agrupar</Button>
             <Button variant="ghost" onClick={() => editor.setSelected(null)}>Listo</Button>
           </div>
         </>
       ) : (
         <>
-          <p className="text-sm font-semibold">Modo decoración</p>
-          <p className="text-xs text-slate-500">Toca un mueble para moverlo, girarlo o guardarlo. Teclado: flechas, R gira, M mueve, Supr guarda, Intro coloca, Esc sale.</p>
+          <p className="text-sm font-semibold">{editor.multi ? "Selección múltiple" : "Modo decoración"}</p>
+          <p className="text-xs text-slate-500">
+            {editor.multi
+              ? "Toca varios muebles para moverlos juntos (por ejemplo, una mesa y sus cuatro sillas)."
+              : "Toca un mueble para moverlo, girarlo o guardarlo. Teclado: flechas, R gira, M mueve, Supr guarda, Intro coloca, Esc sale."}
+          </p>
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
-            <Button variant="secondary" onClick={onInventory}><Package className="size-4" aria-hidden />Inventario</Button>
-            {hasFeature(state.level, "styles") && <Button variant="secondary" onClick={onStyles}><Paintbrush className="size-4" aria-hidden />Acabados</Button>}
-            <Button onClick={onDone}><Check className="size-4" aria-hidden />Terminar</Button>
+            {editor.multi ? (
+              <Button variant="secondary" onClick={() => { editor.setMulti(false); editor.setSelected(null); }}>Salir de la selección</Button>
+            ) : (
+              <>
+                <Button variant="secondary" onClick={onInventory}><Package className="size-4" aria-hidden />Inventario</Button>
+                <Button variant="secondary" onClick={() => editor.setMulti(true)}><Layers className="size-4" aria-hidden />Seleccionar varios</Button>
+                {hasFeature(state.level, "styles") && <Button variant="secondary" onClick={onStyles}><Paintbrush className="size-4" aria-hidden />Acabados</Button>}
+                <Button variant="secondary" onClick={onExpand} title={price === null ? "Tamaño máximo" : `Ampliar por ${price} monedas`}>
+                  <Maximize2 className="size-4" aria-hidden />{price === null ? "Sala al máximo" : "Ampliar sala"}
+                </Button>
+                <Button onClick={onDone}><Check className="size-4" aria-hidden />Terminar</Button>
+              </>
+            )}
             <span className="text-[11px] text-slate-500">{editor.saving ? "Guardando…" : "Cambios guardados"}</span>
           </div>
         </>
       )}
     </div>
+  );
+}
+
+/** Compra opcional de una ampliación (nunca necesaria para lo que desbloquean los niveles). */
+function ExpansionDialog({ state, room, notify, onClose, onBought }: {
+  state: GameState;
+  room: RoomDef;
+  notify: (m: string, k?: "ok" | "error") => void;
+  onClose: () => void;
+  onBought: () => void;
+}) {
+  const price = nextExpansionPrice(room.id, room.bought);
+  const max = roomMax(room.id);
+  const next = price === null ? null : roomAt(room.id, state.level, room.bought + 1);
+  const total = getRoom(room.id).expansions.length;
+  return (
+    <Modal title="Ampliar la sala" onClose={onClose}>
+      <h2 className="text-lg font-bold">Ampliar · {room.name}</h2>
+      <p className="mt-1 text-sm text-slate-600">
+        Ahora mide <strong>{room.w} × {room.h}</strong> casillas. Las salas también crecen solas al subir de nivel; en el nivel 15 alcanzan su tamaño máximo con todas las ampliaciones: <strong>{max.w} × {max.h}</strong>.
+      </p>
+      <div className="mt-3 flex items-center gap-2 text-xs text-slate-500">
+        Ampliaciones compradas:
+        {Array.from({ length: total }, (_, i) => <span key={i} className={`size-2.5 rounded-full ${i < room.bought ? "bg-emerald-500" : "bg-slate-200"}`} />)}
+      </div>
+      {next && price !== null ? (
+        <div className="mt-4 rounded-2xl bg-amber-50 p-3 ring-1 ring-amber-200">
+          <p className="text-sm font-semibold text-amber-950">{room.w} × {room.h} → {next.w} × {next.h} casillas</p>
+          <p className="mt-0.5 text-xs text-amber-900">Tus muebles se quedan donde están. Precio: <Coins value={price} /> (tienes <Coins value={state.balance} />).</p>
+          <Button variant="gold" className="mt-3 w-full" disabled={state.balance < price} onClick={() => {
+            const r = run({ type: "buy_expansion", room: room.id, requestId: `exp-${room.id}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}` });
+            report(r, notify);
+            if (r.ok) {
+              onBought();
+              onClose();
+            }
+          }}>
+            {state.balance < price ? `Te faltan ${price - state.balance} monedas` : "Comprar ampliación"}
+          </Button>
+        </div>
+      ) : (
+        <p className="mt-4 rounded-2xl bg-emerald-50 p-3 text-sm font-semibold text-emerald-900 ring-1 ring-emerald-200">Ya compraste todas las ampliaciones de esta sala.</p>
+      )}
+      <Button variant="ghost" className="mt-3 w-full" onClick={onClose}>Cerrar</Button>
+    </Modal>
   );
 }
 
