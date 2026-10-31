@@ -6,7 +6,7 @@
 
 import { findItem, type CatalogItem } from "../data/catalog";
 import type { RoomDef } from "../data/levels";
-import { cellsOf, entranceOf, findPath, footprint, walkableGrid, type Cell } from "../engine/layout";
+import { cellsOf, entranceOf, findPath, footprint, FRONT, walkableGrid, type Cell } from "../engine/layout";
 import { mulberry32 } from "../rng";
 import { DISCIPLINES, LIBRARIAN_LOOK, randomLook, type Act, type Discipline, type Look } from "./characters";
 import { makeKit, type DeskSpot, type StudyKit } from "./study";
@@ -71,6 +71,8 @@ export const SURFACE_Z: Partial<Record<CatalogItem["kind"], number>> = {
   table: 14, roundtable: 14, desk: 15, counter: 21, lowshelf: 17.5, coffeetable: 8, cabinet: 18,
 };
 const DIRS: Cell[] = [[1, 0], [0, 1], [-1, 0], [0, -1]];
+/** Índice de DIRS para mirar hacia un mueble cuyo frente da a FRONT[rot]. */
+const TOWARD = [3, 2, 1, 0];
 
 function depthOf(item: CatalogItem, p: ScenePlacement): number {
   const { w, h } = item.layer === "small" ? { w: 1, h: 1 } : footprint(item, p.rot);
@@ -135,13 +137,18 @@ export function buildSpots(room: RoomDef, placements: ScenePlacement[], grid: bo
         });
       }
     } else if (item.tags.includes("shelf") || item.kind === "newstand" || item.kind === "vitrine") {
-      const front: Cell[] = cells.map(([x, y]) => (p.rot % 2 === 0 ? [x, y + 1] : [x + 1, y]) as Cell).filter(walk);
-      for (const c of front.slice(0, 2)) spots.push({ key: `${p.uid}:b${c.join(",")}`, seat: c, at: [c[0] + 0.5, c[1] + 0.5], approach: c, z: 0, facing: p.rot % 2 === 0 ? 3 : 2, act: "browse", kind: "browse", onFurniture: false, depth: c[0] + c[1] + 1 });
+      // Se ojea desde la casilla de delante del frente, mirando hacia el mueble.
+      const r = ((p.rot % 4) + 4) % 4;
+      const [fx, fy] = FRONT[r]!;
+      const front: Cell[] = cells.map(([x, y]) => [x + fx, y + fy] as Cell).filter((c) => walk(c) && !cells.some(([x, y]) => x === c[0] && y === c[1]));
+      for (const c of front.slice(0, 2)) spots.push({ key: `${p.uid}:b${c.join(",")}`, seat: c, at: [c[0] + 0.5, c[1] + 0.5], approach: c, z: 0, facing: TOWARD[r]!, act: "browse", kind: "browse", onFurniture: false, depth: c[0] + c[1] + 1 });
     } else if (item.kind === "counter") {
-      const behind: Cell[] = cells.map(([x, y]) => (p.rot % 2 === 0 ? [x, y - 1] : [x - 1, y]) as Cell);
-      const front: Cell[] = cells.map(([x, y]) => (p.rot % 2 === 0 ? [x, y + 1] : [x + 1, y]) as Cell);
+      const r = ((p.rot % 4) + 4) % 4;
+      const [fx, fy] = FRONT[r]!;
+      const behind: Cell[] = cells.map(([x, y]) => [x - fx, y - fy] as Cell);
+      const front: Cell[] = cells.map(([x, y]) => [x + fx, y + fy] as Cell);
       const c = [...behind, ...front].find(walk);
-      if (c) spots.push({ key: `${p.uid}:counter`, seat: c, at: [c[0] + 0.5, c[1] + 0.5], approach: c, z: 0, facing: behind.some((b) => b[0] === c[0] && b[1] === c[1]) ? (p.rot % 2 === 0 ? 1 : 0) : 3, act: "stand", kind: "counter", onFurniture: false, depth: c[0] + c[1] + 1 });
+      if (c) spots.push({ key: `${p.uid}:counter`, seat: c, at: [c[0] + 0.5, c[1] + 0.5], approach: c, z: 0, facing: behind.some((b) => b[0] === c[0] && b[1] === c[1]) ? TOWARD[(r + 2) % 4]! : TOWARD[r]!, act: "stand", kind: "counter", onFurniture: false, depth: c[0] + c[1] + 1 });
     } else if (item.tags.includes("record") || item.tags.includes("piano")) {
       const a = approachFor(cells);
       if (a) spots.push({ key: `${p.uid}:music`, seat: a, at: [a[0] + 0.5, a[1] + 0.5], approach: a, z: 0, facing: 3, act: "chat", kind: "music", onFurniture: false, depth: a[0] + a[1] + 1 });

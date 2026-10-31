@@ -6,7 +6,7 @@
  */
 
 import { findItem, type CatalogItem } from "../data/catalog";
-import { STYLES, type RoomDef } from "../data/levels";
+import { DEFAULT_STYLE, STYLES, type RoomDef, type StyleDef } from "../data/levels";
 import { cellsOf, footprint, reservedCells, wallSlotsOf } from "../engine/layout";
 import type { RoomStyle } from "../engine/types";
 import { drawCat, drawDeskArms, drawPerson } from "./characters";
@@ -91,6 +91,44 @@ function scaled(ctx: Ctx2D, x: number, y: number, k: number, draw: () => void) {
   ctx.scale(k, k);
   draw();
   ctx.restore();
+}
+
+/** Algo que se pinta en la sala: profundidad aproximada y, si ocupa suelo, su huella [x0, y0, x1, y1]. */
+type Drawable = { depth: number; box?: [number, number, number, number]; draw: () => void };
+
+/**
+ * Orden de pintor. Con dos huellas separadas manda la geometría: lo que queda entero detrás en x
+ * o en y va antes, aunque su centro esté más cerca (una persona junto al extremo de una mesa
+ * larga, o detrás de una estantería). Si se pisan o no se puede decidir, decide la profundidad.
+ */
+function paintOrder(list: Drawable[]): Drawable[] {
+  const n = list.length;
+  const eps = 1e-3;
+  const behind = (a: [number, number, number, number], b: [number, number, number, number]) => a[2] <= b[0] + eps || a[3] <= b[1] + eps;
+  const indeg = new Array<number>(n).fill(0);
+  const edges = list.map(() => [] as number[]);
+  for (let i = 0; i < n; i++) {
+    const a = list[i]!.box;
+    if (!a) continue;
+    for (let j = 0; j < n; j++) {
+      const b = list[j]!.box;
+      if (i === j || !b || !behind(a, b) || behind(b, a)) continue;
+      edges[i]!.push(j);
+      indeg[j]! += 1;
+    }
+  }
+  // Kahn eligiendo siempre lo menos profundo; si hay un ciclo, se rompe por profundidad.
+  const done = new Array<boolean>(n).fill(false);
+  const out: Drawable[] = [];
+  for (let k = 0; k < n; k++) {
+    let pick = -1;
+    for (let i = 0; i < n; i++) if (!done[i] && indeg[i] === 0 && (pick < 0 || list[i]!.depth < list[pick]!.depth)) pick = i;
+    if (pick < 0) for (let i = 0; i < n; i++) if (!done[i] && (pick < 0 || list[i]!.depth < list[pick]!.depth)) pick = i;
+    done[pick] = true;
+    for (const j of edges[pick]!) indeg[j]! -= 1;
+    out.push(list[pick]!);
+  }
+  return out;
 }
 
 interface Sprite {
@@ -185,6 +223,206 @@ export function itemThumbnail(itemId: string): string {
 
 function styleColors(id: string): string[] {
   return STYLES.find((s) => s.id === id)?.colors ?? ["#c99a63", "#b98a55"];
+}
+
+function styleDef(id: string): StyleDef | undefined {
+  return STYLES.find((s) => s.id === id);
+}
+
+/** Una baldosa del suelo con su estampado (dy: desplazamiento de la cinemática de construcción). */
+function floorTile(ctx: Ctx2D, o: Iso, x: number, y: number, dy: number, pattern: string, fa: string, fb: string) {
+  const pts = [project(o, x, y), project(o, x + 1, y), project(o, x + 1, y + 1), project(o, x, y + 1)].map(([a, b]) => [a, b + dy] as Pt);
+  const odd = (x + y) % 2 === 1;
+  const hash = (x * 7 + y * 13) % 5;
+  const flat = pattern === "carpet" || pattern === "marble" || pattern === "hydraulic" || pattern === "mosaic";
+  const base = pattern === "checker" ? (odd ? fb : fa) : pattern === "slate" ? shade(fa, (hash - 2) * 0.035) : flat ? fa : odd ? fa : mix(fa, fb, 0.35);
+  poly(ctx, pts, base);
+  const P = new Painter(ctx, { ox: o.ox, oy: o.oy + dy });
+  const sq = (x0: number, y0: number, x1: number, y1: number, c: string) => P.quad([[x0, y0, 0], [x1, y0, 0], [x1, y1, 0], [x0, y1, 0]], c);
+  switch (pattern) {
+    case "planks": {
+      // Tablas a lo largo de x con juntas escalonadas y algo de veta.
+      const grout = shade(fb, -0.2);
+      for (let i = 1; i < 3; i++) P.line([x, y + i / 3, 0], [x + 1, y + i / 3, 0], grout);
+      P.line([x, y, 0], [x + 1, y, 0], shade(fb, -0.12));
+      const j = ((x * 7 + y * 3) % 3) / 3 + 0.2;
+      P.line([x + j, y, 0], [x + j, y + 1 / 3, 0], grout);
+      P.line([x + ((j + 0.45) % 1), y + 1 / 3, 0], [x + ((j + 0.45) % 1), y + 2 / 3, 0], grout);
+      P.px(x + 0.3 + ((x * 13 + y) % 5) * 0.1, y + 0.5, 0, shade(fa, 0.1));
+      return;
+    }
+    case "tiles": {
+      const grout = shade(fb, -0.22);
+      P.line([x, y, 0], [x + 1, y, 0], grout);
+      P.line([x, y, 0], [x, y + 1, 0], grout);
+      P.line([x, y + 0.5, 0], [x + 1, y + 0.5, 0], shade(fb, -0.08));
+      P.line([x + 0.5, y, 0], [x + 0.5, y + 1, 0], shade(fb, -0.08));
+      return;
+    }
+    case "herringbone": {
+      const c = shade(fb, -0.25);
+      for (let i = 0; i < 4; i++) P.line([x, y + i * 0.25, 0], [x + 0.25, y + i * 0.25 - 0.25 < y ? y : y + i * 0.25 - 0.25, 0], c);
+      P.line([x, y + 0.25, 0], [x + 0.5, y, 0], c);
+      P.line([x + 0.5, y + 1, 0], [x + 1, y + 0.5, 0], c);
+      P.line([x, y + 0.75, 0], [x + 0.75, y, 0], shade(fa, 0.08));
+      P.line([x + 0.25, y + 1, 0], [x + 1, y + 0.25, 0], shade(fa, 0.04));
+      return;
+    }
+    case "carpet":
+      for (let i = 0; i < 6; i++) P.px(x + ((i * 0.37 + x * 0.13) % 0.9) + 0.05, y + ((i * 0.53 + y * 0.29) % 0.9) + 0.05, 0, fb);
+      return;
+    case "checker":
+      P.line([x, y, 0], [x + 1, y, 0], alpha("#000000", 0.08));
+      return;
+    case "marble": {
+      // Losas grandes con vetas que continúan de una a otra.
+      P.line([x, y, 0], [x + 1, y, 0], alpha("#000000", 0.07));
+      P.line([x, y, 0], [x, y + 1, 0], alpha("#000000", 0.05));
+      const a = ((x * 5 + y * 3) % 7) / 7;
+      P.line([x, y + a, 0], [x + 0.55, y + ((a + 0.35) % 1), 0], fb);
+      P.line([x + 0.55, y + ((a + 0.35) % 1), 0], [x + 1, y + ((a + 0.15) % 1), 0], shade(fb, 0.15));
+      P.px(x + 0.7, y + ((a + 0.6) % 1), 0, shade(fa, 0.12));
+      return;
+    }
+    case "hydraulic": {
+      // Baldosa hidráulica: rombo central, florón y esquinas que forman estrellas entre baldosas.
+      const g = shade(fb, -0.15);
+      P.line([x, y, 0], [x + 1, y, 0], alpha("#000000", 0.1));
+      P.line([x, y, 0], [x, y + 1, 0], alpha("#000000", 0.08));
+      P.quad([[x + 0.5, y + 0.14, 0], [x + 0.86, y + 0.5, 0], [x + 0.5, y + 0.86, 0], [x + 0.14, y + 0.5, 0]], fb);
+      P.quad([[x + 0.5, y + 0.3, 0], [x + 0.7, y + 0.5, 0], [x + 0.5, y + 0.7, 0], [x + 0.3, y + 0.5, 0]], fa);
+      sq(x + 0.45, y + 0.45, x + 0.55, y + 0.55, g);
+      for (const [cx, cy] of [[0, 0], [1, 0], [0, 1], [1, 1]] as const)
+        P.quad([[x + cx, y + cy + (cy ? -0.16 : 0.16), 0], [x + cx + (cx ? -0.16 : 0.16), y + cy, 0], [x + cx, y + cy, 0], [x + cx, y + cy, 0]], g);
+      return;
+    }
+    case "slate":
+      P.line([x, y, 0], [x + 1, y, 0], shade(fb, -0.35));
+      P.line([x, y, 0], [x, y + 1, 0], shade(fb, -0.3));
+      P.px(x + 0.2 + hash * 0.12, y + 0.3 + (hash % 3) * 0.2, 0, shade(fa, 0.1));
+      return;
+    case "mosaic": {
+      // Teselas pequeñas de tres tonos.
+      const tones = [fa, fb, mix(fa, fb, 0.5)];
+      for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
+        const t = tones[(x * 3 + i + (y * 3 + j) * 2) % 3]!;
+        sq(x + i / 3 + 0.02, y + j / 3 + 0.02, x + (i + 1) / 3 - 0.02, y + (j + 1) / 3 - 0.02, t);
+      }
+      return;
+    }
+  }
+}
+
+/** Las dos paredes visibles con su estampado (sin ventanas ni puerta). */
+function paintWalls(ctx: Ctx2D, o: Iso, w: number, h: number, H: number, pattern: string, wa: string, wb: string) {
+  const leftWall = shade(wa, -0.1);
+  poly(ctx, [project(o, 0, 0, 0), project(o, w, 0, 0), project(o, w, 0, H), project(o, 0, 0, H)], wa);
+  poly(ctx, [project(o, 0, 0, 0), project(o, 0, h, 0), project(o, 0, h, H), project(o, 0, 0, H)], leftWall);
+  const R = new WallPainter(ctx, o, "R", 0);
+  const Lw = new WallPainter(ctx, o, "L", 0);
+  // Cada estampado se pinta en las dos paredes: la izquierda, algo más en sombra.
+  const both = (fn: (W: WallPainter, len: number, dark: number) => void) => {
+    fn(R, w, 0);
+    fn(Lw, h, -0.1);
+  };
+  const wainscot = () => both((W, len, d) => {
+    // Friso de madera (arrimadero) en la parte baja.
+    W.rect(0, 4, len, 17, shade(wb, -0.12 + d));
+    for (let u = 0.5; u < len; u += 1) W.rect(u - 0.38, 6.5, u + 0.38, 14.5, shade(wb, -0.05 + d));
+    W.rect(0, 17, len, 18.2, shade(wb, -0.32 + d));
+  });
+  switch (pattern) {
+    case "brick":
+      both((W, len, d) => {
+        const c = shade(wa, -0.18 + d);
+        for (let v = 4; v < H; v += 6) {
+          W.line(0, v, len, v, c);
+          for (let u = ((v / 6) % 2) * 0.25; u < len; u += 0.5) W.line(u, v, u, Math.min(H, v + 6), c);
+        }
+      });
+      break;
+    case "dots":
+      both((W, len, d) => {
+        for (let v = 22, row = 0; v < H - 5; v += 6, row++)
+          for (let u = (row % 2) * 0.125 + 0.06; u < len; u += 0.25) W.dot(u, v, shade(wb, d));
+      });
+      wainscot();
+      break;
+    case "stripes":
+      both((W, len, d) => {
+        for (let u = 0; u < len; u += 0.5) W.rect(u, 4, u + 0.25, H - 3, shade(wb, d));
+      });
+      break;
+    case "panels":
+      // Boiserie: tablas verticales a toda altura con un listón a media pared.
+      both((W, len, d) => {
+        for (let u = 1 / 3; u < len; u += 1 / 3) W.line(u, 4, u, H - 3, shade(wb, -0.28 + d));
+        W.rect(0, 28, len, 30, shade(wb, -0.15 + d));
+        W.rect(0, 30, len, 31, shade(wa, 0.12 + d));
+      });
+      break;
+    case "tiles":
+      // Zócalo de azulejo con rombos y pintura lisa por encima.
+      both((W, len, d) => {
+        W.rect(0, 4, len, 26, shade(mix(wa, "#ffffff", 0.3), d));
+        for (let u = 0; u < len; u += 0.25) for (let v = 4; v < 26; v += 5.5) {
+          W.line(u, v, u, Math.min(26, v + 5.5), shade(wb, -0.1 + d));
+          W.line(u, v, u + 0.25, v, shade(wb, -0.1 + d));
+          W.rect(u + 0.1, v + 2, u + 0.15, v + 3.5, shade(wb, d));
+          W.rect(u + 0.075, v + 2.5, u + 0.175, v + 3, shade(wb, d));
+        }
+        W.rect(0, 26, len, 27.5, shade(wb, -0.2 + d));
+      });
+      break;
+    case "damask":
+      // Papel adamascado: flores pequeñas al tresbolillo sobre fondo liso.
+      both((W, len, d) => {
+        for (let v = 24, row = 0; v < H - 6; v += 9, row++)
+          for (let u = (row % 2) * 0.25 + 0.125; u < len; u += 0.5) {
+            W.rect(u - 0.03, v - 2.5, u + 0.03, v + 2.5, shade(wb, d));
+            W.rect(u - 0.1, v - 0.6, u + 0.1, v + 0.6, shade(wb, d));
+            W.dot(u, v, shade(wa, 0.15 + d));
+          }
+      });
+      wainscot();
+      break;
+    default:
+      // Papel pintado con rayas suaves.
+      both((W, len, d) => {
+        for (let u = 0.25; u < len; u += 0.25) W.line(u, 18, u, H - 4, alpha(shade(wb, d), (u * 4) % 2 ? 0.18 : 0.35));
+      });
+      wainscot();
+  }
+  // Zócalo, moldura superior y arista
+  R.rect(0, 0, w, 4, shade(wb, -0.35));
+  Lw.rect(0, 0, h, 4, shade(wb, -0.42));
+  R.rect(0, H - 3, w, H, shade(wa, -0.06));
+  Lw.rect(0, H - 3, h, H, shade(leftWall, -0.06));
+  poly(ctx, [project(o, 0, 0, H), project(o, w, 0, H), project(o, w, -0.15, H), project(o, -0.15, -0.15, H), project(o, -0.15, h, H), project(o, 0, h, H)], shade(wb, -0.15));
+  line(ctx, ...project(o, 0, 0, 0), ...project(o, 0, 0, H), shade(wa, -0.3));
+}
+
+const styleThumbCache = new Map<string, string>();
+
+/** Miniatura de un acabado: un rincón de 3×3 con ese suelo o esa pared (y el resto por defecto). */
+export function styleThumbnail(id: string): string {
+  const cached = styleThumbCache.get(id);
+  if (cached) return cached;
+  const def = styleDef(id);
+  const floor = def?.kind === "floor" ? def : styleDef(DEFAULT_STYLE.floor)!;
+  const wall = def?.kind === "wall" ? def : styleDef(DEFAULT_STYLE.wall)!;
+  const n = 3;
+  const H = WALL_H * 0.75;
+  const c = document.createElement("canvas");
+  c.width = n * TW + 8;
+  c.height = n * TH + H * ZS + 12;
+  const ctx = c.getContext("2d")!;
+  const o: Iso = { ox: n * (TW / 2) + 4, oy: H * ZS + 6 };
+  for (let x = 0; x < n; x++) for (let y = 0; y < n; y++) floorTile(ctx, o, x, y, 0, floor.pattern, floor.colors[0]!, floor.colors[1]!);
+  paintWalls(ctx, o, n, n, H, wall.pattern, wall.colors[0]!, wall.colors[1]!);
+  const url = c.toDataURL();
+  styleThumbCache.set(id, url);
+  return url;
 }
 
 const hourFormatter = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Madrid", hour: "numeric", minute: "numeric", hourCycle: "h23" });
@@ -307,80 +545,19 @@ class RoomView {
       line(ctx, L0[0], L0[1] + 1, R0[0], R0[1] + 1, shade(fb, -0.1));
       line(ctx, R0[0], R0[1] + 1, R1[0], R1[1] + 1, shade(fb, -0.25));
     }
+    const floorPattern = styleDef(style.floor)?.pattern ?? "planks";
     for (let x = 0; x < room.w; x++) for (let y = 0; y < room.h; y++) {
       const k = anim.tile ? anim.tile(x, y) : 1;
       if (k <= 0) continue;
-      const dy = (1 - k) * -16 * ZS;
-      const pts = [project(o, x, y), project(o, x + 1, y), project(o, x + 1, y + 1), project(o, x, y + 1)].map(([a, b]) => [a, b + dy] as Pt);
-      const odd = (x + y) % 2 === 1;
-      let base = style.floor === "floor-ajedrez" ? (odd ? fb : fa) : odd ? fa : mix(fa, fb, 0.35);
-      if (style.floor === "floor-moqueta") base = fa;
-      poly(ctx, pts, base);
-      const P = new Painter(ctx, { ox: o.ox, oy: o.oy + dy });
-      if (style.floor === "floor-roble") {
-        // Tablas a lo largo de x con juntas escalonadas y algo de veta.
-        const grout = shade(fb, -0.2);
-        for (let i = 1; i < 3; i++) P.line([x, y + i / 3, 0], [x + 1, y + i / 3, 0], grout);
-        P.line([x, y, 0], [x + 1, y, 0], shade(fb, -0.12));
-        const j = ((x * 7 + y * 3) % 3) / 3 + 0.2;
-        P.line([x + j, y, 0], [x + j, y + 1 / 3, 0], grout);
-        P.line([x + ((j + 0.45) % 1), y + 1 / 3, 0], [x + ((j + 0.45) % 1), y + 2 / 3, 0], grout);
-        P.px(x + 0.3 + ((x * 13 + y) % 5) * 0.1, y + 0.5, 0, shade(fa, 0.1));
-      } else if (style.floor === "floor-terracota") {
-        const grout = shade(fb, -0.22);
-        P.line([x, y, 0], [x + 1, y, 0], grout);
-        P.line([x, y, 0], [x, y + 1, 0], grout);
-        P.line([x, y + 0.5, 0], [x + 1, y + 0.5, 0], shade(fb, -0.08));
-        P.line([x + 0.5, y, 0], [x + 0.5, y + 1, 0], shade(fb, -0.08));
-      } else if (style.floor === "floor-espiga") {
-        const c = shade(fb, -0.25);
-        for (let i = 0; i < 4; i++) P.line([x, y + i * 0.25, 0], [x + 0.25, y + i * 0.25 - 0.25 < y ? y : y + i * 0.25 - 0.25, 0], c);
-        P.line([x, y + 0.25, 0], [x + 0.5, y, 0], c);
-        P.line([x + 0.5, y + 1, 0], [x + 1, y + 0.5, 0], c);
-        P.line([x, y + 0.75, 0], [x + 0.75, y, 0], shade(fa, 0.08));
-        P.line([x + 0.25, y + 1, 0], [x + 1, y + 0.25, 0], shade(fa, 0.04));
-      } else if (style.floor === "floor-moqueta") {
-        for (let i = 0; i < 6; i++) P.px(x + ((i * 0.37 + x * 0.13) % 0.9) + 0.05, y + ((i * 0.53 + y * 0.29) % 0.9) + 0.05, 0, fb);
-      } else if (style.floor === "floor-ajedrez") {
-        P.line([x, y, 0], [x + 1, y, 0], alpha("#000000", 0.08));
-      }
+      floorTile(ctx, o, x, y, (1 - k) * -16 * ZS, floorPattern, fa, fb);
     }
     // Paredes
     const H = WALL_H * (anim.wall ?? 1);
     if (H > 1) {
       const [wa = "#efe2c8", wb = "#d9c7a5"] = wallC;
-      const leftWall = shade(wa, -0.1);
-      poly(ctx, [project(o, 0, 0, 0), project(o, room.w, 0, 0), project(o, room.w, 0, H), project(o, 0, 0, H)], wa);
-      poly(ctx, [project(o, 0, 0, 0), project(o, 0, room.h, 0), project(o, 0, room.h, H), project(o, 0, 0, H)], leftWall);
+      paintWalls(ctx, o, room.w, room.h, H, styleDef(style.wall)?.pattern ?? "wallpaper", wa, wb);
       const R = new WallPainter(ctx, o, "R", 0);
       const Lw = new WallPainter(ctx, o, "L", 0);
-      if (style.wall === "wall-ladrillo") {
-        for (let v = 4; v < H; v += 6) {
-          R.line(0, v, room.w, v, shade(wa, -0.18));
-          Lw.line(0, v, room.h, v, shade(leftWall, -0.18));
-          for (let u = ((v / 6) % 2) * 0.25; u < Math.max(room.w, room.h); u += 0.5) {
-            if (u < room.w) R.line(u, v, u, Math.min(H, v + 6), shade(wa, -0.18));
-            if (u < room.h) Lw.line(u, v, u, Math.min(H, v + 6), shade(leftWall, -0.18));
-          }
-        }
-      } else {
-        // Papel pintado con rayas suaves y friso de madera (arrimadero) en la parte baja.
-        for (let u = 0.25; u < room.w; u += 0.25) R.line(u, 18, u, H - 4, alpha(wb, (u * 4) % 2 ? 0.18 : 0.35));
-        for (let u = 0.25; u < room.h; u += 0.25) Lw.line(u, 18, u, H - 4, alpha(shade(wb, -0.1), (u * 4) % 2 ? 0.18 : 0.35));
-        R.rect(0, 4, room.w, 17, shade(wb, -0.12));
-        Lw.rect(0, 4, room.h, 17, shade(wb, -0.2));
-        for (let u = 0.5; u < room.w; u += 1) R.rect(u - 0.38, 6.5, u + 0.38, 14.5, shade(wb, -0.05));
-        for (let u = 0.5; u < room.h; u += 1) Lw.rect(u - 0.38, 6.5, u + 0.38, 14.5, shade(wb, -0.13));
-        R.rect(0, 17, room.w, 18.2, shade(wb, -0.32));
-        Lw.rect(0, 17, room.h, 18.2, shade(wb, -0.38));
-      }
-      // Zócalo, moldura superior y arista
-      R.rect(0, 0, room.w, 4, shade(wb, -0.35));
-      Lw.rect(0, 0, room.h, 4, shade(wb, -0.42));
-      R.rect(0, H - 3, room.w, H, shade(wa, -0.06));
-      Lw.rect(0, H - 3, room.h, H, shade(leftWall, -0.06));
-      poly(ctx, [project(o, 0, 0, H), project(o, room.w, 0, H), project(o, room.w, -0.15, H), project(o, -0.15, -0.15, H), project(o, -0.15, room.h, H), project(o, 0, room.h, H)], shade(wb, -0.15));
-      line(ctx, ...project(o, 0, 0, 0), ...project(o, 0, 0, H), shade(wa, -0.3));
       if (anim.wall === undefined || anim.wall >= 1) {
         // Ventanas con el cielo de la hora de Madrid, alféizar y parteluz
         for (const win of room.windows) {
@@ -474,16 +651,15 @@ class RoomView {
   drawDynamic(ctx: Ctx2D, time: number, overlay: Overlay | null, build: { on: boolean; ct: number }) {
     const input = this.input;
     const reduced = this.host.reducedMotion;
-    type Drawable = { depth: number; draw: () => void };
     const list: Drawable[] = [];
     const hits: Hit[] = [];
-    const surfaces = new Map<string, { depth: number; z: number }>();
+    const surfaces = new Map<string, { depth: number; z: number; box: [number, number, number, number] }>();
     for (const p of input.placements) {
       const item = findItem(p.itemId);
       if (item?.layer !== "floor" || !SURFACE_Z[item.kind]) continue;
       const { w: fw, h: fh } = footprint(item, p.rot);
       const depth = p.x + fw / 2 + p.y + fh / 2;
-      for (const [x, y] of cellsOf(item, p)) surfaces.set(`${x},${y}`, { depth, z: SURFACE_Z[item.kind]! });
+      for (const [x, y] of cellsOf(item, p)) surfaces.set(`${x},${y}`, { depth, z: SURFACE_Z[item.kind]!, box: [p.x, p.y, p.x + fw, p.y + fh] });
     }
     const selected = new Set(overlay?.selected ?? []);
     let index = 0;
@@ -497,6 +673,8 @@ class RoomView {
       const order = index++;
       list.push({
         depth,
+        // Los objetos pequeños sobre una mesa comparten su huella: se pintan justo después de ella.
+        box: surface ? surface.box : [p.x, p.y, p.x + fw, p.y + fh],
         draw: () => {
           let lift = surface?.z ?? 0;
           if (item.fx === "float" && !reduced) lift += Math.round(Math.sin(time * 2 + order) * 1.5 * ZS) / ZS;
@@ -527,6 +705,7 @@ class RoomView {
       const surface = item.layer === "small" ? surfaces.get(`${ghost.x},${ghost.y}`) : undefined;
       list.push({
         depth: ghost.x + fw / 2 + ghost.y + fh / 2 + (surface ? 0.5 : 0),
+        box: surface ? surface.box : [ghost.x, ghost.y, ghost.x + fw, ghost.y + fh],
         draw: () => {
           this.footprintFill(ctx, ghost.x, ghost.y, fw, fh, ghost.valid ? "rgba(34,197,94,0.45)" : "rgba(239,68,68,0.5)");
           ctx.globalAlpha = 0.72;
@@ -537,8 +716,7 @@ class RoomView {
         },
       });
     }
-    list.sort((a, b) => a.depth - b.depth);
-    for (const d of list) d.draw();
+    for (const d of paintOrder(list)) d.draw();
 
     // Paredes y alfombras: selección y zona de toque.
     for (const p of input.placements) {
@@ -577,15 +755,18 @@ class RoomView {
     this.hits = hits;
   }
 
-  private pushAgent(list: { depth: number; draw: () => void }[], hits: Hit[], ctx: Ctx2D, a: Agent, time: number, build: { on: boolean; ct: number }) {
+  private pushAgent(list: Drawable[], hits: Hit[], ctx: Ctx2D, a: Agent, time: number, build: { on: boolean; ct: number }) {
     const reduced = this.host.reducedMotion;
     const spot = a.spot;
     const seated = !!spot && spot.onFurniture && (a.state === "stay" || a.state === "sleep") && a.path.length === 0;
     // Sentado: justo delante de su mueble si mira a cámara, justo detrás si está de espaldas.
     const depth = seated ? spot!.depth + (a.back ? -0.04 : 0.04) : a.x + a.y + 0.05;
     const t = reduced ? 0 : a.t;
+    // Huella aproximada de la persona (o del gato) para ordenarla frente a los muebles vecinos.
+    const r = a.kind === "cat" ? 0.18 : 0.24;
     list.push({
       depth,
+      box: [a.x - r, a.y - r, a.x + r, a.y + r],
       draw: () => {
         if (build.on && build.ct < 2.4) return;
         const arc = a.jump > 0 ? Math.sin((1 - a.jump) * Math.PI) * 10 : 0;
@@ -599,7 +780,8 @@ class RoomView {
           hits.push({ id: "cat", x0: x - 16 * CAT_SCALE, y0: y - 26 * CAT_SCALE, x1: x + 16 * CAT_SCALE, y1: y + 2, depth });
           return;
         }
-        if (a.z === 0) ellipse(ctx, x, y, 8 * PERSON_SCALE, 2 * PERSON_SCALE, "rgba(40,25,15,0.22)");        scaled(ctx, x, y, PERSON_SCALE, () => drawPerson(ctx, 0, 0, a.look, {
+        if (a.z === 0) ellipse(ctx, x, y, 8 * PERSON_SCALE, 2 * PERSON_SCALE, "rgba(40,25,15,0.22)");
+        scaled(ctx, x, y, PERSON_SCALE, () => drawPerson(ctx, 0, 0, a.look, {
           act: a.act, t, back: a.back, flip: a.flip, seated, gaze: a.gaze,
           carry: a.kind === "librarian" && a.path.length > 0,
         }));
@@ -611,7 +793,8 @@ class RoomView {
       const deskDepth = desk.edge[0] + desk.dir[0] * 0.5 + desk.edge[1] + desk.dir[1] * 0.5 + 0.02;
       const tableDepth = Math.max(deskDepth, a.back ? -Infinity : spot!.depth + 0.06);
       list.push({
-        depth: a.back ? Math.min(tableDepth, depth - 0.01) : Math.max(tableDepth, this.tableDepthAt(desk) + 0.02),
+        depth: a.back ? Math.min(tableDepth, depth - 0.01) : Math.max(tableDepth, this.tableAt(desk).depth + 0.02),
+        box: this.tableAt(desk).box,
         draw: () => {
           if (build.on && build.ct < 2.4) return;
           drawDeskProps(new Painter(ctx, this.iso), desk, a.kit!, a.act, a.t);
@@ -624,8 +807,8 @@ class RoomView {
     }
   }
 
-  /** Profundidad de dibujo de la mesa que hay en una casilla de trabajo. */
-  private tableDepthAt(desk: { edge: [number, number]; dir: [number, number] }): number {
+  /** Profundidad y huella de la mesa que hay en una casilla de trabajo. */
+  private tableAt(desk: { edge: [number, number]; dir: [number, number] }): { depth: number; box: [number, number, number, number] } {
     const cx = Math.floor(desk.edge[0] + desk.dir[0] * 0.5);
     const cy = Math.floor(desk.edge[1] + desk.dir[1] * 0.5);
     for (const p of this.input.placements) {
@@ -633,10 +816,10 @@ class RoomView {
       if (item?.layer !== "floor") continue;
       if (cellsOf(item, p).some(([x, y]) => x === cx && y === cy)) {
         const { w, h } = footprint(item, p.rot);
-        return p.x + w / 2 + p.y + h / 2;
+        return { depth: p.x + w / 2 + p.y + h / 2, box: [p.x, p.y, p.x + w, p.y + h] };
       }
     }
-    return cx + cy + 1;
+    return { depth: cx + cy + 1, box: [cx, cy, cx + 1, cy + 1] };
   }
 
   drawHalos(ctx: Ctx2D, time: number, night: number) {
@@ -887,7 +1070,7 @@ export class Scene {
       // por la sala vecina y el corte se lee como una casa de muñecas abierta.
       this.order.push(...placed.reverse());
       const [fx, fy] = project(base, 0, span[ri]!.h, 0);
-      this.floorLabels.push({ text: r[0]!.room.floor ? "Planta alta" : "Planta baja", x: fx - 8 * ZS, y: fy - 40 * ZS });
+      this.floorLabels.push({ text: r[0]!.room.floor ? "1.ª planta" : "Planta baja", x: fx - 8 * ZS, y: fy - 40 * ZS });
       top += rowH[ri]! + ROW_GAP;
     });
     this.draw();

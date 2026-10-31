@@ -271,30 +271,58 @@ export function nextRewardText(count: number): string | null {
   return `Faltan ${n} ${n === 1 ? "reporte válido" : "reportes válidos"} para el nivel ${next.level}: ${next.title.toLowerCase()}`;
 }
 
-/** Estilos de sala. Los de L6 se desbloquean con la edición; el de espiga es regalo exclusivo. */
+/**
+ * Estilos de sala. Los de L6 se desbloquean con la edición; el de espiga es regalo exclusivo.
+ * Los que tienen precio se compran en la tienda («Pared y suelo») a partir de su nivel.
+ */
 export interface StyleDef {
   id: string;
   kind: "floor" | "wall" | "window";
   name: string;
   colors: string[];
   minLevel: number;
+  /** Dibujo del suelo (planks, tiles, checker…) o de la pared (wallpaper, brick, panels…). */
+  pattern: string;
+  /** Monedas que cuesta en la tienda; sin precio, se obtiene al llegar a su nivel. */
+  price?: number;
   /** Solo si se ha recibido como regalo. */
   gift?: boolean;
 }
 
 export const STYLES: StyleDef[] = [
-  { id: "floor-roble", kind: "floor", name: "Tarima de roble", colors: ["#c99a63", "#b98a55"], minLevel: 1 },
-  { id: "floor-ajedrez", kind: "floor", name: "Baldosa ajedrez", colors: ["#e9e2d4", "#5d5a66"], minLevel: 6 },
-  { id: "floor-moqueta", kind: "floor", name: "Moqueta verde", colors: ["#6f9461", "#668a59"], minLevel: 6 },
-  { id: "floor-terracota", kind: "floor", name: "Terracota", colors: ["#c77a52", "#b86c46"], minLevel: 6 },
-  { id: "floor-espiga", kind: "floor", name: "Parqué en espiga", colors: ["#a8743f", "#8d5e33"], minLevel: 6, gift: true },
-  { id: "wall-crema", kind: "wall", name: "Crema", colors: ["#efe2c8", "#d9c7a5"], minLevel: 1 },
-  { id: "wall-salvia", kind: "wall", name: "Verde salvia", colors: ["#b9c9a7", "#9fb28b"], minLevel: 6 },
-  { id: "wall-azul", kind: "wall", name: "Azul noche", colors: ["#5b6d99", "#475984"], minLevel: 6 },
-  { id: "wall-ladrillo", kind: "wall", name: "Ladrillo visto", colors: ["#b8664a", "#9d5440"], minLevel: 6 },
-  { id: "window-madera", kind: "window", name: "Ventana de madera", colors: ["#8d5e33", "#bfe3f2"], minLevel: 1 },
-  { id: "window-arco", kind: "window", name: "Ventanal en arco", colors: ["#f1ece2", "#bfe3f2"], minLevel: 6 },
-  { id: "window-vidriera", kind: "window", name: "Vidriera", colors: ["#4a3426", "#e7b85c"], minLevel: 6 },
+  { id: "floor-roble", kind: "floor", name: "Tarima de roble", colors: ["#c99a63", "#b98a55"], minLevel: 1, pattern: "planks" },
+  { id: "floor-ajedrez", kind: "floor", name: "Baldosa ajedrez", colors: ["#e9e2d4", "#5d5a66"], minLevel: 6, pattern: "checker" },
+  { id: "floor-moqueta", kind: "floor", name: "Moqueta verde", colors: ["#6f9461", "#668a59"], minLevel: 6, pattern: "carpet" },
+  { id: "floor-terracota", kind: "floor", name: "Terracota", colors: ["#c77a52", "#b86c46"], minLevel: 6, pattern: "tiles" },
+  { id: "floor-espiga", kind: "floor", name: "Parqué en espiga", colors: ["#a8743f", "#8d5e33"], minLevel: 6, pattern: "herringbone", gift: true },
+  { id: "floor-pino", kind: "floor", name: "Tarima de pino", colors: ["#e3c693", "#cfae78"], minLevel: 2, pattern: "planks", price: 30 },
+  { id: "floor-moqueta-azul", kind: "floor", name: "Moqueta azul", colors: ["#56739e", "#4b6791"], minLevel: 2, pattern: "carpet", price: 30 },
+  { id: "floor-cuadros-rojos", kind: "floor", name: "Baldosa roja y crema", colors: ["#efe2c6", "#a8473e"], minLevel: 3, pattern: "checker", price: 45 },
+  { id: "floor-nogal", kind: "floor", name: "Tarima de nogal", colors: ["#8f5f3a", "#7a4f2f"], minLevel: 4, pattern: "planks", price: 55 },
+  { id: "floor-moqueta-burdeos", kind: "floor", name: "Moqueta burdeos", colors: ["#8e3d48", "#80353f"], minLevel: 5, pattern: "carpet", price: 65 },
+  { id: "floor-hidraulica", kind: "floor", name: "Baldosa hidráulica", colors: ["#ece0c6", "#3f6f8a"], minLevel: 7, pattern: "hydraulic", price: 90 },
+  { id: "floor-marmol", kind: "floor", name: "Mármol blanco", colors: ["#eeeae3", "#c8c1b6"], minLevel: 8, pattern: "marble", price: 110 },
+  { id: "floor-pizarra", kind: "floor", name: "Pizarra", colors: ["#5d636b", "#4d535a"], minLevel: 9, pattern: "slate", price: 120 },
+  { id: "floor-espiga-clara", kind: "floor", name: "Espiga de arce", colors: ["#d9b37d", "#c09862"], minLevel: 10, pattern: "herringbone", price: 140 },
+  { id: "floor-mosaico", kind: "floor", name: "Mosaico romano", colors: ["#e6d3ad", "#9c5a3c"], minLevel: 12, pattern: "mosaic", price: 170 },
+  { id: "floor-marmol-negro", kind: "floor", name: "Mármol negro", colors: ["#3b3b42", "#8c8577"], minLevel: 14, pattern: "marble", price: 210 },
+  { id: "wall-crema", kind: "wall", name: "Crema", colors: ["#efe2c8", "#d9c7a5"], minLevel: 1, pattern: "wallpaper" },
+  { id: "wall-salvia", kind: "wall", name: "Verde salvia", colors: ["#b9c9a7", "#9fb28b"], minLevel: 6, pattern: "wallpaper" },
+  { id: "wall-azul", kind: "wall", name: "Azul noche", colors: ["#5b6d99", "#475984"], minLevel: 6, pattern: "wallpaper" },
+  { id: "wall-ladrillo", kind: "wall", name: "Ladrillo visto", colors: ["#b8664a", "#9d5440"], minLevel: 6, pattern: "brick" },
+  { id: "wall-melocoton", kind: "wall", name: "Melocotón", colors: ["#f2cfb6", "#dcae90"], minLevel: 2, pattern: "wallpaper", price: 30 },
+  { id: "wall-lavanda", kind: "wall", name: "Lavanda", colors: ["#d4cae6", "#b3a6cf"], minLevel: 3, pattern: "wallpaper", price: 40 },
+  { id: "wall-topos", kind: "wall", name: "Papel de topos", colors: ["#f3e7d0", "#c98552"], minLevel: 4, pattern: "dots", price: 55 },
+  { id: "wall-rayas", kind: "wall", name: "Rayas marineras", colors: ["#eef1f4", "#5a7ca6"], minLevel: 5, pattern: "stripes", price: 65 },
+  { id: "wall-madera", kind: "wall", name: "Boiserie de madera", colors: ["#a06f44", "#835a35"], minLevel: 7, pattern: "panels", price: 90 },
+  { id: "wall-azulejo", kind: "wall", name: "Azulejo andaluz", colors: ["#f2ece1", "#2f6f9a"], minLevel: 8, pattern: "tiles", price: 110 },
+  { id: "wall-ladrillo-blanco", kind: "wall", name: "Ladrillo blanco", colors: ["#ece6dc", "#d6cec2"], minLevel: 9, pattern: "brick", price: 120 },
+  { id: "wall-verde-ingles", kind: "wall", name: "Verde inglés", colors: ["#466350", "#9db88f"], minLevel: 11, pattern: "damask", price: 150 },
+  { id: "wall-burdeos", kind: "wall", name: "Damasco burdeos", colors: ["#7a3039", "#c98a6a"], minLevel: 13, pattern: "damask", price: 180 },
+  { id: "wall-dorado", kind: "wall", name: "Papel dorado", colors: ["#e8cb7b", "#b8913f"], minLevel: 15, pattern: "damask", price: 230 },
+  { id: "window-madera", kind: "window", name: "Ventana de madera", colors: ["#8d5e33", "#bfe3f2"], minLevel: 1, pattern: "frame" },
+  { id: "window-arco", kind: "window", name: "Ventanal en arco", colors: ["#f1ece2", "#bfe3f2"], minLevel: 6, pattern: "arch" },
+  { id: "window-vidriera", kind: "window", name: "Vidriera", colors: ["#4a3426", "#e7b85c"], minLevel: 6, pattern: "stained" },
 ];
 
 export const DEFAULT_STYLE = { floor: "floor-roble", wall: "wall-crema", window: "window-madera" } as const;

@@ -28,14 +28,14 @@ const MAX_REQUEST_LOG = 200;
 const MAX_NAME = 40;
 
 /** Revisión actual de la estructura guardada. */
-export const SCHEMA = 2;
+export const SCHEMA = 3;
 
 export function initialState(userId: string, now: number): GameState {
   const roomStyles = Object.fromEntries(ROOMS.map((r) => [r.id, { ...DEFAULT_STYLE }]));
   return {
     version: 1, schema: SCHEMA, userId, createdAt: now, seq: 0, name: "Mi biblioteca", nameCustomized: false,
     validReportCount: 0, level: 0, reports: [], ledger: [], balance: 0, inventory: [], placements: [],
-    roomStyles, styleGifts: [], rotations: {}, reservations: [], missions: [], community: {}, achievements: {},
+    roomStyles, styleGifts: [], ownedStyles: [], rotations: {}, reservations: [], missions: [], community: {}, achievements: {},
     showcase: [], frame: "madera", frames: ["madera"], badges: [], vacations: [],
     streak: { current: 0, best: 0, protectors: 0, protectorsEarned: 0, consumedDates: [], frozenDates: [], perfectWeeks: [], reportedToday: false },
     realViews: [], virtualVisits: [], likes: {}, likeLog: [], layoutSaves: [], showcaseChanges: [], musicSaves: [], nameSaves: [],
@@ -51,16 +51,21 @@ export function initialState(userId: string, now: number): GameState {
  * lo que elija el usuario). Publicación y alias se conservan tal cual.
  */
 export function migrateState(state: GameState): GameState {
-  if ((state.schema ?? 1) >= SCHEMA) return state;
-  state.expansions ??= {};
-  const settings = state.settings as Partial<GameState["settings"]>;
-  state.settings = {
-    music: { ...(settings.music ?? { track: "lofi", volume: 0.5 }), enabled: true },
-    sfx: true,
-    sfxVolume: settings.sfxVolume ?? 0.6,
-    publish: settings.publish ?? false,
-    alias: settings.alias ?? "",
-  };
+  const from = state.schema ?? 1;
+  if (from >= SCHEMA) return state;
+  if (from < 2) {
+    state.expansions ??= {};
+    const settings = state.settings as Partial<GameState["settings"]>;
+    state.settings = {
+      music: { ...(settings.music ?? { track: "lofi", volume: 0.5 }), enabled: true },
+      sfx: true,
+      sfxVolume: settings.sfxVolume ?? 0.6,
+      publish: settings.publish ?? false,
+      alias: settings.alias ?? "",
+    };
+  }
+  // Esquema 3: acabados de pared y suelo que se compran en la tienda.
+  state.ownedStyles ??= [];
   state.schema = SCHEMA;
   return state;
 }
@@ -302,6 +307,18 @@ function apply(state: GameState, cmd: Command, now: number, today: string): { me
       return { message: qty > 1 ? `${qty} × ${item.name} al inventario` : `${item.name} al inventario` };
     }
 
+    case "buy_style": {
+      if (!hasFeature(state.level, "shop")) throw new GameError("La tienda se abre en el nivel 1.");
+      const style = STYLES.find((s) => s.id === cmd.styleId);
+      if (!style?.price) throw new GameError("Ese acabado no está a la venta.");
+      if (state.ownedStyles.includes(style.id)) throw new GameError("Ya tienes ese acabado.");
+      if (style.minLevel > state.level) throw new GameError(`Necesitas nivel ${style.minLevel}.`);
+      if (state.balance < style.price) throw new GameError("No tienes monedas suficientes.");
+      credit(state, "style", style.id, -style.price, now, `Acabado: ${style.name}`);
+      state.ownedStyles.push(style.id);
+      return { message: `${style.name} es tuyo. Aplícalo en Decorar → Acabados.` };
+    }
+
     case "sell": {
       const owned = state.inventory.find((o) => o.uid === cmd.uid);
       if (!owned || owned.soldAt) throw new GameError("Ese objeto ya no está en tu inventario.");
@@ -360,7 +377,8 @@ function apply(state: GameState, cmd: Command, now: number, today: string): { me
         const current = state.roomStyles[room] ?? DEFAULT_STYLE;
         for (const kind of ["floor", "wall", "window"] as const) {
           if (style[kind] === current[kind]) continue;
-          if (!hasFeature(state.level, "styles") || !availableStyles(state, kind).includes(style[kind]))
+          // Los de nivel llegan con «Interiorismo» (L6); los comprados se pueden usar desde el principio.
+          if (!availableStyles(state, kind).includes(style[kind]))
             throw new GameError("Ese acabado aún no está disponible.");
           if (!STYLES.some((s) => s.id === style[kind])) throw new GameError("Acabado desconocido.");
         }

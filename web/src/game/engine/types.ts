@@ -174,6 +174,8 @@ export interface GameState {
   placements: Placement[];
   roomStyles: Record<string, RoomStyle>;
   styleGifts: string[];
+  /** Acabados de pared y suelo comprados en la tienda. */
+  ownedStyles: string[];
   rotations: Record<string, { ids: string[]; seedVersion: number }>;
   reservations: Reservation[];
   missions: MissionAssignment[];
@@ -215,6 +217,7 @@ export type Command =
   | { type: "visit_virtual"; ownerId: string; room?: string }
   | { type: "like"; ownerId: string; liked: boolean }
   | { type: "purchase"; itemId: string; qty: number; requestId: string }
+  | { type: "buy_style"; styleId: string }
   | { type: "sell"; uid: string }
   | { type: "reserve"; itemId: string }
   | { type: "complete_reservation"; id: string }

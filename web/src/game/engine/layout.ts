@@ -6,14 +6,14 @@ import type { GameState, OwnedItem, Placement, RoomStyle, SaveFacts } from "./ty
 
 export type Cell = [number, number];
 
-const SEAT_ROTATIONS = new Set(["chair", "stool", "officechair", "armchair", "throne", "bench", "sofa", "pc", "monitor", "terminal", "counter", "piano", "lightpiano"]);
-
+/** Lo colgado va en una de las dos paredes; lo de suelo gira en las cuatro direcciones. */
 export function rotationsFor(item: CatalogItem): number[] {
   if (item.layer === "wall") return [0, 1];
-  if (SEAT_ROTATIONS.has(item.kind)) return [0, 1, 2, 3];
-  if (item.w !== item.h) return [0, 1];
-  return [0];
+  return [0, 1, 2, 3];
 }
+
+/** Hacia dónde mira el frente de un mueble según su giro (0: +y, 1: +x, 2: −y, 3: −x). */
+export const FRONT: readonly Cell[] = [[0, 1], [1, 0], [0, -1], [-1, 0]];
 
 /** Huella en casillas tras el giro (las orientaciones impares intercambian ancho y fondo). */
 export function footprint(item: CatalogItem, rot: number): { w: number; h: number } {

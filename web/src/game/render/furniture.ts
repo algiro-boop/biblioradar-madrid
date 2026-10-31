@@ -1,7 +1,7 @@
 /**
  * Dibujantes pixel art del mobiliario. Cada pieza se compone de prismas isométricos y
  * detalles a píxel, con la misma luz (arriba-izquierda), contorno y paleta cálida para todas.
- * Las rotaciones solo intercambian huella/orientación: no se finge 3D con sprites inexistentes.
+ * Los cuatro giros son reales: a 0°/90° el frente mira a la cámara y a 180°/270° se ve la trasera.
  */
 
 import { ART_VARIANT, type CatalogItem } from "../data/catalog";
@@ -265,15 +265,24 @@ function drawBack(P: Painter, back: number, fw: number, fh: number, z: number, h
   else P.box(inset, fh - inset - thick, z, fw - inset * 2, thick, h, color);
 }
 
-function shelfFace(fw: number, fh: number): { along: "x" | "y"; front: number; len: number } {
-  // Las estanterías miran a la cámara: cara +y si son anchas en x, cara +x si lo son en y.
-  return fw >= fh ? { along: "x", front: fh, len: fw } : { along: "y", front: fw, len: fh };
+/** ¿El mueble se extiende a lo largo de x? Los cuadrados lo deciden por el giro (pares: x). */
+function alongX(fw: number, fh: number, facing: number): boolean {
+  return fw === fh ? facing % 2 === 0 : fw > fh;
+}
+
+function shelfFace(fw: number, fh: number, facing: number): { along: "x" | "y"; front: number; len: number } {
+  // Cara de los libros: +y si es ancha en x, +x si lo es en y (o −y/−x girada 180°).
+  return alongX(fw, fh, facing) ? { along: "x", front: fh, len: fw } : { along: "y", front: fw, len: fh };
 }
 
 export function paintItem(P: Painter, item: CatalogItem, o: PaintOpts): void {
   const [c0 = "#b9824a", c1 = "#7a4f31"] = item.colors;
   const v = ART_VARIANT[item.id] ?? "";
-  const { fw, fh, facing } = o;
+  const { fw, fh } = o;
+  const facing = ((o.facing % 4) + 4) % 4;
+  // Girado 180° el mueble da la espalda a la cámara: frentes ocultos y trasera a la vista.
+  const flip = facing >= 2;
+  const ax = alongX(fw, fh, facing);
   switch (item.kind) {
     case "table": {
       const legH = 11;
@@ -327,8 +336,9 @@ export function paintItem(P: Painter, item: CatalogItem, o: PaintOpts): void {
         P.disc(fw * 0.35, fh * 0.5, top, 0.25, shade(c1, 0.3));
         P.disc(fw * 0.65, fh * 0.45, top, 0.18, shade(c1, 0.45));
       } else if (item.id === "P009") {
-        P.box(fw - 0.6, 0.3, top, 0.25, 0.25, 2, "#4a3426");
-        P.box(fw - 0.62, 0.28, top + 8, 0.3, 0.3, 4, "#f3e2bf");
+        const [lx, ly] = flip ? [0.35, fh - 0.55] : [fw - 0.6, 0.3];
+        P.box(lx, ly, top, 0.25, 0.25, 2, "#4a3426");
+        P.box(lx - 0.02, ly - 0.02, top + 8, 0.3, 0.3, 4, "#f3e2bf");
       }
       return;
     }
@@ -342,45 +352,50 @@ export function paintItem(P: Painter, item: CatalogItem, o: PaintOpts): void {
     }
     case "desk": {
       const pc = item.tags.includes("pc");
-      const along = fw >= fh;
+      const along = ax;
       const len = along ? fw : fh;
       const dep = along ? fh : fw;
-      // Panel en un extremo, cajonera en el otro y faldón trasero
-      const at = (s0: number, t0: number, z: number, ds: number, dt: number, h: number, c: string, outline = true) =>
-        along ? P.box(s0, t0, z, ds, dt, h, c, outline) : P.box(t0, s0, z, dt, ds, h, c, outline);
-      at(0.08, 0.1, 0, 0.12, dep - 0.2, 12, shade(c0, -0.12));
-      at(0.2, 0.1, 4, len - 0.8, 0.1, 8, shade(c0, -0.2));
-      at(len - 0.6, 0.1, 0, 0.52, dep - 0.2, 12, shade(c0, -0.05));
-      for (const z of [3.5, 7.5]) {
-        if (along) {
-          P.line([len - 0.58, dep - 0.1, z], [len - 0.1, dep - 0.1, z], shade(c0, -0.35));
-          P.dot(len - 0.36, dep - 0.1, z + 2, "#d8dde3");
-        } else {
-          P.line([dep - 0.1, len - 0.58, z], [dep - 0.1, len - 0.1, z], shade(c0, -0.35));
-          P.dot(dep - 0.1, len - 0.36, z + 2, "#d8dde3");
-        }
-      }
-      at(0.03, 0.04, 12, len - 0.06, dep - 0.08, 3, c0);
+      // s a lo largo y t de la trasera (0) al frente (dep); girado 180° ambos se invierten.
+      const S = (v: number, d = 0) => (flip ? len - v - d : v);
+      const T = (v: number, d = 0) => (flip ? dep - v - d : v);
+      const pt = (sv: number, tv: number, z: number): [number, number, number] => (along ? [S(sv), T(tv), z] : [T(tv), S(sv), z]);
+      const parts: Part[] = [];
+      const add = (s0: number, t0: number, z: number, ds: number, dt: number, h: number, c: string, outline = true) => {
+        const [x, y, w, d] = along ? [S(s0, ds), T(t0, dt), ds, dt] : [T(t0, dt), S(s0, ds), dt, ds];
+        parts.push({ x, y, z, w, d, h, c, outline });
+      };
+      // Panel en un extremo, cajonera en el otro, faldón trasero y tablero
+      add(0.08, 0.1, 0, 0.12, dep - 0.2, 12, shade(c0, -0.12));
+      add(0.2, 0.1, 4, len - 0.8, 0.1, 8, shade(c0, -0.2));
+      add(len - 0.6, 0.1, 0, 0.52, dep - 0.2, 12, shade(c0, -0.05));
+      add(0.03, 0.04, 12, len - 0.06, dep - 0.08, 3, c0);
+      const mx = len / 2 - 0.4;
       if (pc) {
-        const mx = len / 2 - 0.4;
-        at(mx + 0.22, 0.2, 15, 0.36, 0.2, 0.6, "#3d4450", false);
-        at(mx + 0.32, 0.22, 15.6, 0.16, 0.1, 3.4, "#3d4450", false);
-        at(mx, 0.16, 19, 0.8, 0.08, 11, "#2a2f38");
-        const s0 = mx + 0.05;
-        const s1 = mx + 0.75;
-        const tf = 0.24;
-        if (along) P.quad([[s0, tf, 20], [s1, tf, 20], [s1, tf, 29], [s0, tf, 29]], c1);
-        else P.quad([[tf, s0, 20], [tf, s1, 20], [tf, s1, 29], [tf, s0, 29]], c1);
-        for (let i = 0; i < 4; i++) {
-          if (along) P.line([s0 + 0.08, tf, 27 - i * 2], [s0 + 0.2 + (i % 3) * 0.12, tf, 27 - i * 2], alpha("#ffffff", 0.75));
-          else P.line([tf, s0 + 0.08, 27 - i * 2], [tf, s0 + 0.2 + (i % 3) * 0.12, 27 - i * 2], alpha("#ffffff", 0.75));
-        }
-        at(mx + 0.05, dep * 0.55, 15, 0.62, 0.18, 0.8, "#d8dde3");
-        at(mx + 0.8, dep * 0.58, 15, 0.1, 0.13, 0.8, "#d8dde3");
+        add(mx + 0.22, 0.2, 15, 0.36, 0.2, 0.6, "#3d4450", false);
+        add(mx + 0.32, 0.22, 15.6, 0.16, 0.1, 3.4, "#3d4450", false);
+        add(mx, 0.16, 19, 0.8, 0.08, 11, "#2a2f38");
+        add(mx + 0.05, dep * 0.55, 15, 0.62, 0.18, 0.8, "#d8dde3");
+        add(mx + 0.8, dep * 0.58, 15, 0.1, 0.13, 0.8, "#d8dde3");
       } else {
-        at(len - 0.5, 0.25, 15, 0.3, 0.4, 0.6, "#f8f4ec", false);
-        at(len - 0.45, 0.3, 15.6, 0.22, 0.3, 0.6, "#e8d9b8", false);
-        at(0.25, 0.25, 15, 0.12, 0.12, 4, "#4c78b5");
+        add(len - 0.5, 0.25, 15, 0.3, 0.4, 0.6, "#f8f4ec", false);
+        add(len - 0.45, 0.3, 15.6, 0.22, 0.3, 0.6, "#e8d9b8", false);
+        add(0.25, 0.25, 15, 0.12, 0.12, 4, "#4c78b5");
+      }
+      drawParts(P, parts);
+      if (!flip) {
+        // Tiradores de la cajonera y pantalla encendida (de espaldas no se ven).
+        for (const z of [3.5, 7.5]) {
+          P.line(pt(len - 0.58, dep - 0.1, z), pt(len - 0.1, dep - 0.1, z), shade(c0, -0.35));
+          const [hx, hy] = pt(len - 0.36, dep - 0.1, 0);
+          P.dot(hx, hy, z + 2, "#d8dde3");
+        }
+        if (pc) {
+          const s0 = mx + 0.05;
+          const s1 = mx + 0.75;
+          const tf = 0.24;
+          P.quad([pt(s0, tf, 20), pt(s1, tf, 20), pt(s1, tf, 29), pt(s0, tf, 29)], c1);
+          for (let i = 0; i < 4; i++) P.line(pt(s0 + 0.08, tf, 27 - i * 2), pt(s0 + 0.2 + (i % 3) * 0.12, tf, 27 - i * 2), alpha("#ffffff", 0.75));
+        }
       }
       return;
     }
@@ -399,38 +414,49 @@ export function paintItem(P: Painter, item: CatalogItem, o: PaintOpts): void {
       return;
     }
     case "shelf": case "lowshelf": {
-      const { along, front, len } = shelfFace(fw, fh);
+      const { along, front, len } = shelfFace(fw, fh, facing);
       const H = item.kind === "lowshelf" ? 16 : item.id === "P030" ? 46 : len === 1 && fw === fh ? 32 : 38;
       const depth = Math.min(front, 0.7);
       const back = front - depth;
+      // Girada 180°, el cuerpo se pega al otro lado de la casilla y a la vista queda la trasera.
+      const S = (v: number, d = 0) => (flip ? len - v - d : v);
+      const T = (v: number, d = 0) => (flip ? depth - v - d : back + v);
       const at = (s0: number, t0: number, z: number, ds: number, dt: number, h: number, c: string | Tone, outline = true) =>
-        along === "x" ? P.box(s0, back + t0, z, ds, dt, h, c, outline) : P.box(back + t0, s0, z, dt, ds, h, c, outline);
-      const face = (s0: number, s1: number, z0: number, z1: number, c: string) =>
-        along === "x" ? P.quad([[s0, front, z0], [s1, front, z0], [s1, front, z1], [s0, front, z1]], c) : P.quad([[front, s0, z0], [front, s1, z0], [front, s1, z1], [front, s0, z1]], c);
+        along === "x" ? P.box(S(s0, ds), T(t0, dt), z, ds, dt, h, c, outline) : P.box(T(t0, dt), S(s0, ds), z, dt, ds, h, c, outline);
+      const plane = (t: number, s0: number, s1: number, z0: number, z1: number, c: string) =>
+        along === "x" ? P.quad([[s0, t, z0], [s1, t, z0], [s1, t, z1], [s0, t, z1]], c) : P.quad([[t, s0, z0], [t, s1, z0], [t, s1, z1], [t, s0, z1]], c);
+      const face = (s0: number, s1: number, z0: number, z1: number, c: string) => plane(front, s0, s1, z0, z1, c);
       at(0.04, 0, 0, len - 0.08, depth, H, c1);
-      const palette = v === "rainbow" ? RAINBOW : v === "infinite" ? ["#e0b04a", "#f3e2bf", "#7b5aa6", "#26305a"] : BOOKS;
-      const rows = Math.max(1, Math.floor((H - 4) / 9));
-      const rowH = (H - 4) / rows;
-      for (let r = 0; r < rows; r++) {
-        const z = 2 + r * rowH;
-        face(0.1, len - 0.1, z, z + rowH - 1.2, shade(c1, -0.5));
-        face(0.1, len - 0.1, z + rowH - 2, z + rowH - 1.2, shade(c1, -0.65));
-        bookRow(P, 0.1, len - 0.1, front, z, Math.min(7.2, rowH - 2), along, palette, r * 7 + item.id.charCodeAt(item.id.length - 1));
-        face(0.06, len - 0.06, z + rowH - 1.2, z + rowH, shade(c0, 0.05));
-        face(0.06, len - 0.06, z - 0.4, z, shade(c0, -0.15));
+      if (flip) {
+        // Trasera: tablero liso con juntas verticales.
+        plane(depth, 0.1, len - 0.1, 1.5, H - 1.5, shade(c1, -0.12));
+        for (let u = 0.5; u < len - 0.2; u += 0.5) plane(depth, u - 0.01, u + 0.01, 1.5, H - 1.5, shade(c1, -0.32));
+      } else {
+        const palette = v === "rainbow" ? RAINBOW : v === "infinite" ? ["#e0b04a", "#f3e2bf", "#7b5aa6", "#26305a"] : BOOKS;
+        const rows = Math.max(1, Math.floor((H - 4) / 9));
+        const rowH = (H - 4) / rows;
+        for (let r = 0; r < rows; r++) {
+          const z = 2 + r * rowH;
+          face(0.1, len - 0.1, z, z + rowH - 1.2, shade(c1, -0.5));
+          face(0.1, len - 0.1, z + rowH - 2, z + rowH - 1.2, shade(c1, -0.65));
+          bookRow(P, 0.1, len - 0.1, front, z, Math.min(7.2, rowH - 2), along, palette, r * 7 + item.id.charCodeAt(item.id.length - 1));
+          face(0.06, len - 0.06, z + rowH - 1.2, z + rowH, shade(c0, 0.05));
+          face(0.06, len - 0.06, z - 0.4, z, shade(c0, -0.15));
+        }
+        // Laterales con canto
+        at(0.04, depth - 0.06, 0, 0.08, 0.08, H, c0);
+        at(len - 0.12, depth - 0.06, 0, 0.08, 0.08, H, c0);
       }
-      // Laterales y remate superior con canto
-      at(0.04, depth - 0.06, 0, 0.08, 0.08, H, c0);
-      at(len - 0.12, depth - 0.06, 0, 0.08, 0.08, H, c0);
+      // Remate superior
       at(0.02, 0, H, len - 0.04, depth + 0.03, 1.5, shade(c0, 0.06));
       if (item.kind === "lowshelf") {
         // Encima: maceta pequeña y un libro tumbado
         at(0.25, 0.2, H + 1.5, 0.22, 0.22, 3, "#c4703f");
-        const [px, py] = along === "x" ? [0.36, back + 0.31] : [back + 0.31, 0.36];
-        P.ball(px, py, H + 7, 3, "#5f8f5a");
+        const [ps, pt] = [S(0.36), T(0.31)];
+        P.ball(along === "x" ? ps : pt, along === "x" ? pt : ps, H + 7, 3, "#5f8f5a");
         at(len - 0.6, 0.15, H + 1.5, 0.35, 0.3, 1.2, "#4c78b5");
       }
-      if (v === "stained") for (let i = 0; i < 3; i++) P.ball(along === "x" ? 0.4 + i * 0.6 : front, along === "x" ? front : 0.4 + i * 0.6, H - 5, 2, RAINBOW[i * 2]!);
+      if (v === "stained" && !flip) for (let i = 0; i < 3; i++) P.ball(along === "x" ? 0.4 + i * 0.6 : front, along === "x" ? front : 0.4 + i * 0.6, H - 5, 2, RAINBOW[i * 2]!);
       if (item.id === "P030") {
         at(0, 0, H + 1.5, len, depth + 0.06, 3, c1);
         at(0.1, 0, H + 4.5, len - 0.2, depth, 1, c0);
@@ -438,11 +464,18 @@ export function paintItem(P: Painter, item: CatalogItem, o: PaintOpts): void {
       return;
     }
     case "cornershelf": {
-      P.box(0.04, 0.04, 0, fw - 0.08, 0.7, 34, c1);
-      P.box(0.04, 0.74, 0, 0.7, fh - 0.78, 34, c1);
+      // Rinconera en L: el giro lleva la esquina a cada rincón de la huella.
+      const rot = (x: number, y: number): [number, number] =>
+        facing === 0 ? [x, y] : facing === 1 ? [fw - y, x] : facing === 2 ? [fw - x, fh - y] : [y, fh - x];
+      const part = (x0: number, y0: number, x1: number, y1: number): Part => {
+        const [ax0, ay0] = rot(x0, y0);
+        const [ax1, ay1] = rot(x1, y1);
+        return { x: Math.min(ax0, ax1), y: Math.min(ay0, ay1), z: 0, w: Math.abs(ax1 - ax0), d: Math.abs(ay1 - ay0), h: 34, c: c1, outline: true };
+      };
+      drawParts(P, [part(0.04, 0.04, fw - 0.04, 0.74), part(0.04, 0.74, 0.74, fh - 0.04)]);
       for (let r = 0; r < 3; r++) {
-        bookRow(P, 0.8, fw - 0.1, 0.74, 3 + r * 10, 7, "x", BOOKS, r);
-        bookRow(P, 0.8, fh - 0.1, 0.74, 3 + r * 10, 7, "y", BOOKS, r + 4);
+        if (facing === 0 || facing === 1) bookRow(P, facing === 0 ? 0.8 : 0.1, facing === 0 ? fw - 0.1 : fw - 0.8, 0.74, 3 + r * 10, 7, "x", BOOKS, facing === 0 ? r : r + 4);
+        if (facing === 0 || facing === 3) bookRow(P, facing === 0 ? 0.8 : 0.1, facing === 0 ? fh - 0.1 : fh - 0.8, 0.74, 3 + r * 10, 7, "y", BOOKS, facing === 0 ? r + 4 : r);
       }
       return;
     }
@@ -636,16 +669,29 @@ export function paintItem(P: Painter, item: CatalogItem, o: PaintOpts): void {
     case "counter": {
       P.box(0.04, 0.1, 0, fw - 0.08, fh - 0.2, 18, c0);
       P.box(0, 0.05, 18, fw, fh - 0.1, 3, c1);
-      if (fw >= fh) for (let i = 0; i < fw * 2; i++) P.vline(0.2 + i * 0.5, fh - 0.1, 3, 11, shade(c0, -0.18));
-      else for (let i = 0; i < fh * 2; i++) P.vline(fw - 0.04, 0.2 + i * 0.5, 3, 11, shade(c0, -0.18));
+      // Paneles del frente (por detrás, mostrador liso).
+      if (!flip) {
+        if (ax) for (let i = 0; i < fw * 2; i++) P.vline(0.2 + i * 0.5, fh - 0.1, 3, 11, shade(c0, -0.18));
+        else for (let i = 0; i < fh * 2; i++) P.vline(fw - 0.04, 0.2 + i * 0.5, 3, 11, shade(c0, -0.18));
+      }
       P.box(fw / 2 - 0.15, fh / 2 - 0.15, 21, 0.3, 0.3, 3, "#e8d9b8", false);
       return;
     }
     case "sign": {
       P.box(0.45, 0.45, 0, 0.1, 0.1, 14, "#7a4f31", false);
-      P.box(0.15, 0.45, 12, 0.7, 0.08, 12, c1);
-      P.quad([[0.2, 0.53, 15], [0.8, 0.53, 15], [0.8, 0.53, 21], [0.2, 0.53, 21]], c0);
-      P.line([0.3, 0.53, 18], [0.7, 0.53, 18], c1);
+      const t = flip ? 0.47 : 0.45;
+      if (ax) P.box(0.15, t, 12, 0.7, 0.08, 12, c1);
+      else P.box(t, 0.15, 12, 0.08, 0.7, 12, c1);
+      if (!flip) {
+        const f = 0.53;
+        if (ax) {
+          P.quad([[0.2, f, 15], [0.8, f, 15], [0.8, f, 21], [0.2, f, 21]], c0);
+          P.line([0.3, f, 18], [0.7, f, 18], c1);
+        } else {
+          P.quad([[f, 0.2, 15], [f, 0.8, 15], [f, 0.8, 21], [f, 0.2, 21]], c0);
+          P.line([f, 0.3, 18], [f, 0.7, 18], c1);
+        }
+      }
       return;
     }
     case "coatrack": {
@@ -656,41 +702,49 @@ export function paintItem(P: Painter, item: CatalogItem, o: PaintOpts): void {
       return;
     }
     case "locker": {
-      const along = fw >= fh;
       P.box(0.05, 0.1, 0, fw - 0.1, fh - 0.2, 28, c0);
-      const len = along ? fw : fh;
-      for (let i = 1; i < len * 2; i++) {
-        if (along) P.vline(i * 0.5, fh - 0.1, 1, 26, shade(c0, -0.3));
+      const len = ax ? fw : fh;
+      if (!flip) for (let i = 1; i < len * 2; i++) {
+        if (ax) P.vline(i * 0.5, fh - 0.1, 1, 26, shade(c0, -0.3));
         else P.vline(fw - 0.05, i * 0.5, 1, 26, shade(c0, -0.3));
       }
       return;
     }
     case "infopanel": case "terminal": {
-      const along = fw >= fh;
-      const len = along ? fw : fh;
-      P.box(along ? len / 2 - 0.08 : 0.42, along ? 0.42 : len / 2 - 0.08, 0, 0.16, 0.16, 12, c1, false);
-      if (along) {
-        P.box(0.15, 0.4, 12, len - 0.3, 0.12, 16, item.kind === "terminal" ? c0 : c1);
-        P.quad([[0.22, 0.52, 14], [len - 0.22, 0.52, 14], [len - 0.22, 0.52, 26], [0.22, 0.52, 26]], item.kind === "terminal" ? c1 : c0);
+      const len = ax ? fw : fh;
+      const screen = item.kind === "terminal" ? c1 : c0;
+      const body = item.kind === "terminal" ? c0 : c1;
+      const t = flip ? 0.48 : 0.4;
+      P.box(ax ? len / 2 - 0.08 : 0.42, ax ? 0.42 : len / 2 - 0.08, 0, 0.16, 0.16, 12, c1, false);
+      if (ax) {
+        P.box(0.15, t, 12, len - 0.3, 0.12, 16, body);
+        if (!flip) P.quad([[0.22, 0.52, 14], [len - 0.22, 0.52, 14], [len - 0.22, 0.52, 26], [0.22, 0.52, 26]], screen);
       } else {
-        P.box(0.4, 0.15, 12, 0.12, len - 0.3, 16, item.kind === "terminal" ? c0 : c1);
-        P.quad([[0.52, 0.22, 14], [0.52, len - 0.22, 14], [0.52, len - 0.22, 26], [0.52, 0.22, 26]], item.kind === "terminal" ? c1 : c0);
+        P.box(t, 0.15, 12, 0.12, len - 0.3, 16, body);
+        if (!flip) P.quad([[0.52, 0.22, 14], [0.52, len - 0.22, 14], [0.52, len - 0.22, 26], [0.52, 0.22, 26]], screen);
       }
       return;
     }
     case "cabinet": {
       P.box(0.15, 0.15, 0, 0.7, 0.7, 18, c0);
-      for (const z of [4, 10, 16]) P.line([0.25, 0.85, z], [0.75, 0.85, z], shade(c0, -0.35));
+      if (!flip) for (const z of [4, 10, 16]) {
+        if (ax) P.line([0.25, 0.85, z], [0.75, 0.85, z], shade(c0, -0.35));
+        else P.line([0.85, 0.25, z], [0.85, 0.75, z], shade(c0, -0.35));
+      }
       return;
     }
     case "newstand": {
-      const along = fw >= fh;
-      const len = along ? fw : fh;
+      const len = ax ? fw : fh;
+      const dep = ax ? fh : fw;
+      // Revistas inclinadas hacia el frente; de espaldas se ven sus contraportadas.
+      const T = (t: number) => (flip ? dep - t : t);
       P.box(0.05, 0.05, 0, fw - 0.1, fh - 0.1, 6, c0);
       for (let i = 0; i < len * 2; i++) {
-        const col = BOOKS[(i * 3) % BOOKS.length]!;
-        if (along) P.quad([[0.15 + i * 0.48, 0.3, 6], [0.5 + i * 0.48, 0.3, 6], [0.5 + i * 0.48, 0.15, 18], [0.15 + i * 0.48, 0.15, 18]], col);
-        else P.quad([[0.3, 0.15 + i * 0.48, 6], [0.3, 0.5 + i * 0.48, 6], [0.15, 0.5 + i * 0.48, 18], [0.15, 0.15 + i * 0.48, 18]], col);
+        const col = flip ? shade(BOOKS[(i * 3) % BOOKS.length]!, -0.3) : BOOKS[(i * 3) % BOOKS.length]!;
+        const a = 0.15 + i * 0.48;
+        const b = 0.5 + i * 0.48;
+        if (ax) P.quad([[a, T(0.3), 6], [b, T(0.3), 6], [b, T(0.15), 18], [a, T(0.15), 18]], col);
+        else P.quad([[T(0.3), a, 6], [T(0.3), b, 6], [T(0.15), b, 18], [T(0.15), a, 18]], col);
       }
       return;
     }
@@ -710,22 +764,41 @@ export function paintItem(P: Painter, item: CatalogItem, o: PaintOpts): void {
     }
     case "pc": case "monitor": {
       const wide = item.kind === "monitor";
+      const keyboard = () => {
+        if (wide) return;
+        const t = flip ? 0.22 : 0.62;
+        if (ax) P.box(0.25, t, 0, 0.5, 0.16, 1, "#d8dde3", false);
+        else P.box(t, 0.25, 0, 0.16, 0.5, 1, "#d8dde3", false);
+      };
+      // De espaldas el teclado queda detrás de la pantalla: se pinta antes.
+      if (flip) keyboard();
       P.box(0.4, 0.4, 0, 0.2, 0.2, 2, "#3d4450", false);
       P.box(0.47, 0.47, 2, 0.06, 0.06, 4, "#3d4450", false);
-      if (fw >= fh) {
-        P.box(wide ? 0.08 : 0.2, 0.35, 6, wide ? 0.84 : 0.6, 0.08, 11, c0);
-        P.quad([[wide ? 0.13 : 0.25, 0.43, 7], [wide ? 0.87 : 0.75, 0.43, 7], [wide ? 0.87 : 0.75, 0.43, 16], [wide ? 0.13 : 0.25, 0.43, 16]], c1);
-      } else {
-        P.box(0.35, wide ? 0.08 : 0.2, 6, 0.08, wide ? 0.84 : 0.6, 11, c0);
-        P.quad([[0.43, wide ? 0.13 : 0.25, 7], [0.43, wide ? 0.87 : 0.75, 7], [0.43, wide ? 0.87 : 0.75, 16], [0.43, wide ? 0.13 : 0.25, 16]], c1);
+      const t = flip ? 0.57 : 0.35;
+      const a = wide ? 0.08 : 0.2;
+      const span = wide ? 0.84 : 0.6;
+      if (ax) P.box(a, t, 6, span, 0.08, 11, c0);
+      else P.box(t, a, 6, 0.08, span, 11, c0);
+      if (!flip) {
+        const s0 = wide ? 0.13 : 0.25;
+        const s1 = wide ? 0.87 : 0.75;
+        if (ax) P.quad([[s0, 0.43, 7], [s1, 0.43, 7], [s1, 0.43, 16], [s0, 0.43, 16]], c1);
+        else P.quad([[0.43, s0, 7], [0.43, s1, 7], [0.43, s1, 16], [0.43, s0, 16]], c1);
+        keyboard();
       }
-      if (!wide) P.box(0.25, 0.62, 0, 0.5, 0.16, 1, "#d8dde3", false);
       return;
     }
     case "printer": {
+      // Bandeja de salida en el frente (detrás del cuerpo si está de espaldas).
+      const tray = () => {
+        const t = flip ? 0.28 : 0.62;
+        if (ax) P.box(0.2, t, 3, 0.6, 0.1, 1, c1, false);
+        else P.box(t, 0.2, 3, 0.1, 0.6, 1, c1, false);
+      };
+      if (flip) tray();
       P.box(0.18, 0.2, 0, 0.64, 0.6, 7, c0);
       P.box(0.28, 0.25, 7, 0.44, 0.3, 2, "#ffffff", false);
-      P.box(0.2, 0.62, 3, 0.6, 0.1, 1, c1, false);
+      if (!flip) tray();
       return;
     }
     case "coffeetable": {
@@ -737,10 +810,11 @@ export function paintItem(P: Painter, item: CatalogItem, o: PaintOpts): void {
     case "record": {
       P.box(0.06, 0.1, 0, fw - 0.12, fh - 0.2, 12, c0);
       P.box(0.1, 0.14, 12, fw - 0.2, fh - 0.28, 2, shade(c0, -0.2));
-      const [cx, cy] = fw >= fh ? [fw * 0.38, fh / 2] : [fw / 2, fh * 0.38];
+      const k = flip ? 0.62 : 0.38;
+      const [cx, cy] = ax ? [fw * k, fh / 2] : [fw / 2, fh * k];
       P.disc(cx, cy, 14, 0.36, "#1d1d22");
       P.disc(cx, cy, 14, 0.1, c1);
-      P.line([fw * 0.8, fh * 0.3, 15], [cx + 0.15, cy, 15], "#d8dde3");
+      P.line(flip ? [fw * 0.2, fh * 0.7, 15] : [fw * 0.8, fh * 0.3, 15], [cx + (flip ? -0.15 : 0.15), cy, 15], "#d8dde3");
       return;
     }
     case "vinylbox": {
@@ -749,39 +823,38 @@ export function paintItem(P: Painter, item: CatalogItem, o: PaintOpts): void {
       return;
     }
     case "speakers": {
-      const along = fw >= fh;
-      const len = along ? fw : fh;
+      const len = ax ? fw : fh;
       for (const u of [0.1, len - 0.6]) {
-        const [x, y] = along ? [u, 0.2] : [0.2, u];
-        P.box(x, y, 0, along ? 0.5 : 0.6, along ? 0.6 : 0.5, 20, c0);
-        if (along) {
-          P.blob(x + 0.25, 0.8, 6, 2, c1);
-          P.blob(x + 0.25, 0.8, 14, 3, shade(c1, -0.3));
-        } else {
-          P.blob(0.8, y + 0.25, 6, 2, c1);
-          P.blob(0.8, y + 0.25, 14, 3, shade(c1, -0.3));
-        }
+        const [x, y] = ax ? [u, 0.2] : [0.2, u];
+        P.box(x, y, 0, ax ? 0.5 : 0.6, ax ? 0.6 : 0.5, 20, c0);
+        // Conos en el frente; por detrás, caja lisa.
+        if (flip) continue;
+        const [bx, by] = ax ? [x + 0.25, 0.8] : [0.8, y + 0.25];
+        P.blob(bx, by, 6, 2, c1);
+        P.blob(bx, by, 14, 3, shade(c1, -0.3));
       }
       return;
     }
     case "piano": case "lightpiano": {
       const light = item.kind === "lightpiano";
-      const along = fw >= fh;
-      const len = along ? fw : fh;
-      if (!light) {
-        if (along) P.box(0.05, 0.05, 0, len - 0.1, 0.7, 30, c0);
-        else P.box(0.05, 0.05, 0, 0.7, len - 0.1, 30, c0);
-      }
+      const len = ax ? fw : fh;
+      const dep = ax ? fh : fw;
+      // t de la trasera al teclado; girado 180° el teclado queda detrás del mueble.
+      const T = (t: number, d: number) => (flip ? dep - t - d : t);
+      const box = (s: number, t: number, z: number, ds: number, dt: number, h: number, c: string, outline = true) =>
+        ax ? P.box(s, T(t, dt), z, ds, dt, h, c, outline) : P.box(T(t, dt), s, z, dt, ds, h, c, outline);
       const kz = light ? 10 : 12;
-      if (along) {
-        if (light) legs(P, 0.15, 0.2, len - 0.3, 0.5, kz, c1);
-        P.box(0.08, light ? 0.2 : 0.75, kz, len - 0.16, 0.45, 3, light ? c0 : c0);
-        for (let i = 0; i < len * 7; i++) P.box(0.12 + i * 0.14, light ? 0.24 : 0.8, kz + 3, 0.1, 0.3, 1, "#f8f4ec", false);
-      } else {
-        if (light) legs(P, 0.2, 0.15, 0.5, len - 0.3, kz, c1);
-        P.box(light ? 0.2 : 0.75, 0.08, kz, 0.45, len - 0.16, 3, c0);
-        for (let i = 0; i < len * 7; i++) P.box(light ? 0.24 : 0.8, 0.12 + i * 0.14, kz + 3, 0.3, 0.1, 1, "#f8f4ec", false);
-      }
+      const keys = () => {
+        if (light) {
+          if (ax) legs(P, 0.15, T(0.2, 0.5), len - 0.3, 0.5, kz, c1);
+          else legs(P, T(0.2, 0.5), 0.15, 0.5, len - 0.3, kz, c1);
+        }
+        box(0.08, light ? 0.2 : 0.75, kz, len - 0.16, 0.45, 3, c0);
+        for (let i = 0; 0.22 + i * 0.14 <= len - 0.1; i++) box(0.12 + i * 0.14, light ? 0.24 : 0.8, kz + 3, 0.1, 0.3, 1, "#f8f4ec", false);
+      };
+      if (flip || light) keys();
+      if (!light) box(0.05, 0.05, 0, len - 0.1, 0.7, 30, c0);
+      if (!flip && !light) keys();
       return;
     }
     case "monument": case "statue": case "fountain": {
@@ -796,9 +869,12 @@ export function paintItem(P: Painter, item: CatalogItem, o: PaintOpts): void {
       P.box(0.2, 0.2, 0, fw - 0.4, fh - 0.4, 8, c0);
       P.box(0.35, 0.35, 8, fw - 0.7, fh - 0.7, 4, shade(c0, 0.1));
       if (item.kind === "statue") {
+        // Banda delantera: de espaldas queda detrás del cuerpo.
+        const sash = () => P.box(fw / 2 - 0.25, flip ? fh / 2 - 0.25 : fh / 2 + 0.1, 22, 0.5, 0.15, 5, c1);
+        if (flip) sash();
         P.box(fw / 2 - 0.2, fh / 2 - 0.15, 12, 0.4, 0.3, 18, c0);
         P.blob(fw / 2, fh / 2, 34, 4, c0);
-        P.box(fw / 2 - 0.25, fh / 2 + 0.1, 22, 0.5, 0.15, 5, c1);
+        if (!flip) sash();
       } else {
         P.box(fw / 2 - 0.3, fh / 2 - 0.3, 12, 0.6, 0.6, 30, c0);
         P.box(fw / 2 - 0.4, fh / 2 - 0.2, 42, 0.8, 0.4, 6, c1);

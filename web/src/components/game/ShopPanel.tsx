@@ -1,14 +1,15 @@
 "use client";
 
-import { Lock, Timer } from "lucide-react";
+import { Check, Lock, Timer } from "lucide-react";
 import { useMemo, useState } from "react";
 import { findItem, ITEM_CATEGORIES, itemCategory, PERMANENT_ITEMS, type CatalogItem } from "@/game/data/catalog";
+import { STYLES, type StyleDef } from "@/game/data/levels";
 import { MAX_PURCHASE_QTY, type GameState } from "@/game/engine";
 import { reservationDeposit } from "@/game/engine/shop";
 import { sfx, type SfxKind } from "@/game/sfx";
 import { run } from "@/game/store";
 import { formatCountdown, madridDateKey, msUntilMadridMidnight } from "@/game/time";
-import { Button, CategoryChips, Coin, Coins, Empty, Modal, normalize, RARITY_STYLE, SearchBox, Section, Thumb } from "./ui";
+import { Button, CategoryChips, Coin, Coins, Empty, Modal, normalize, RARITY_STYLE, SearchBox, Section, StyleThumb, Thumb } from "./ui";
 
 const GROUPS = ["Todo", ...ITEM_CATEGORIES.filter((c) => PERMANENT_ITEMS.some((i) => itemCategory(i) === c))];
 
@@ -17,6 +18,7 @@ export function ShopPanel({ state, now, notify }: { state: GameState; now: numbe
   const [affordable, setAffordable] = useState(false);
   const [query, setQuery] = useState("");
   const [detail, setDetail] = useState<CatalogItem | null>(null);
+  const [styleDetail, setStyleDetail] = useState<StyleDef | null>(null);
   const today = madridDateKey(now);
   const specials = (state.rotations[today]?.ids ?? []).map((id) => findItem(id)!).filter(Boolean);
   const reservations = state.reservations.filter((r) => r.state === "active");
@@ -63,6 +65,8 @@ export function ShopPanel({ state, now, notify }: { state: GameState; now: numbe
         </Section>
       )}
 
+      <StylesShop state={state} onOpen={setStyleDetail} />
+
       <Section title="Catálogo permanente" aside={`${list.length} artículos`}>
         <CategoryChips options={GROUPS} value={group} onChange={(g) => { setGroup(g); sfx("click"); }} />
         <SearchBox value={query} onChange={setQuery} placeholder="Buscar en la tienda" />
@@ -76,7 +80,79 @@ export function ShopPanel({ state, now, notify }: { state: GameState; now: numbe
       </Section>
 
       {detail && <BuyDialog item={detail} state={state} special={detail.rarity !== "P"} onClose={() => setDetail(null)} notify={notify} />}
+      {styleDetail && <StyleDialog style={styleDetail} state={state} onClose={() => setStyleDetail(null)} notify={notify} />}
     </div>
+  );
+}
+
+const SHOP_STYLES = STYLES.filter((st) => st.price).sort((a, b) => a.minLevel - b.minLevel || a.price! - b.price!);
+
+/** Suelos y paredes a la venta: se desbloquean por nivel y, una vez comprados, valen para todas las salas. */
+function StylesShop({ state, onOpen }: { state: GameState; onOpen: (s: StyleDef) => void }) {
+  const [kind, setKind] = useState<"floor" | "wall">("floor");
+  const list = SHOP_STYLES.filter((st) => st.kind === kind);
+  const owned = SHOP_STYLES.filter((st) => state.ownedStyles.includes(st.id)).length;
+  return (
+    <Section title="Pared y suelo" aside={`${owned}/${SHOP_STYLES.length} tuyos`}>
+      <div className="flex gap-1.5" role="group" aria-label="Tipo de acabado">
+        {([["floor", "Suelos"], ["wall", "Paredes"]] as const).map(([k, label]) => (
+          <button key={k} type="button" aria-pressed={kind === k} onClick={() => { setKind(k); sfx("click"); }}
+            className={`rounded-full px-3 py-1.5 text-xs font-semibold ring-1 transition-colors ${kind === k ? "bg-slate-900 text-white ring-slate-900" : "bg-white text-slate-600 ring-slate-200 hover:bg-slate-100"}`}>
+            {label}
+          </button>
+        ))}
+      </div>
+      <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-3">
+        {list.map((st) => {
+          const locked = st.minLevel > state.level;
+          const mine = state.ownedStyles.includes(st.id);
+          return (
+            <button key={st.id} type="button" onClick={() => onOpen(st)}
+              className={`relative flex flex-col items-stretch rounded-2xl bg-white p-2 text-left ring-1 transition-[scale,box-shadow] duration-150 hover:shadow-md active:scale-[0.97] ${mine ? "ring-2 ring-emerald-400" : "ring-slate-200"}`}>
+              {mine && <span className="absolute top-1.5 right-1.5 z-10 inline-flex items-center gap-0.5 rounded-md bg-emerald-100 px-1.5 py-0.5 text-[9px] font-bold text-emerald-800"><Check className="size-3" aria-hidden />Tuyo</span>}
+              <StyleThumb id={st.id} alt={st.name} className={`h-16 ${locked ? "opacity-40 grayscale" : ""}`} />
+              <span className="mt-1 line-clamp-2 min-h-8 text-[11px] leading-tight font-semibold text-slate-800">{st.name}</span>
+              <span className="mt-1 flex items-center justify-between text-xs">
+                {mine ? <span className="text-[10px] font-semibold text-emerald-700">Comprado</span> : <Coins value={st.price!} className={state.balance >= st.price! ? "text-slate-800" : "text-slate-400"} />}
+                {locked && <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-slate-500"><Lock className="size-3" aria-hidden />Nv {st.minLevel}</span>}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+      <p className="text-xs text-slate-500">Cada nivel trae acabados nuevos. Lo que compres se aplica en Decorar → Acabados, en la sala que quieras.</p>
+    </Section>
+  );
+}
+
+function StyleDialog({ style, state, onClose, notify }: { style: StyleDef; state: GameState; onClose: () => void; notify: (m: string, k?: "ok" | "error") => void }) {
+  const locked = style.minLevel > state.level;
+  const mine = state.ownedStyles.includes(style.id);
+  const price = style.price ?? 0;
+  return (
+    <Modal title={style.name} onClose={onClose}>
+      <div className="rounded-2xl bg-gradient-to-b from-amber-50 to-white p-3 ring-1 ring-amber-100">
+        <StyleThumb id={style.id} alt={style.name} className="h-40" />
+      </div>
+      <h2 className="mt-3 text-lg font-bold">{style.name}</h2>
+      <p className="text-xs text-slate-500">{style.kind === "floor" ? "Suelo" : "Paredes"} · nivel {style.minLevel}</p>
+      {mine ? (
+        <p className="mt-4 rounded-xl bg-emerald-50 p-3 text-sm text-emerald-800 ring-1 ring-emerald-200"><Check className="mr-1 inline size-4" aria-hidden />Ya es tuyo. Aplícalo en Decorar → Acabados.</p>
+      ) : locked ? (
+        <p className="mt-4 rounded-xl bg-slate-100 p-3 text-sm text-slate-600"><Lock className="mr-1 inline size-4" aria-hidden />Se desbloquea en el nivel {style.minLevel}.</p>
+      ) : (
+        <>
+          <Button className="mt-4 w-full" disabled={state.balance < price} onClick={() => {
+            const r = run({ type: "buy_style", styleId: style.id });
+            report(r, notify, "buy");
+            if (r.ok) onClose();
+          }}>
+            Comprar por <Coin /> {price}
+          </Button>
+          {state.balance < price && <p className="mt-2 text-center text-xs text-slate-500">Te faltan {price - state.balance} monedas.</p>}
+        </>
+      )}
+    </Modal>
   );
 }
 

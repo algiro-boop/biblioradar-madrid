@@ -62,7 +62,9 @@ export function feasible(state: GameState, def: MissionDef, today: string): bool
 }
 
 export function availableStyles(state: GameState, kind: "floor" | "wall" | "window"): string[] {
-  return STYLES.filter((s) => s.kind === kind && state.level >= s.minLevel && (!s.gift || state.styleGifts.includes(s.id))).map((s) => s.id);
+  return STYLES.filter((s) => s.kind === kind && (s.price
+    ? state.ownedStyles.includes(s.id)
+    : state.level >= s.minLevel && (!s.gift || state.styleGifts.includes(s.id)))).map((s) => s.id);
 }
 
 function ruleSignature(rule: MissionRule): string {

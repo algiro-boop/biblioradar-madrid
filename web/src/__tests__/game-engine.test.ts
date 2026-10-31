@@ -1,11 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { ACHIEVEMENTS } from "@/game/data/achievements";
 import { ALL_ITEMS, EXCLUSIVE_ITEMS, getItem, PERMANENT_ITEMS, SPECIAL_ITEMS } from "@/game/data/catalog";
-import { LEVELS, roomAt, roomMax, ROOMS } from "@/game/data/levels";
+import { DEFAULT_STYLE, LEVELS, roomAt, roomMax, ROOMS, STYLES } from "@/game/data/levels";
 import { DAILY_MISSIONS, getMission, WEEKLY_MISSIONS } from "@/game/data/missions";
 import { NEIGHBORS } from "@/game/data/neighbors";
+import { availableStyles } from "@/game/engine/missions";
 import { coinsForOrdinal, dispatch, initialState, migrateState, type Command, type GameState } from "@/game/engine";
-import { validateLayout } from "@/game/engine/layout";
+import { rotationsFor, validateLayout } from "@/game/engine/layout";
 import { drawRotation, rotationFor } from "@/game/engine/shop";
 import { computeStreak } from "@/game/engine/streak";
 import { addDays, madridDateKey, madridMidnightMs } from "@/game/time";
@@ -554,3 +555,54 @@ function withReportsFrom(state: GameState, n: number): GameState {
   for (let i = 0; i < n; i++) s = report(s, `extra${i}`);
   return s;
 }
+
+describe("acabados de pared y suelo en la tienda", () => {
+  const style = STYLES.find((st) => st.id === "floor-nogal")!;
+
+  it("cada nivel del 2 al 15 trae algún acabado nuevo a la venta", () => {
+    const sold = STYLES.filter((st) => st.price);
+    expect(sold.length).toBeGreaterThanOrEqual(20);
+    for (let level = 2; level <= 15; level++) {
+      const upTo = sold.filter((st) => st.minLevel <= level).length;
+      const before = sold.filter((st) => st.minLevel < level).length;
+      if (level <= 5 || level % 2 === 1) expect(upTo).toBeGreaterThan(before);
+    }
+    expect(new Set(sold.map((st) => st.kind))).toEqual(new Set(["floor", "wall"]));
+  });
+
+  it("se compra a partir de su nivel, cobra una vez y queda disponible para aplicarlo", () => {
+    let s = ok(ok(initialState("t", T0), { type: "dev_set_level", level: style.minLevel - 1 }), { type: "dev_coins", delta: 500 });
+    expect(run(s, { type: "buy_style", styleId: style.id }).result.ok).toBe(false);
+    s = ok(s, { type: "dev_set_level", level: style.minLevel });
+    const before = s.balance;
+    expect(availableStyles(s, "floor")).not.toContain(style.id);
+    s = ok(s, { type: "buy_style", styleId: style.id });
+    expect(s.balance).toBe(before - style.price!);
+    expect(s.ownedStyles).toEqual([style.id]);
+    expect(availableStyles(s, "floor")).toContain(style.id);
+    expect(run(s, { type: "buy_style", styleId: style.id }).result.ok).toBe(false);
+    // Comprado antes de «Interiorismo» (L6), ya se puede aplicar a una sala.
+    s = ok(s, { type: "save_layout", placements: s.placements, styles: { r1: { ...DEFAULT_STYLE, floor: style.id } } });
+    expect(s.roomStyles.r1!.floor).toBe(style.id);
+  });
+
+  it("no deja aplicar un acabado de pago sin comprarlo ni comprar los que no están a la venta", () => {
+    const s = ok(ok(initialState("t", T0), { type: "dev_set_level", level: 15 }), { type: "dev_coins", delta: 500 });
+    expect(run(s, { type: "save_layout", placements: s.placements, styles: { r1: { ...DEFAULT_STYLE, floor: style.id } } }).result.ok).toBe(false);
+    expect(run(s, { type: "buy_style", styleId: "floor-ajedrez" }).result.ok).toBe(false);
+    expect(run(ok(s, { type: "dev_coins", delta: -s.balance }), { type: "buy_style", styleId: style.id }).result.ok).toBe(false);
+  });
+
+  it("migra partidas del esquema 2 con la lista de acabados comprados vacía", () => {
+    const old = withReports(1) as GameState & Record<string, unknown>;
+    old.schema = 2;
+    delete (old as Partial<GameState>).ownedStyles;
+    expect(migrateState(structuredClone(old)).ownedStyles).toEqual([]);
+  });
+});
+
+describe("giros de los muebles", () => {
+  it("todo lo de suelo gira en las cuatro direcciones y lo de pared elige pared", () => {
+    for (const item of ALL_ITEMS) expect(rotationsFor(item)).toEqual(item.layer === "wall" ? [0, 1] : [0, 1, 2, 3]);
+  });
+});

@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import type { CatalogItem, Rarity } from "@/game/data/catalog";
-import { itemThumbnail } from "@/game/render/scene";
+import { itemThumbnail, styleThumbnail } from "@/game/render/scene";
 
 /** Moneda pixel art. */
 export function Coin({ className = "size-4" }: { className?: string }) {
@@ -41,10 +41,28 @@ export function Thumb({ item, className = "h-16" }: { item: CatalogItem; classNa
   const [src, setSrc] = useState("");
   useEffect(() => setSrc(itemThumbnail(item.id)), [item.id]);
   return (
-    <div className={`grid place-items-center ${className}`}>
+    // La imagen va absoluta dentro de la caja: en Safari/Chrome de iOS la altura al 100 % dentro de
+    // una rejilla no se resolvía y el dibujo se salía sobre el nombre del artículo.
+    <div className={`relative grid place-items-center ${className}`}>
       {src ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={src} alt={item.alt} className="max-h-full max-w-full object-contain [image-rendering:pixelated]" style={{ width: "auto", height: "100%" }} />
+        <img src={src} alt={item.alt} className="absolute inset-0 size-full object-contain [image-rendering:pixelated]" />
+      ) : (
+        <span className="text-xs text-slate-400">…</span>
+      )}
+    </div>
+  );
+}
+
+/** Miniatura de un acabado de pared o suelo: un rincón pintado con el mismo dibujo que la sala. */
+export function StyleThumb({ id, alt, className = "h-16" }: { id: string; alt: string; className?: string }) {
+  const [src, setSrc] = useState("");
+  useEffect(() => setSrc(styleThumbnail(id)), [id]);
+  return (
+    <div className={`relative grid place-items-center ${className}`}>
+      {src ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={src} alt={alt} className="absolute inset-0 size-full object-contain [image-rendering:pixelated]" />
       ) : (
         <span className="text-xs text-slate-400">…</span>
       )}

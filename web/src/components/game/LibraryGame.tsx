@@ -26,7 +26,7 @@ import { GameStage, type StageHandle, type StageTap } from "./GameStage";
 import { MissionsPanel, ProgressPanel } from "./ProgressPanels";
 import { report, ShopPanel } from "./ShopPanel";
 import { SettingsPanel, VisitPanel } from "./SocialPanels";
-import { AchievementIcon, Button, Coins, Modal, Thumb } from "./ui";
+import { AchievementIcon, Button, Coins, Modal, StyleThumb, Thumb } from "./ui";
 import { useEditor } from "./useEditor";
 
 type Tab = "shop" | "inventory" | "missions" | "achievements" | "progress" | "visit" | "settings" | "dev";
@@ -430,7 +430,7 @@ export default function LibraryGame() {
       {TABS.map((t) => (
         <button key={t.id} type="button" aria-pressed={activeTab === t.id}
           onClick={() => { sfx("tab"); setTab(activeTab === t.id && !desktop ? null : t.id); }}
-          className={`relative flex min-w-12 flex-1 flex-col items-center gap-0.5 rounded-xl px-1.5 py-1.5 text-[10px] font-semibold transition-colors ${activeTab === t.id ? "bg-emerald-50 text-emerald-700" : "text-slate-500 hover:bg-slate-100"}`}>
+          className={`relative flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-xl px-0.5 py-1.5 text-[10px] font-semibold tracking-tight whitespace-nowrap transition-colors max-[400px]:text-[9px] ${activeTab === t.id ? "bg-emerald-50 text-emerald-700" : "text-slate-500 hover:bg-slate-100"}`}>
           {t.icon}
           {t.label}
           {t.id === "missions" && claimable > 0 && <span className="absolute top-0.5 right-2 grid size-4 place-items-center rounded-full bg-amber-400 text-[9px] font-bold text-amber-950">{claimable}</span>}
@@ -663,7 +663,7 @@ function EditorBar({ state, editor, room, onDone, onInventory, onStyles, onExpan
               <>
                 <Button variant="secondary" onClick={onInventory}><Package className="size-4" aria-hidden />Inventario</Button>
                 <Button variant="secondary" onClick={() => editor.setMulti(true)}><Layers className="size-4" aria-hidden />Seleccionar varios</Button>
-                {hasFeature(state.level, "styles") && <Button variant="secondary" onClick={onStyles}><Paintbrush className="size-4" aria-hidden />Acabados</Button>}
+                <Button variant="secondary" onClick={onStyles}><Paintbrush className="size-4" aria-hidden />Acabados</Button>
                 <Button variant="secondary" onClick={onExpand} title={price === null ? "Tamaño máximo" : `Ampliar por ${price} monedas`}>
                   <Maximize2 className="size-4" aria-hidden />{price === null ? "Sala al máximo" : "Ampliar sala"}
                 </Button>
@@ -740,15 +740,21 @@ function StylesDialog({ state, roomId, styles, onPick, onClose }: {
           <div key={kind} className="mt-4">
             <p className="text-xs font-bold tracking-wider text-slate-500 uppercase">{label}</p>
             <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {STYLES.filter((s) => s.kind === kind).map((s) => {
+              {/* Primero lo disponible; lo demás indica cómo conseguirlo (nivel, regalo o tienda). */}
+              {STYLES.filter((s) => s.kind === kind).sort((a, b) => Number(available.has(b.id)) - Number(available.has(a.id))).map((s) => {
                 const ok = available.has(s.id);
+                const how = s.price ? (s.minLevel > state.level ? `Tienda · nivel ${s.minLevel}` : `En la tienda · ${s.price} monedas`) : s.gift ? "Regalo de nivel" : `Nivel ${s.minLevel}`;
                 return (
                   <button key={s.id} type="button" disabled={!ok} aria-pressed={styles[kind] === s.id} onClick={() => onPick(kind, s.id)}
                     className={`flex items-center gap-2 rounded-xl p-2 text-left text-xs font-semibold ring-1 disabled:opacity-45 ${styles[kind] === s.id ? "bg-emerald-50 ring-2 ring-emerald-500" : "bg-white ring-slate-200"}`}>
-                    <span className="flex size-7 shrink-0 overflow-hidden rounded-md ring-1 ring-black/10" aria-hidden>
-                      {s.colors.slice(0, 2).map((c) => <span key={c} className="h-full flex-1" style={{ background: c }} />)}
-                    </span>
-                    <span>{s.name}{!ok && <span className="block font-normal text-slate-500">{s.gift ? "Regalo de nivel" : `Nivel ${s.minLevel}`}</span>}</span>
+                    {kind === "window" ? (
+                      <span className="flex size-10 shrink-0 overflow-hidden rounded-md ring-1 ring-black/10" aria-hidden>
+                        {s.colors.slice(0, 2).map((c) => <span key={c} className="h-full flex-1" style={{ background: c }} />)}
+                      </span>
+                    ) : (
+                      <StyleThumb id={s.id} alt="" className="size-10 shrink-0" />
+                    )}
+                    <span>{s.name}{!ok && <span className="block font-normal text-slate-500">{how}</span>}</span>
                   </button>
                 );
               })}
