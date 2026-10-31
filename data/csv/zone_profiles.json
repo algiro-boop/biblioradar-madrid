@@ -1,0 +1,34 @@
+{
+  "Biblioteca La Chata": {
+    "zone": "Carabanchel",
+    "nearest": 3
+  },
+  "Sala de estudio y lectura Centro Sociocultural Teresa de Calcuta (Barajas)": {
+    "zone": "Barajas",
+    "nearest": 3
+  },
+  "Mediateca Miguel Delibes": {
+    "zone": "Alcobendas + San Sebastián de los Reyes",
+    "references": [
+      "Centro Cultural Pablo Iglesias",
+      "Biblioteca Municipal Marcos Ana",
+      "Biblioteca Municipal Claudio Rodríguez"
+    ]
+  },
+  "Centro Cultural Anabel Segura": {
+    "zone": "Alcobendas + San Sebastián de los Reyes",
+    "references": [
+      "Centro Cultural Pablo Iglesias",
+      "Biblioteca Municipal Marcos Ana",
+      "Biblioteca Municipal Claudio Rodríguez"
+    ]
+  },
+  "Biblioteca Pública Municipal Plaza de la Iglesia": {
+    "zone": "Alcobendas + San Sebastián de los Reyes",
+    "references": [
+      "Centro Cultural Pablo Iglesias",
+      "Biblioteca Municipal Marcos Ana",
+      "Biblioteca Municipal Claudio Rodríguez"
+    ]
+  }
+}

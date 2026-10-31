@@ -1,0 +1,90 @@
+[
+  {
+    "name": "Biblioteca Municipal Claudio Rodríguez",
+    "source_url": "https://www.comunidad.madrid/centros/biblioteca-municipal-claudio-rodriguez",
+    "lat": 40.551722363013,
+    "lng": -3.6381134604385,
+    "raw_coordinate_evidence": "\"geo\":{\"@type\":\"GeoCoordinates\",\"latitude\":40.551722363013,\"longitude\":-3.6381134604385",
+    "import_sha256": "b102607934ada4c3c65c36691113498e1465c1b1a0111f9e0d0555a7ce9466b8",
+    "has_popular_times": true,
+    "address": "Av. Maximiliano Puerro del Tell, s/n, 28701 San Sebastián de los Reyes, Madrid",
+    "district": "San Sebastián de los Reyes"
+  },
+  {
+    "name": "Centro Cultural Pablo Iglesias",
+    "source_url": "https://www.comunidad.madrid/centros/mediateca-pablo-iglesias",
+    "lat": 40.543554327171,
+    "lng": -3.643849771261,
+    "raw_coordinate_evidence": "\"geo\":{\"@type\":\"GeoCoordinates\",\"latitude\":40.543554327171,\"longitude\":-3.643849771261",
+    "import_sha256": "b102607934ada4c3c65c36691113498e1465c1b1a0111f9e0d0555a7ce9466b8",
+    "has_popular_times": true,
+    "address": "Paseo de la Chopera, 59, 28100 Alcobendas, Madrid",
+    "district": "Alcobendas"
+  },
+  {
+    "name": "Biblioteca Municipal Marcos Ana",
+    "source_url": "https://www.comunidad.madrid/centros/biblioteca-municipal-marcos-ana",
+    "lat": 40.552625512747,
+    "lng": -3.6306739894496,
+    "raw_coordinate_evidence": "\"geo\":{\"@type\":\"GeoCoordinates\",\"latitude\":40.552625512747,\"longitude\":-3.6306739894496",
+    "import_sha256": "b102607934ada4c3c65c36691113498e1465c1b1a0111f9e0d0555a7ce9466b8",
+    "has_popular_times": true,
+    "address": "Plaza de Andrés Caballero, 2, 28701 San Sebastián de los Reyes, Madrid",
+    "district": "San Sebastián de los Reyes"
+  },
+  {
+    "name": "Biblioteca La Chata",
+    "source_url": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/1756-biblioteca-publica-municipal-chata-carabanchel-.json",
+    "lat": 40.3833059350434,
+    "lng": -3.74206338611758,
+    "raw_coordinate_evidence": "Coordinates from existing official Madrid open-data entity; UUID 8613774f-949a-499d-914f-340ea59873d9",
+    "import_sha256": "b102607934ada4c3c65c36691113498e1465c1b1a0111f9e0d0555a7ce9466b8",
+    "has_popular_times": false,
+    "address": "Calle del Gral. Ricardos, 252, Carabanchel, 28025 Madrid",
+    "district": "Carabanchel"
+  },
+  {
+    "name": "Sala de estudio y lectura Centro Sociocultural Teresa de Calcuta (Barajas)",
+    "source_url": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/12103923-sala-estudio-lectura-centro-sociocultural-teresa-calcuta-barajas-.json",
+    "lat": 40.4553207402328,
+    "lng": -3.58763018584694,
+    "raw_coordinate_evidence": "Coordinates from existing official Madrid open-data entity; UUID fcc93ebc-95b6-4b16-9792-d1f135c7df6c",
+    "import_sha256": "b102607934ada4c3c65c36691113498e1465c1b1a0111f9e0d0555a7ce9466b8",
+    "has_popular_times": false,
+    "address": "Plaza Navío, 4, 28042 Madrid",
+    "district": "Alameda de Osuna / Barajas"
+  },
+  {
+    "name": "Mediateca Miguel Delibes",
+    "source_url": "https://www.comunidad.madrid/centros/mediateca-miguel-delibes",
+    "lat": 40.55174081112,
+    "lng": -3.6571749449115,
+    "raw_coordinate_evidence": "\"geo\":{\"@type\":\"GeoCoordinates\",\"latitude\":40.55174081112,\"longitude\":-3.6571749449115",
+    "import_sha256": "b102607934ada4c3c65c36691113498e1465c1b1a0111f9e0d0555a7ce9466b8",
+    "has_popular_times": false,
+    "address": "Av. de la Magia, 4, 28100 Alcobendas, Madrid",
+    "district": "Alcobendas"
+  },
+  {
+    "name": "Centro Cultural Anabel Segura",
+    "source_url": "https://www.comunidad.madrid/centros/mediateca-anabel-segura",
+    "lat": 40.531516068377,
+    "lng": -3.6366388295675,
+    "raw_coordinate_evidence": "\"geo\":{\"@type\":\"GeoCoordinates\",\"latitude\":40.531516068377,\"longitude\":-3.6366388295675",
+    "import_sha256": "b102607934ada4c3c65c36691113498e1465c1b1a0111f9e0d0555a7ce9466b8",
+    "has_popular_times": false,
+    "address": "Av. de Bruselas, 19, 28108 Alcobendas, Madrid",
+    "district": "Alcobendas"
+  },
+  {
+    "name": "Biblioteca Pública Municipal Plaza de la Iglesia",
+    "source_url": "https://www.comunidad.madrid/centros/biblioteca-municipal-plaza-iglesia",
+    "lat": 40.546978570146,
+    "lng": -3.6268451606142,
+    "raw_coordinate_evidence": "\"geo\":{\"@type\":\"GeoCoordinates\",\"latitude\":40.546978570146,\"longitude\":-3.6268451606142",
+    "import_sha256": "b102607934ada4c3c65c36691113498e1465c1b1a0111f9e0d0555a7ce9466b8",
+    "has_popular_times": false,
+    "address": "Pl. de la Iglesia, 4, 28701 San Sebastián de los Reyes, Madrid",
+    "district": "San Sebastián de los Reyes"
+  }
+]

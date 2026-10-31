@@ -227,6 +227,7 @@ export function parseOccupancyStatus(raw: unknown): OccupancyStatus | null {
 function parseOpeningHours(raw: unknown): OpeningHours {
   const r = asRecord(raw) ?? {};
   return {
+    temporarily_closed: r.temporarily_closed === true,
     timezone: asString(r.timezone, "Europe/Madrid"),
     raw_text: asString(r.raw_text),
     normalized_text: asString(r.normalized_text),

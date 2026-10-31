@@ -57,14 +57,14 @@ def test_coverage_and_unique_names_are_mandatory(audit):
         sync.apply_verified_capacities([{"name": "Fixture"}], audit)
 
 
-def test_production_audit_is_exactly_81_verified_and_16_null_and_matches_payload():
+def test_production_audit_preserves_81_verified_and_24_null_and_matches_payload():
     with (ROOT / "data/csv/bibliotecas_madrid_popular_times.csv").open() as handle:
         rows = sync.prepare(list(csv.DictReader(handle)))
     audit = json.loads((ROOT / "data/csv/verified_capacities_audit.json").read_text())
     sync.apply_verified_capacities(rows, audit)
-    assert len(rows) == 97
+    assert len(rows) == 105
     assert sum(r["total_capacity"] is not None for r in rows) == 81
-    assert sum(r["total_capacity"] is None for r in rows) == 16
+    assert sum(r["total_capacity"] is None for r in rows) == 24
     indexed = {r["name"]: r["capacity"] for r in audit}
     assert all(row["total_capacity"] == indexed[row["name"]] for row in rows)
     catalog = [{"id": str(uuid4()), "name": r["name"], "lat": 40.4, "lng": -3.7} for r in rows]

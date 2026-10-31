@@ -4493,5 +4493,61 @@
       }
     ],
     "evidence_candidates": []
+  },
+  {
+    "name": "Biblioteca Municipal Claudio Rodríguez",
+    "capacity": null,
+    "raw_evidence_text": null,
+    "source_url": null,
+    "reason": "not_audited"
+  },
+  {
+    "name": "Centro Cultural Pablo Iglesias",
+    "capacity": null,
+    "raw_evidence_text": null,
+    "source_url": null,
+    "reason": "not_audited"
+  },
+  {
+    "name": "Biblioteca Municipal Marcos Ana",
+    "capacity": null,
+    "raw_evidence_text": null,
+    "source_url": null,
+    "reason": "not_audited"
+  },
+  {
+    "name": "Biblioteca La Chata",
+    "capacity": null,
+    "raw_evidence_text": null,
+    "source_url": null,
+    "reason": "not_audited"
+  },
+  {
+    "name": "Sala de estudio y lectura Centro Sociocultural Teresa de Calcuta (Barajas)",
+    "capacity": null,
+    "raw_evidence_text": null,
+    "source_url": null,
+    "reason": "not_audited"
+  },
+  {
+    "name": "Mediateca Miguel Delibes",
+    "capacity": null,
+    "raw_evidence_text": null,
+    "source_url": null,
+    "reason": "not_audited"
+  },
+  {
+    "name": "Centro Cultural Anabel Segura",
+    "capacity": null,
+    "raw_evidence_text": null,
+    "source_url": null,
+    "reason": "not_audited"
+  },
+  {
+    "name": "Biblioteca Pública Municipal Plaza de la Iglesia",
+    "capacity": null,
+    "raw_evidence_text": null,
+    "source_url": null,
+    "reason": "not_audited"
   }
 ]

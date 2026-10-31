@@ -19,6 +19,7 @@ import json
 import math
 import os
 import re
+import sys
 import unicodedata
 from datetime import date, datetime, timezone
 from difflib import SequenceMatcher
@@ -26,7 +27,7 @@ from pathlib import Path
 from uuid import NAMESPACE_URL, UUID, uuid5
 
 DAYS = ("lun", "mar", "mie", "jue", "vie", "sab", "dom")
-CATALOG_SIZE = 97
+CATALOG_SIZE = 105
 META = (
     "nombre tipo valoracion num_resenas direccion telefono horario_lun horario_mar horario_mie "
     "horario_jue horario_vie horario_sab horario_dom nota_horario_domingo"
@@ -339,6 +340,29 @@ def apply_curve_provenance(rows: list[dict], provenance: dict) -> None:
             row["historical_popularity"]["provenance"] = provenance[row["name"]]
 
 
+def apply_temporary_closures(rows: list[dict], closures: dict) -> None:
+    indexed = {r["name"]: r for r in rows}
+    for name, closure in closures.items():
+        if (
+            name not in indexed
+            or not closure.get("source_url", "").startswith("https://")
+            or not closure.get("reason")
+        ):
+            raise ValueError(f"Cierre temporal sin evidencia: {name}")
+        hours = indexed[name]["opening_hours"]
+        if "regular_weekly" in closure:
+            weekly = closure["regular_weekly"]
+            if set(weekly) != set(map(str, range(1, 8))):
+                raise ValueError("Horario habitual incompleto")
+            hours["weekly"] = {
+                day: parse_hours(" / ".join("–".join(slot) for slot in slots)) if slots else []
+                for day, slots in weekly.items()
+            }
+        hours["temporarily_closed"] = True
+        hours["closure_notice"] = closure
+        hours["normalized_text"] = closure["reason"]
+
+
 def apply_opening_exceptions(rows: list[dict], exceptions: dict) -> None:
     """Aplicar excepciones fechadas sin alterar horarios semanales ni curvas."""
     if not isinstance(exceptions, dict):
@@ -423,6 +447,18 @@ def main(argv: list[str] | None = None) -> int:
         "--new-locations", type=Path, help="JSON de ubicaciones verificadas para altas nuevas"
     )
     parser.add_argument(
+        "--temporary-closures",
+        type=Path,
+        default=Path(__file__).resolve().parent / "data/csv/temporary_closures.json",
+        help="Cierres oficiales hasta nuevo aviso, separados del horario habitual",
+    )
+    parser.add_argument(
+        "--zone-profiles",
+        type=Path,
+        default=Path(__file__).resolve().parent / "data/csv/zone_profiles.json",
+        help="Perfiles inferidos por zona; solo usan curvas históricas observadas",
+    )
+    parser.add_argument(
         "--holidays", type=Path, help="JSON de fechas YYYY-MM-DD con ajuste festivo"
     )
     parser.add_argument(
@@ -458,6 +494,7 @@ def main(argv: list[str] | None = None) -> int:
             source_manifest["downloads"],
             args.capacities_audit.parent / "capacity_sources",
         )
+        apply_temporary_closures(rows, json.loads(args.temporary_closures.read_text()))
         apply_opening_exceptions(rows, json.loads(args.opening_exceptions.read_text()))
         apply_curve_provenance(rows, json.loads(args.curve_provenance.read_text()))
         client = None
@@ -480,7 +517,7 @@ def main(argv: list[str] | None = None) -> int:
             while True:
                 page = (
                     client.table("libraries")
-                    .select("id,name,address,lat,lng,total_capacity")
+                    .select("id,name,address,lat,lng,district,institution,total_capacity")
                     .order("id")
                     .range(len(catalog), len(catalog) + 499)
                     .execute()
@@ -502,6 +539,11 @@ def main(argv: list[str] | None = None) -> int:
                         for key in ("lat", "lng", "institution", "district", "source_url")
                     }
                 )
+        if not problems:
+            sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
+            from biblioradar.zone_profiles import apply_zone_profiles
+
+            apply_zone_profiles(resolved, expanded, json.loads(args.zone_profiles.read_text()))
         if args.holidays:
             holidays = json.loads(args.holidays.read_text())
             if not isinstance(holidays, list) or any(

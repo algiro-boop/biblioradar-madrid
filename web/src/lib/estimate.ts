@@ -233,6 +233,7 @@ function hhmm(value: unknown): number | null {
 
 /** Horario revisado (`weekly` ISO 1..7, `date_overrides`), como `update_job.opening_status`. */
 export function openingStatus(hours: OpeningHours | null | undefined, t: number): boolean | null {
+  if (hours?.temporarily_closed === true) return false;
   if (!hours || hours.requires_review !== false) return null;
   const weekly = hours.weekly;
   if (!weekly) return null;

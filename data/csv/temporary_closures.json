@@ -1,0 +1,42 @@
+{
+  "Biblioteca La Chata": {
+    "reason": "Cerrada temporalmente por mantenimiento hasta nuevo aviso.",
+    "source_url": "https://www.madrid.es/portales/munimadrid/es/Inicio/El-Ayuntamiento/Organizacion-municipal/Biblioteca-Publica-Municipal-La-Chata-Carabanchel-/?vgnextchannel=2ef308a90a1e9410VgnVCM100000171f5a0aRCRD&vgnextfmt=default&vgnextoid=d9a879262ef5d010VgnVCM1000000b205a0aRCRD",
+    "verified_on": "2026-10-31",
+    "regular_weekly": {
+      "1": [
+        [
+          "08:30",
+          "21:00"
+        ]
+      ],
+      "2": [
+        [
+          "08:30",
+          "21:00"
+        ]
+      ],
+      "3": [
+        [
+          "08:30",
+          "21:00"
+        ]
+      ],
+      "4": [
+        [
+          "08:30",
+          "21:00"
+        ]
+      ],
+      "5": [
+        [
+          "08:30",
+          "21:00"
+        ]
+      ],
+      "6": [],
+      "7": []
+    },
+    "note": "El CSV recibido solo mostraba apertura el lunes; el horario habitual oficial es de lunes a viernes, sujeto al cierre temporal."
+  }
+}

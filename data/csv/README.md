@@ -56,3 +56,37 @@ Las 95 filas anteriores permanecen intactas. Los horarios, valoraciones, reseña
 El resto de los puntos queda a cero. `curve_provenance.json` registra el método y `kind: archetype, kappa: 6` para ambos centros. El importador valida esa precisión explícita. La migración 009 mantiene κ=6 en el motor SQL aunque la curva esté completa, sin cambiar la precisión del resto del catálogo. `tests/archetype_smoke.sql` lo verifica con un reporte de peso 20: confianza `20/(6+20)`, seguida de una comprobación de la precisión normal y de la expiración del reporte. Se ejecuta con rollback en la base de pruebas, no inserta reportes de prueba en producción.
 
 SHA256 actual del CSV de 97 filas: `d95bd5038d0329b7c3c512607f4efc4f9808d953cc0342a397d2ae4a0e38d8d5`.
+
+## Ampliación a 105 centros — 31 de octubre de 2026
+
+Se conserva el CSV largo original en `imports/bibliotecas_madrid_alcobendas_sanse_unificado.csv`.
+El maestro conserva sin cambios las primeras 97 filas y añade ocho: seis altas del norte y
+reactivación de los UUID existentes de La Chata y Teresa de Calcuta. `north_import_audit.json`
+guarda las coordenadas oficiales, sus fuentes y el SHA256 del archivo recibido. Las ocho
+capacidades nuevas permanecen en null, sin reutilizar ni estimar aforos.
+
+`catalog_import.import_unified_centers` valida 126 franjas únicas por centro y convierte la
+estructura larga al esquema del maestro. Tres curvas son las observaciones del archivo;
+las otras cinco permanecen vacías en el CSV para no presentarlas como datos medidos.
+`zone_profiles.json` declara cómo inferirlas durante cada sincronización:
+
+- El norte usa Pablo Iglesias, Marcos Ana y Claudio Rodríguez, ponderados por distancia.
+- Madrid usa hasta tres donantes observados del distrito; si no hay, los más cercanos de Madrid.
+- Los donantes cerrados no aportan ceros. Los destinos cerrados siempre tienen curva cero.
+- Si falta una franja, se busca la hora observada más próxima del mismo día y, solo si todo
+  el día carece de datos, esa hora en otros días. Cada sustitución queda en `slot_fallbacks`.
+- Ningún perfil estimado se usa como donante. El resultado se guarda en el mismo `csv-v1`
+  que consume el motor bayesiano y el cron; no incorpora Google API ni nuevas dependencias.
+
+`temporary_closures.json` aplica el aviso oficial de cierre de La Chata por mantenimiento
+hasta nuevo aviso y su horario habitual oficial L–V 08:30–21:00, distinto del CSV recibido.
+El flag `temporarily_closed` se respeta en PostgreSQL, Python y frontend; eliminar la entrada
+cuando se confirme la reapertura y volver a sincronizar. La migración 014 añade ese control
+y siembra las seis ubicaciones verificadas inicialmente inactivas.
+
+```sh
+uv run sync_csv_to_supabase.py data/csv/bibliotecas_madrid_popular_times.csv \
+  --overrides data/csv/name_matches.json --new-locations data/csv/verified_locations.json --dry-run
+# Una vez aplicada la migración 014, repetir con --apply y actualizar el estado:
+uv run python -m biblioradar.csv_job
+```

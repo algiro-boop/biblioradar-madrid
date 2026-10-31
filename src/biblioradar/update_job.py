@@ -84,6 +84,8 @@ def opening_status(hours: dict, now: datetime) -> bool | None:
     weekly usa ISO 1=lunes..7=domingo; intervalos [HH:MM,HH:MM].
     date_overrides permite festivos/cierres por YYYY-MM-DD. Fin 24:00 admitido.
     """
+    if isinstance(hours, dict) and hours.get("temporarily_closed") is True:
+        return False
     if not isinstance(hours, dict) or hours.get("requires_review", True):
         return None
     weekly = hours.get("weekly")

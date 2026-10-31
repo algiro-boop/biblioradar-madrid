@@ -19,6 +19,7 @@ export type OpeningHours = {
   requires_review: boolean;
   date_overrides?: Record<string, unknown>;
   sunday_note?: string;
+  temporarily_closed?: boolean;
 };
 
 // `type` (no `interface`): supabase-js exige que Row sea asignable a Record<string, unknown>.

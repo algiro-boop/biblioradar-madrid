@@ -106,7 +106,7 @@ def test_matching_preserves_ids_ambiguity_requires_override():
 def test_real_csv_and_verified_matches():
     with (ROOT / "data/csv/bibliotecas_madrid_popular_times.csv").open(newline="") as f:
         prepared = sync.prepare(list(csv.DictReader(f)))
-    assert len(prepared) == 97
+    assert len(prepared) == 105
     assert all(len(r["historical_popularity"]["days"]) == 7 for r in prepared)
     elipa = next(r for r in prepared if "La Elipa" in r["name"])
     assert elipa["opening_hours"]["requires_review"] is False
@@ -120,7 +120,7 @@ def test_real_csv_and_verified_matches():
     for day in ["6", "7"]:
         assert elipa["opening_hours"]["weekly"][day] == []
         assert all(v == 0.0 for v in elipa["historical_popularity"]["days"][day].values())
-    assert len(json.loads((ROOT / "data/csv/verified_locations.json").read_text())) == 10
+    assert len(json.loads((ROOT / "data/csv/verified_locations.json").read_text())) == 18
 
 
 def test_six_additions_have_complete_reference_curves_and_distinct_ids():
@@ -182,10 +182,10 @@ def test_six_additions_have_complete_reference_curves_and_distinct_ids():
 
 
 def test_catalog_count_guard_and_explicit_future_expansion():
-    records = [{**row(), "nombre": f"Biblioteca {i}"} for i in range(98)]
+    records = [{**row(), "nombre": f"Biblioteca {i}"} for i in range(106)]
     with pytest.raises(ValueError):
         sync.prepare(records)
-    assert len(sync.prepare(records, expected_rows=98)) == 98
+    assert len(sync.prepare(records, expected_rows=106)) == 106
     with pytest.raises(ValueError):
         sync.prepare(records[:88])  # Un CSV truncado no debe archivar seis centros por accidente.
 

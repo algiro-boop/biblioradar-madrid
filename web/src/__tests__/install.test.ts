@@ -132,7 +132,7 @@ describe("instalación de la PWA", () => {
 describe("compartir la app", () => {
   it("mensaje general con el enlace", () => {
     expect(APP_SHARE_TEXT).toBe(
-      `📡 ¿Buscas sitio para estudiar en Madrid? Mira en tiempo real la ocupación de 97 bibliotecas públicas y salas de estudio en BiblioRadar: ${SITE_URL}`,
+      `📡 ¿Buscas sitio para estudiar en Madrid? Mira en tiempo real la ocupación de 105 bibliotecas públicas y salas de estudio en BiblioRadar: ${SITE_URL}`,
     );
   });
 });

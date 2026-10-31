@@ -82,5 +82,77 @@
     "source_url": "https://www.leganes.org/portal/leganes/contenedor1.jsp?seccion=s_fdes_d4_v1.jsp&codbusqueda=269&language=es&codResi=1&codMenuPN=3&codMenuSN=49&codMenuTN=166",
     "coordinate_source": "user_supplied",
     "verification_note": "Coordenadas, horarios y datos proporcionados por el usuario."
+  },
+  "Biblioteca Municipal Claudio Rodríguez": {
+    "lat": 40.551722363013,
+    "lng": -3.6381134604385,
+    "district": "San Sebastián de los Reyes",
+    "institution": "ayuntamiento",
+    "source_url": "https://www.comunidad.madrid/centros/biblioteca-municipal-claudio-rodriguez",
+    "coordinate_source": "official_directory",
+    "verification_note": "\"geo\":{\"@type\":\"GeoCoordinates\",\"latitude\":40.551722363013,\"longitude\":-3.6381134604385"
+  },
+  "Centro Cultural Pablo Iglesias": {
+    "lat": 40.543554327171,
+    "lng": -3.643849771261,
+    "district": "Alcobendas",
+    "institution": "ayuntamiento",
+    "source_url": "https://www.comunidad.madrid/centros/mediateca-pablo-iglesias",
+    "coordinate_source": "official_directory",
+    "verification_note": "\"geo\":{\"@type\":\"GeoCoordinates\",\"latitude\":40.543554327171,\"longitude\":-3.643849771261"
+  },
+  "Biblioteca Municipal Marcos Ana": {
+    "lat": 40.552625512747,
+    "lng": -3.6306739894496,
+    "district": "San Sebastián de los Reyes",
+    "institution": "ayuntamiento",
+    "source_url": "https://www.comunidad.madrid/centros/biblioteca-municipal-marcos-ana",
+    "coordinate_source": "official_directory",
+    "verification_note": "\"geo\":{\"@type\":\"GeoCoordinates\",\"latitude\":40.552625512747,\"longitude\":-3.6306739894496"
+  },
+  "Biblioteca La Chata": {
+    "lat": 40.3833059350434,
+    "lng": -3.74206338611758,
+    "district": "Carabanchel",
+    "institution": "ayuntamiento",
+    "source_url": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/1756-biblioteca-publica-municipal-chata-carabanchel-.json",
+    "coordinate_source": "official_directory",
+    "verification_note": "Coordinates from existing official Madrid open-data entity; UUID 8613774f-949a-499d-914f-340ea59873d9"
+  },
+  "Sala de estudio y lectura Centro Sociocultural Teresa de Calcuta (Barajas)": {
+    "lat": 40.4553207402328,
+    "lng": -3.58763018584694,
+    "district": "Alameda de Osuna / Barajas",
+    "institution": "ayuntamiento",
+    "source_url": "https://datos.madrid.es/egob/catalogo/tipo/entidadesyorganismos/12103923-sala-estudio-lectura-centro-sociocultural-teresa-calcuta-barajas-.json",
+    "coordinate_source": "official_directory",
+    "verification_note": "Coordinates from existing official Madrid open-data entity; UUID fcc93ebc-95b6-4b16-9792-d1f135c7df6c"
+  },
+  "Mediateca Miguel Delibes": {
+    "lat": 40.55174081112,
+    "lng": -3.6571749449115,
+    "district": "Alcobendas",
+    "institution": "ayuntamiento",
+    "source_url": "https://www.comunidad.madrid/centros/mediateca-miguel-delibes",
+    "coordinate_source": "official_directory",
+    "verification_note": "\"geo\":{\"@type\":\"GeoCoordinates\",\"latitude\":40.55174081112,\"longitude\":-3.6571749449115"
+  },
+  "Centro Cultural Anabel Segura": {
+    "lat": 40.531516068377,
+    "lng": -3.6366388295675,
+    "district": "Alcobendas",
+    "institution": "ayuntamiento",
+    "source_url": "https://www.comunidad.madrid/centros/mediateca-anabel-segura",
+    "coordinate_source": "official_directory",
+    "verification_note": "\"geo\":{\"@type\":\"GeoCoordinates\",\"latitude\":40.531516068377,\"longitude\":-3.6366388295675"
+  },
+  "Biblioteca Pública Municipal Plaza de la Iglesia": {
+    "lat": 40.546978570146,
+    "lng": -3.6268451606142,
+    "district": "San Sebastián de los Reyes",
+    "institution": "ayuntamiento",
+    "source_url": "https://www.comunidad.madrid/centros/biblioteca-municipal-plaza-iglesia",
+    "coordinate_source": "official_directory",
+    "verification_note": "\"geo\":{\"@type\":\"GeoCoordinates\",\"latitude\":40.546978570146,\"longitude\":-3.6268451606142"
   }
 }
