@@ -16,6 +16,7 @@ import {
   type Ctx2D, type Iso, type Pt,
 } from "./pixel";
 import { Sim, SURFACE_Z, type Agent, type ScenePlacement } from "./sim";
+import { daylight } from "../sun";
 import { drawDeskProps } from "./study";
 
 export interface SceneInput {
@@ -430,18 +431,6 @@ export function styleThumbnail(id: string): string {
   return url;
 }
 
-const hourFormatter = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Madrid", hour: "numeric", minute: "numeric", hourCycle: "h23" });
-
-/** Luz del día en Madrid: cielo de las ventanas y penumbra de la sala. */
-function daylight(now: number): { sky: string; night: number; sun: boolean } {
-  const [h = 12, m = 0] = hourFormatter.format(now).split(":").map(Number);
-  const t = h + m / 60;
-  if (t >= 9 && t < 18) return { sky: "#9fd3f0", night: 0, sun: true };
-  if (t >= 7 && t < 9) return { sky: mix("#f6c98b", "#9fd3f0", (t - 7) / 2), night: 0.15 * (1 - (t - 7) / 2), sun: true };
-  if (t >= 18 && t < 20.5) return { sky: mix("#9fd3f0", "#f0905f", Math.min(1, (t - 18) / 1.5)), night: 0.12 * ((t - 18) / 2.5), sun: t < 19.5 };
-  return { sky: "#1f2747", night: 0.32, sun: false };
-}
-
 const ease = (t: number) => 1 - Math.pow(1 - Math.min(1, Math.max(0, t)), 3);
 const easeBack = (t: number) => {
   const x = Math.min(1, Math.max(0, t));
@@ -503,7 +492,8 @@ class RoomView {
 
   private cacheKey(): string {
     const i = this.input;
-    const minute = Math.floor(i.now / 600_000);
+    // Cada 5 minutos: el cielo de las ventanas sigue al sol sin repintar a cada fotograma.
+    const minute = Math.floor(i.now / 300_000);
     return JSON.stringify([i.room.id, i.room.w, i.room.h, i.style, i.level, minute, i.placements.filter((p) => {
       const item = findItem(p.itemId);
       return item?.layer === "wall" || item?.layer === "rug";
@@ -564,19 +554,36 @@ class RoomView {
       const R = new WallPainter(ctx, o, "R", 0);
       const Lw = new WallPainter(ctx, o, "L", 0);
       if (anim.wall === undefined || anim.wall >= 1) {
-        // Ventanas con el cielo de la hora de Madrid, alféizar y parteluz
-        for (const win of room.windows) {
+        // Ventanas con el cielo real de Madrid (sol, luna y estrellas en la primera), alféizar y parteluz
+        room.windows.forEach((win, w) => {
           const a = win.at + 0.12;
           const b = win.at + win.w - 0.12;
           const [frame = "#8d5e33", tint = "#bfe3f2"] = winC;
           R.rect(a - 0.08, 14, b + 0.08, 52, shade(frame, -0.2));
           R.rect(a - 0.04, 16, b + 0.04, 50, frame);
-          R.rect(a + 0.05, 19, b - 0.05, 47, mix(light.sky, tint, 0.25));
-          if (!light.sun) for (let i = 0; i < 7; i++) R.dot(a + 0.15 + ((i * 0.37) % (b - a - 0.3)), 25 + ((i * 7) % 18), "#f3e2bf");
-          else {
-            R.rect(a + 0.1, 28, a + 0.6, 31, alpha("#ffffff", 0.75));
-            R.rect(a + 0.35, 31, a + 0.9, 33, alpha("#ffffff", 0.55));
-            R.line(a + 0.12, 44, a + 0.4, 22, alpha("#ffffff", 0.45));
+          const sky = (k: number) => mix(mix(light.horizon, light.zenith, k), tint, 0.2);
+          for (let i = 0; i < 7; i++) R.rect(a + 0.05, 19 + i * 4, b - 0.05, 23 + i * 4, sky(i / 6));
+          if (light.stars > 0) for (let i = 0; i < 7; i++) R.dot(a + 0.15 + ((i * 0.37) % (b - a - 0.3)), 25 + ((i * 7) % 18), alpha("#f3e2bf", light.stars));
+          if (w === 0 && light.stars > 0.4) {
+            // Luna creciente: disco claro mordido por un trozo de cielo.
+            const mx = a + (b - a) * 0.72;
+            R.rect(mx - 0.1, 37, mx + 0.1, 44, alpha("#f6f0d8", light.stars));
+            R.rect(mx - 0.14, 38.5, mx + 0.14, 42.5, alpha("#f6f0d8", light.stars));
+            R.rect(mx - 0.01, 38, mx + 0.16, 43, sky(0.8));
+          }
+          if (w === 0 && light.sun) {
+            // Sol bajo al amanecer y al atardecer, que sube por el cristal conforme avanza.
+            const sx = a + (b - a) * 0.72;
+            const sy = 20 + light.sun.y * 22;
+            R.rect(sx - 0.24, sy - 4, sx + 0.24, sy + 4, alpha(light.sun.color, 0.22));
+            R.rect(sx - 0.1, sy - 2.5, sx + 0.1, sy + 2.5, light.sun.color);
+            R.rect(sx - 0.14, sy - 1.5, sx + 0.14, sy + 1.5, light.sun.color);
+          }
+          if (light.clouds > 0) {
+            const cloud = mix("#ffffff", light.horizon, 0.4 * (1 - light.clouds));
+            R.rect(a + 0.1, 28, a + 0.6, 31, alpha(cloud, 0.75 * light.clouds));
+            R.rect(a + 0.35, 31, a + 0.9, 33, alpha(cloud, 0.55 * light.clouds));
+            R.line(a + 0.12, 44, a + 0.4, 22, alpha("#ffffff", 0.45 * light.clouds));
           }
           if (style.window === "window-arco") R.rect(a + 0.04, 44, b - 0.04, 47, frame);
           if (style.window === "window-vidriera") for (let i = 0; i < win.w * 4; i++) R.rect(a + 0.05 + i * 0.22, 21, a + 0.2 + i * 0.22, 26, ["#e7b85c", "#b84a44", "#4c78b5", "#5f8f5a"][i % 4]!);
@@ -584,7 +591,7 @@ class RoomView {
           R.rect(a, 32.5, b, 34, frame);
           R.rect(a - 0.14, 12, b + 0.14, 14.5, shade(frame, 0.25));
           R.rect(a - 0.1, 11, b + 0.1, 12, shade(frame, -0.25));
-        }
+        });
         // Puerta con marco, cuarterones y pomo
         if (room.door !== null) {
           const d = room.door;
@@ -608,11 +615,13 @@ class RoomView {
       for (let i = 0; i <= s.h * 3; i++) P.box(s.x + s.w + 0.02, s.y + i / 3 - 0.02, 0, 0.04, 0.04, 14, "#5a3f2c", false);
     }
     if (anim.tile) return;
-    // Luz de las ventanas en el suelo (nivel 2+: ambiente cálido)
-    if (level >= 2 && light.sun) {
+    // Luz de las ventanas en el suelo (nivel 2+): blanca de día, larga y dorada con el sol bajo.
+    if (level >= 2 && light.beam) {
+      const len = Math.min(light.beam.length, room.h - 0.5);
+      const slant = 0.4 + (len - 3.2) * 0.25;
       for (const win of room.windows) {
         const P = new Painter(ctx, o);
-        P.quad([[win.at + 0.1, 0.05, 0], [win.at + win.w - 0.1, 0.05, 0], [win.at + win.w - 0.6, 3.2, 0], [win.at - 0.4, 3.2, 0]], "rgba(255,236,180,0.16)");
+        P.quad([[win.at + 0.1, 0.05, 0], [win.at + win.w - 0.1, 0.05, 0], [win.at + win.w - 0.2 - slant, len, 0], [win.at - slant, len, 0]], alpha(light.beam.color, 0.16 + (len - 3.2) * 0.025));
       }
     }
     // Objetos de pared y alfombras
@@ -1196,7 +1205,6 @@ export class Scene {
     const ct = cine ? this.time - cine.start : 99;
     const building = !!cine && ["build", "expansion", "floor", "final"].includes(cine.kind) && ct < 3.2;
     const overlay = this.mode === "room" ? this.overlay : null;
-    let night = 0;
     for (const v of views) {
       // Salas aún bloqueadas en la vista general: maqueta vacía y atenuada.
       const ghostRoom = this.mode === "overview" && v.input.locked;
@@ -1206,15 +1214,17 @@ export class Scene {
       if (overlay?.editing) v.drawGrid(ctx);
       if (!ghostRoom) v.drawDynamic(ctx, this.time, overlay, { on: building, ct });
       ctx.globalAlpha = 1;
-      night = Math.max(night, daylight(v.input.now).night);
     }
-    // Penumbra nocturna solo sobre lo pintado; halos de lámparas por encima.
-    if (night > 0) {
-      ctx.globalCompositeOperation = "source-atop";
-      ctx.fillStyle = `rgba(18,22,58,${night})`;
+    // Velo de la hora (azul de noche, rosa al alba, dorado al atardecer) solo sobre lo pintado;
+    // los halos de las lámparas van por encima y se avivan con la oscuridad.
+    const light = daylight(views[0]!.input.now);
+    const night = light.night;
+    ctx.globalCompositeOperation = "source-atop";
+    for (const v of light.veils) {
+      ctx.fillStyle = alpha(v.color, v.alpha);
       ctx.fillRect(0, 0, this.buffer.width, this.buffer.height);
-      ctx.globalCompositeOperation = "source-over";
     }
+    ctx.globalCompositeOperation = "source-over";
     for (const v of views) if (v.input.level >= 2 || night > 0) v.drawHalos(ctx, this.time, night);
     if (cine?.kind === "cozy" && ct < 2) {
       ctx.globalCompositeOperation = "source-atop";

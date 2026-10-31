@@ -17,11 +17,13 @@ import type { SceneInput } from "@/game/render/scene";
 import { SEAT_Z, type ScenePlacement } from "@/game/render/sim";
 import { sfx, unlockAudioOnGesture } from "@/game/sfx";
 import { getGameState, run, useGameState } from "@/game/store";
+import { phaseInstant, type SkyPhase } from "@/game/sun";
 import { madridDateKey } from "@/game/time";
 import { GAME_DEV_TOOLS } from "@/lib/gamification-flag";
 import { AchievementsPanel, InventoryPanel } from "./CollectionPanels";
 import { DevPanel } from "./DevPanel";
 import { ShowcaseViewer } from "./ShowcaseViewer";
+import { Tutorial, tutorialSeen, type TutorialTab } from "./Tutorial";
 import { GameStage, type StageHandle, type StageTap } from "./GameStage";
 import { MissionsPanel, ProgressPanel } from "./ProgressPanels";
 import { report, ShopPanel } from "./ShopPanel";
@@ -105,11 +107,16 @@ export default function LibraryGame() {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [showAllRooms, setShowAllRooms] = useState(false);
   const [previewCat, setPreviewCat] = useState(false);
+  const [lightPreview, setLightPreview] = useState<SkyPhase | null>(null);
   const [stylesOpen, setStylesOpen] = useState(false);
   const [audible, setAudible] = useState(false);
   const [overview, setOverview] = useState(false);
   const [expandOpen, setExpandOpen] = useState(false);
   const [showcaseOpen, setShowcaseOpen] = useState(false);
+  // Tutorial: sale solo la primera vez que se abre el juego en este navegador.
+  const [tutorial, setTutorial] = useState(() => !tutorialSeen());
+  const [tutorialTabs, setTutorialTabs] = useState<TutorialTab[]>([]);
+  const closeTutorial = useCallback(() => { setTutorial(false); setTutorialTabs([]); }, []);
   const stageRef = useRef<StageHandle>(null);
   const activeTab = tab ?? (desktop ? "missions" : null);
 
@@ -147,7 +154,8 @@ export default function LibraryGame() {
   const roomLocked = room.level > state.level && !(state.level === 0 && room.id === "r1");
   const itemOf = useMemo(() => itemLookup(state), [state]);
   const neighbor = visiting ? NEIGHBORS.find((n) => n.id === visiting) ?? null : null;
-  const minute = Math.floor(now / 60_000) * 60_000;
+  // La luz de la sala sigue al sol real de Madrid; en Dev se puede forzar un momento del día.
+  const minute = lightPreview ? phaseInstant(madridDateKey(now), lightPreview) : Math.floor(now / 60_000) * 60_000;
   const catHere = (hasFeature(state.level, "cat") || previewCat) && !roomLocked;
 
   // Mientras se mueve un mueble (o un grupo), solo se ven sus fantasmas.
@@ -439,9 +447,9 @@ export default function LibraryGame() {
       {activeTab === "achievements" && <AchievementsPanel state={state} notify={notify} onOpenShowcase={() => setShowcaseOpen(true)} />}
       {activeTab === "progress" && <ProgressPanel state={state} now={now} notify={notify} />}
       {activeTab === "visit" && <VisitPanel state={state} now={now} onVisit={visit} notify={notify} />}
-      {activeTab === "settings" && <SettingsPanel key={`${state.name}|${state.catName}`} state={state} notify={notify} />}
+      {activeTab === "settings" && <SettingsPanel key={`${state.name}|${state.catName}`} state={state} notify={notify} onTutorial={() => { setTab(desktop ? "settings" : null); setTutorial(true); }} />}
       {activeTab === "dev" && GAME_DEV_TOOLS && (
-        <DevPanel state={state} now={now} notify={notify} showAllRooms={showAllRooms} setShowAllRooms={setShowAllRooms} previewCat={previewCat} setPreviewCat={setPreviewCat} />
+        <DevPanel state={state} now={now} notify={notify} showAllRooms={showAllRooms} setShowAllRooms={setShowAllRooms} previewCat={previewCat} setPreviewCat={setPreviewCat} lightPreview={lightPreview} setLightPreview={setLightPreview} />
       )}
     </div>
   );
@@ -451,7 +459,7 @@ export default function LibraryGame() {
       {TABS.map((t) => (
         <button key={t.id} type="button" aria-pressed={activeTab === t.id}
           onClick={() => { sfx("tab"); setTab(activeTab === t.id && !desktop ? null : t.id); }}
-          className={`relative flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-xl px-0.5 py-1.5 text-[10px] font-semibold tracking-tight whitespace-nowrap transition-colors max-[400px]:text-[9px] ${activeTab === t.id ? "bg-emerald-50 text-emerald-700" : "text-slate-500 hover:bg-slate-100"}`}>
+          className={`relative flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-xl px-0.5 py-1.5 text-[10px] font-semibold tracking-tight whitespace-nowrap transition-colors max-[400px]:text-[9px] ${tutorialTabs.includes(t.id as TutorialTab) ? "bg-amber-100 text-amber-800 ring-2 ring-amber-400 ring-inset motion-safe:animate-pulse" : activeTab === t.id ? "bg-emerald-50 text-emerald-700" : "text-slate-500 hover:bg-slate-100"}`}>
           {t.icon}
           {t.label}
           {t.id === "missions" && claimable > 0 && <span className="absolute top-0.5 right-2 grid size-4 place-items-center rounded-full bg-amber-400 text-[9px] font-bold text-amber-950">{claimable}</span>}
@@ -464,7 +472,7 @@ export default function LibraryGame() {
     <main className={`app-viewport flex w-full overflow-hidden bg-[#2b211b] text-slate-900 ${desktop ? "flex-row" : "flex-col"}`}>
       {/* Escenario */}
       <div className={`relative min-h-0 min-w-0 flex-1 bg-[radial-gradient(ellipse_at_center,#4a3426_0%,#2b211b_70%)] ${photo ? "[&>*:not(:first-child):not([data-keep])]:hidden" : ""}`}>
-        <GameStage key={visiting ?? "own"} ref={stageRef} input={input} overview={stageOverview} controls={!photo && !(editing && !desktop)} onPhoto={editing ? undefined : () => { setPhoto(true); setTab(null); sfx("click"); }} overlay={overlay} onTap={onTap} onHover={onHover} onCatNap={onCatNap}
+        <GameStage key={visiting ?? "own"} ref={stageRef} input={input} overview={stageOverview} controls={!photo && !tutorial && !(editing && !desktop)} onPhoto={editing ? undefined : () => { setPhoto(true); setTab(null); sfx("click"); }} overlay={overlay} onTap={onTap} onHover={onHover} onCatNap={onCatNap}
           onOpenRoom={(r) => {
             if (neighbor) {
               setVisitRoom(r);
@@ -583,7 +591,7 @@ export default function LibraryGame() {
         )}
 
         {/* Acceso al editor y siesta accesible */}
-        {!editing && (canEdit || canOverview || canVisitOverview) && (
+        {!editing && !tutorial && (canEdit || canOverview || canVisitOverview) && (
           <div className="absolute bottom-3 left-3 flex flex-col items-start gap-2">
             {(canOverview || canVisitOverview) && (
               <Button variant={stageOverview ? "gold" : "secondary"} className="shadow-lg" aria-pressed={!!stageOverview}
@@ -601,6 +609,8 @@ export default function LibraryGame() {
             )}
           </div>
         )}
+
+        {tutorial && !celebration && !photo && <Tutorial onFocus={setTutorialTabs} onClose={closeTutorial} />}
 
         {editing && <EditorBar state={state} editor={editor} room={room} onDone={() => { editor.flush(); editor.cancel(); setEditing(false); }}
           onInventory={() => setTab("inventory")} onStyles={() => setStylesOpen(true)} onExpand={() => setExpandOpen(true)} />}

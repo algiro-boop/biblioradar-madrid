@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, Music, Sparkles, Volume2 } from "lucide-react";
+import { GraduationCap, Heart, Music, Sparkles, Volume2 } from "lucide-react";
 import { useState } from "react";
 import { hasFeature } from "@/game/data/levels";
 import { NEIGHBORS } from "@/game/data/neighbors";
@@ -122,7 +122,7 @@ const TRACKS: { id: MusicSettings["track"]; name: string }[] = [
   { id: "rain", name: "Lluvia y piano" },
 ];
 
-export function SettingsPanel({ state, notify }: { state: GameState; notify: Notify }) {
+export function SettingsPanel({ state, notify, onTutorial }: { state: GameState; notify: Notify; onTutorial: () => void }) {
   const [name, setName] = useState(state.name);
   const [cat, setCat] = useState(state.catName);
   const music = state.settings.music;
@@ -141,6 +141,12 @@ export function SettingsPanel({ state, notify }: { state: GameState; notify: Not
             <Button type="submit" variant="secondary" disabled={cat.trim() === state.catName}>Nombre del gato</Button>
           </form>
         )}
+      </Section>
+
+      <Section title="Ayuda">
+        <Button variant="secondary" onClick={onTutorial}>
+          <GraduationCap className="size-4" aria-hidden />Ver el tutorial otra vez
+        </Button>
       </Section>
 
       <Section title="Música ambiente">

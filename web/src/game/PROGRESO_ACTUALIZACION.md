@@ -63,6 +63,12 @@ Especificación: `ACTUALIZACION_BIBLIORADAR_PARA_CLAUDE.md` del usuario. Rama lo
 - **Cabecera del mapa (código de la app pública)**: entre ~430 y 440 px de ancho, «Instalar app» se salía por la derecha porque el hijo de `Reveal` (un grid) conservaba `min-width: auto` y el título no podía encoger. Con `min-w-0` cabe en 375, 393, 430 y 440 px. Este cambio afecta a la app pública cuando se publique la rama.
 - **Racha en el mapa**: se ocultaba en nivel 0 con 0 días, así que una partida nueva no la veía. Ahora se muestra siempre (llama apagada y «0» hasta el primer reporte), como pide la especificación.
 
+### Luz real de Madrid y tutorial
+
+- **Ciclo de luz** (`game/sun.ts`): la altura del sol sobre Madrid se calcula para cada instante (fórmulas del Almanaque Náutico; salida y puesta con ±2 min respecto al OAN, cambios de hora incluidos). La sala pasa por noche, amanecer, día y atardecer a la vez que la ciudad. El cielo de las ventanas va en degradado del horizonte al cénit, con el sol bajo al amanecer y al atardecer, y con luna y estrellas de noche. Sobre la sala caen dos velos: una penumbra y un brillo rosado al alba o naranja al atardecer. Con el sol bajo, el haz de luz del suelo se alarga y se vuelve dorado. El cielo se repinta cada 5 minutos.
+- En Dev, «Luz del día» enseña las horas de hoy y deja ver amanecer, día, atardecer o noche sin mover el reloj del juego (que afectaría a rachas y misiones).
+- **Tutorial** (`components/game/Tutorial.tsx`): 10 pasos breves (reportes y niveles, monedas, racha, misiones, tienda, inventario y decorar, logros y progreso, visitar y ajustes, luz de Madrid). Cada paso ilumina su pestaña y las cifras salen del motor. Sale una sola vez por navegador: se marca al mostrarse, así que no se repite aunque se cierre a medias. Se puede volver a ver desde Ajustes → Ayuda. Espera a que no haya ninguna celebración en pantalla.
+
 ## Verificado
 
 - `tsc` limpio y 308/308 tests de vitest (incluye que las bibliotecas de muestra son válidas en su nivel, solo usan muebles de su nivel y no dejan casillas inaccesibles).

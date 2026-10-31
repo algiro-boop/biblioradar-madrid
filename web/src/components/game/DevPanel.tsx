@@ -9,11 +9,16 @@ import { DAY_MS, type Command, type GameState } from "@/game/engine";
 import { activeMissions } from "@/game/engine/missions";
 import { rotationFor } from "@/game/engine/shop";
 import { run } from "@/game/store";
+import { daylight, sunTimes, type SkyPhase } from "@/game/sun";
 import { addDays, formatDateKey, madridDateKey, madridMidnightMs } from "@/game/time";
 import { report } from "./ShopPanel";
 import { Button, Section } from "./ui";
 
 type Notify = (m: string, k?: "ok" | "error") => void;
+
+const PHASES: [SkyPhase | null, string][] = [[null, "Real"], ["dawn", "Amanecer"], ["day", "Día"], ["dusk", "Atardecer"], ["night", "Noche"]];
+const PHASE_NAME: Record<SkyPhase, string> = { dawn: "amanecer", day: "día", dusk: "atardecer", night: "noche" };
+const clock = (ms: number) => new Date(ms).toLocaleTimeString("es-ES", { timeZone: "Europe/Madrid", hour: "2-digit", minute: "2-digit" });
 
 const FAKE_LIBRARIES = ["sim-biblio-retiro", "sim-biblio-chamberi", "sim-biblio-lavapies", "sim-biblio-moncloa"];
 
@@ -21,7 +26,7 @@ const FAKE_LIBRARIES = ["sim-biblio-retiro", "sim-biblio-chamberi", "sim-biblio-
  * Modo desarrollador del entorno de pruebas. Solo se monta con `next dev` y el flag activo;
  * todo lo que hace pasa por el mismo motor (`dispatch`) que el juego normal.
  */
-export function DevPanel({ state, now, notify, showAllRooms, setShowAllRooms, previewCat, setPreviewCat }: {
+export function DevPanel({ state, now, notify, showAllRooms, setShowAllRooms, previewCat, setPreviewCat, lightPreview, setLightPreview }: {
   state: GameState;
   now: number;
   notify: Notify;
@@ -29,6 +34,8 @@ export function DevPanel({ state, now, notify, showAllRooms, setShowAllRooms, pr
   setShowAllRooms: (v: boolean) => void;
   previewCat: boolean;
   setPreviewCat: (v: boolean) => void;
+  lightPreview: SkyPhase | null;
+  setLightPreview: (v: SkyPhase | null) => void;
 }) {
   const [level, setLevel] = useState(state.level);
   useEffect(() => setLevel(state.level), [state.level]);
@@ -42,6 +49,7 @@ export function DevPanel({ state, now, notify, showAllRooms, setShowAllRooms, pr
   const missions = activeMissions(state, today, now);
   const lastReport = [...state.reports].reverse().find((r) => !r.invalidated);
   const activeReservations = state.reservations.filter((r) => r.state === "active");
+  const sun = sunTimes(today);
 
   return (
     <div className="space-y-6">
@@ -101,6 +109,15 @@ export function DevPanel({ state, now, notify, showAllRooms, setShowAllRooms, pr
           <Button variant="secondary" onClick={() => date && setOffset(madridMidnightMs(date) + 12 * 3_600_000 - Date.now())}>Ir a ese día (12:00)</Button>
         </div>
         <p className="text-[11px] text-slate-500">Cambia la tienda diaria, las misiones, las reservas de 72 h y las rachas. Con reloj adelantado, un día sin reportar consume protector.</p>
+      </Section>
+
+      <Section title="Luz del día" aside={`Ahora: ${PHASE_NAME[daylight(now).phase]}`}>
+        <p className="text-xs text-slate-600">En Madrid hoy sale el sol a las {clock(sun.sunrise)} y se pone a las {clock(sun.sunset)}. La sala sigue esa luz; aquí puedes ver otro momento sin mover el reloj del juego.</p>
+        <div className="flex flex-wrap gap-1.5">
+          {PHASES.map(([phase, label]) => (
+            <Button key={label} variant={lightPreview === phase ? "primary" : "secondary"} aria-pressed={lightPreview === phase} onClick={() => setLightPreview(phase)}>{label}</Button>
+          ))}
+        </div>
       </Section>
 
       <Section title="Tienda: próximos especiales">
