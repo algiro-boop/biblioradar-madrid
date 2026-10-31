@@ -11,7 +11,7 @@ export function MyLibraryButton() {
     <div className="flex flex-col-reverse items-start gap-2 sm:flex-row sm:items-end">
       <Link
         href="/mi-biblioteca"
-        aria-label="Abrir Mi Biblioteca (pruebas)"
+        aria-label="Abrir Mi Biblioteca"
         title="Mi Biblioteca"
         className="pointer-events-auto flex h-11 items-center gap-2 rounded-2xl bg-white/95 px-2.5 text-sm font-semibold text-slate-700 shadow-lg shadow-black/15 ring-1 ring-slate-900/10 backdrop-blur transition-[background-color,scale] duration-150 hover:bg-slate-100 active:scale-[0.96] focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:outline-none"
       >

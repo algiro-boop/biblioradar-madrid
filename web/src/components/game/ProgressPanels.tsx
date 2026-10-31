@@ -2,6 +2,7 @@
 
 import { Check, Flame, Palmtree, Shield, Timer, Users } from "lucide-react";
 import { LEVELS, MAX_LEVEL, nextLevel, nextRewardText } from "@/game/data/levels";
+import { communityMissionsEnabled } from "@/game/data/missions";
 import type { GameState } from "@/game/engine";
 import { activeMissions } from "@/game/engine/missions";
 import { activeVacation, MAX_PROTECTORS, STREAK_MILESTONES, vacationDaysUsed, VACATION_MAX_CONSECUTIVE, VACATION_MAX_PER_YEAR } from "@/game/engine/streak";
@@ -30,7 +31,10 @@ export function MissionsPanel({ state, now, notify }: { state: GameState; now: n
         {weekly.map((m) => <MissionCard key={m.assignment.id} m={m} notify={notify} />)}
       </Section>
       <p className="text-xs text-slate-500">
-        Las misiones de reportes solo avanzan con reportes válidos. En las comunitarias el progreso del resto de la comunidad está <strong>simulado</strong> en este entorno de pruebas; para cobrarlas hay que aportar al menos un reporte válido.
+        Las misiones de reportes solo avanzan con reportes válidos.
+        {communityMissionsEnabled()
+          ? <> En las comunitarias el progreso del resto de la comunidad está <strong>simulado</strong>; para cobrarlas hay que aportar al menos un reporte válido.</>
+          : " Pronto llegarán misiones comunitarias con objetivos para todo Madrid."}
       </p>
     </div>
   );

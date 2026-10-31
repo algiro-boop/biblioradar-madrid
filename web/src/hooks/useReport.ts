@@ -132,8 +132,8 @@ export function useReport(options: {
           return;
         }
         recordRecentReport(library.id, value);
-        // Solo en el entorno de pruebas: el reporte aceptado suma en «Mi Biblioteca».
-        if (process.env.NEXT_PUBLIC_GAMIFICATION === "1") void import("@/game/bridge").then((m) => m.reportValid(result.reportId, library.id));
+        // El reporte aceptado suma en «Mi Biblioteca» (salvo con el juego apagado).
+        if (process.env.NEXT_PUBLIC_GAMIFICATION !== "0") void import("@/game/bridge").then((m) => m.reportValid(result.reportId, library.id));
         setPhase("success");
         onReported?.(library.id, value);
       } finally {

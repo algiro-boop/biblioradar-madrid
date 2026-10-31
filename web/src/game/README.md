@@ -1,14 +1,17 @@
-# Mi Biblioteca: gamificación (entorno de pruebas)
+# Mi Biblioteca: gamificación
 
 Implementación completa de `GAMIFICACION_BIBLIORADAR.md`: 15 niveles, biblioteca virtual pixel art con 4 salas, editor libre, 164 artículos dibujados por código, personajes y gato animados, tienda diaria con reservas, monedas con libro contable, 45 misiones diarias y 30 semanales, 40 logros (5 secretos), rachas con protectores, modo vacaciones y música ambiente generativa. Rankings: no (fase 2).
 
-## Aislamiento: nada llega a producción
+## Interruptor y aislamiento
 
-| Barrera | Efecto |
+El juego está activo por defecto. `NEXT_PUBLIC_GAMIFICATION=0` (en Vercel: variable de entorno y nuevo despliegue) lo apaga por completo:
+
+| Barrera | Efecto con `=0` |
 | --- | --- |
-| `NEXT_PUBLIC_GAMIFICATION=1` solo en `web/.env.local` de esta rama | Sin él no hay botón ni enganches en la app. |
-| `pageExtensions` en `next.config.ts` | La ruta `app/mi-biblioteca/page.game.tsx` solo se compila con el flag. Sin él, 404 nativo y **0 chunks del juego** en `.next/static` (comprobado con `next build`). |
-| `process.env.NEXT_PUBLIC_GAMIFICATION === "1"` literal en `AppShell` y `useReport` | Código muerto eliminado en el build público. |
+| `GAMIFICATION_ENABLED` (`lib/gamification-flag.ts`) | No hay botón ni enganches en la app. |
+| `pageExtensions` en `next.config.ts` | La ruta `app/mi-biblioteca/page.game.tsx` no se compila: 404 nativo y **0 chunks del juego** en `.next/static`. |
+| `process.env.NEXT_PUBLIC_GAMIFICATION !== "0"` literal en `AppShell` y `useReport` | Código muerto eliminado en el build. |
+| Misiones comunitarias: `NEXT_PUBLIC_GAME_COMMUNITY=1` | Apagadas por defecto hasta que haya datos reales de la comunidad (su progreso global solo existe simulado). |
 | Modo desarrollador: flag **y** `NODE_ENV === "development"` | Nunca existe en un `next build`, ni siquiera con el flag. |
 | Estado en `localStorage` (`biblioradar:game:v1`) | El juego no lee ni escribe en Supabase. |
 

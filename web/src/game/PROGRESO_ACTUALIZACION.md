@@ -99,6 +99,17 @@ Especificación: `ACTUALIZACION_BIBLIORADAR_PARA_CLAUDE.md` del usuario. Rama lo
 
 - Los porcentajes del mapa son ilustrativos (lo dice el propio plano). El anuncio enseña Mi Biblioteca, que aún no es pública: no se debería difundir hasta publicarla.
 
+### Publicación
+
+- El juego queda **activo por defecto**. Para apagarlo sin tocar código, se pone `NEXT_PUBLIC_GAMIFICATION=0` en Vercel y se hace un nuevo despliegue (comprobado: sin ruta y sin ningún fichero del juego en el build).
+- Ajustes para el público:
+  - Las vecinas son «Bibliotecas de ejemplo» inventadas, sin alias de personas en el banner de visita.
+  - «Mi biblioteca pública» aparece como «Próximamente»: no hay servidor que la enseñe a nadie.
+  - Las misiones comunitarias no se asignan, porque su progreso global solo existía simulado. Se activan con `NEXT_PUBLIC_GAME_COMMUNITY=1`, y sus logros salen como «Próximamente».
+- **Sugerencias en el mapa móvil**: el botón se había perdido al compactar la cabecera. Vuelve como icono junto al buscador.
+  - Como ahora hay dos instancias del formulario, sus `id` se generan con `useId`.
+  - En la fila superior no cabía: a 375–393 px cortaba «BiblioRadar».
+
 ## Verificado
 
 - `tsc` limpio y 308/308 tests de vitest (incluye que las bibliotecas de muestra son válidas en su nivel, solo usan muebles de su nivel y no dejan casillas inaccesibles).

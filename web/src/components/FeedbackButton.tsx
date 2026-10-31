@@ -1,7 +1,7 @@
 "use client";
 
 import { CheckCircle2, LoaderCircle, MessageSquarePlus, Send, X } from "lucide-react";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { getDeviceHash } from "@/lib/device";
 import { FEEDBACK_CATEGORIES, feedbackValidation, submitFeedback, type FeedbackCategory } from "@/lib/feedback";
 import type { Library } from "@/lib/types";
@@ -9,7 +9,12 @@ import type { Library } from "@/lib/types";
 type Choice = Pick<Library, "id" | "name">;
 
 /** El diálogo nativo aporta foco contenido, Escape y fondo inerte también en Safari. */
-export function FeedbackButton({ libraries, compact = false }: { libraries: Choice[]; compact?: boolean }) {
+export function FeedbackButton({ libraries, compact = false, icon = false }: {
+  libraries: Choice[];
+  compact?: boolean;
+  /** Solo el icono, junto al buscador en el mapa móvil. */
+  icon?: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState<FeedbackCategory>("sugerencia");
   const [message, setMessage] = useState("");
@@ -20,6 +25,8 @@ export function FeedbackButton({ libraries, compact = false }: { libraries: Choi
   const dialogRef = useRef<HTMLDialogElement>(null);
   const openerRef = useRef<HTMLButtonElement>(null);
   const busyRef = useRef(false);
+  // Puede haber dos instancias (icono del mapa móvil y fila de la cabecera): ids propios.
+  const uid = useId();
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -66,12 +73,14 @@ export function FeedbackButton({ libraries, compact = false }: { libraries: Choi
     <>
       <button ref={openerRef} type="button" onClick={show} aria-haspopup="dialog"
         aria-label="¿Falta una biblio o hay un error?"
-        className={`${compact ? "" : "mt-2"} flex min-h-9 items-center gap-2 rounded-xl px-2 text-xs font-medium text-slate-600 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-sky-600`}
-        title="¿Falta una biblio o hay un error?">
-        <MessageSquarePlus className="size-4" aria-hidden />
-        {compact ? "Sugerencias" : "¿Falta una biblio o hay un error?"}
+        className={icon
+          ? "grid size-10 shrink-0 place-items-center rounded-2xl bg-slate-100 text-slate-600 transition hover:bg-slate-200 active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-sky-600 focus-visible:outline-none"
+          : `${compact ? "" : "mt-2"} flex min-h-9 items-center gap-2 rounded-xl px-2 text-xs font-medium text-slate-600 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-sky-600`}
+        title={icon ? "Sugerencias" : "¿Falta una biblio o hay un error?"}>
+        <MessageSquarePlus className={icon ? "size-5" : "size-4"} aria-hidden />
+        {!icon && (compact ? "Sugerencias" : "¿Falta una biblio o hay un error?")}
       </button>
-      <dialog ref={dialogRef} aria-labelledby="feedback-title" aria-describedby="feedback-description"
+      <dialog ref={dialogRef} aria-labelledby={`${uid}-title`} aria-describedby={`${uid}-description`}
         onCancel={() => setOpen(false)} onClose={() => { setOpen(false); openerRef.current?.focus({ preventScroll: true }); }}
         onClick={(e) => {
           if (e.target !== e.currentTarget) return;
@@ -82,8 +91,8 @@ export function FeedbackButton({ libraries, compact = false }: { libraries: Choi
         <div className="flex max-h-[inherit] flex-col p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
           <div className="flex shrink-0 items-start justify-between gap-3">
             <div>
-              <h2 id="feedback-title" className="text-lg font-bold">Sugerencias y errores</h2>
-              <p id="feedback-description" className="mt-1 text-sm text-slate-600">Ayúdanos a mejorar BiblioRadar.</p>
+              <h2 id={`${uid}-title`} className="text-lg font-bold">Sugerencias y errores</h2>
+              <p id={`${uid}-description`} className="mt-1 text-sm text-slate-600">Ayúdanos a mejorar BiblioRadar.</p>
             </div>
             <button type="button" onClick={() => setOpen(false)} aria-label="Cerrar sugerencias"
               className="grid size-11 shrink-0 place-items-center rounded-full hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-sky-600"><X className="size-5" /></button>
@@ -111,11 +120,11 @@ export function FeedbackButton({ libraries, compact = false }: { libraries: Choi
                   </select>
                 </label>
                 <div>
-                  <label htmlFor="feedback-message" className="block text-sm font-medium">Mensaje</label>
-                  <textarea suppressHydrationWarning id="feedback-message" required minLength={5} maxLength={1000} rows={4} value={message} onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Cuéntanos qué falta o qué podemos corregir…" className={`${field} resize-y`} aria-describedby="feedback-length" />
+                  <label htmlFor={`${uid}-message`} className="block text-sm font-medium">Mensaje</label>
+                  <textarea suppressHydrationWarning id={`${uid}-message`} required minLength={5} maxLength={1000} rows={4} value={message} onChange={(e) => setMessage(e.target.value)}
+                    placeholder="Cuéntanos qué falta o qué podemos corregir…" className={`${field} resize-y`} aria-describedby={`${uid}-length`} />
                 </div>
-                <p id="feedback-length" className="text-right text-xs text-slate-500">{[...message].length}/1000 caracteres</p>
+                <p id={`${uid}-length`} className="text-right text-xs text-slate-500">{[...message].length}/1000 caracteres</p>
                 <label className="block text-sm font-medium">Email o usuario de contacto (opcional)
                   <input suppressHydrationWarning type="text" maxLength={200} autoComplete="off" value={contact} onChange={(e) => setContact(e.target.value)} className={field} placeholder="Solo si quieres que podamos responderte" />
                 </label>

@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { ACHIEVEMENTS } from "@/game/data/achievements";
 import { ALL_ITEMS, EXCLUSIVE_ITEMS, getItem, PERMANENT_ITEMS, SPECIAL_ITEMS } from "@/game/data/catalog";
 import { DEFAULT_STYLE, LEVELS, roomAt, roomMax, ROOMS, STYLES } from "@/game/data/levels";
@@ -306,7 +306,19 @@ describe("inventario, tienda y reventa (§14.4–5, 8, 9)", () => {
 });
 
 describe("misiones (§14.6–7)", () => {
+  afterEach(() => vi.unstubAllEnvs());
+
+  it("sin datos reales de la comunidad no asigna comunitarias: 5 semanales personales", () => {
+    for (let k = 0; k < 20; k++) {
+      const s = ok(initialState(`user-${k}`, T0), { type: "dev_set_level", level: 1 + (k % 15) });
+      const weekly = s.missions.filter((m) => m.period === "weekly");
+      expect(weekly).toHaveLength(5);
+      expect(weekly.filter((m) => getMission(m.missionId).category === "community")).toHaveLength(0);
+    }
+  });
+
   it("asigna 3 diarias (contribución, decoración, exploración) y 5 semanales con 1–2 comunitarias", () => {
+    vi.stubEnv("NEXT_PUBLIC_GAME_COMMUNITY", "1");
     for (let k = 0; k < 20; k++) {
       const s = ok(initialState(`user-${k}`, T0), { type: "dev_set_level", level: 1 + (k % 15) });
       const today = madridDateKey(T0);
@@ -347,6 +359,7 @@ describe("misiones (§14.6–7)", () => {
   });
 
   it("comunitaria: sin contribución no cobra; con contribución cobra solo si se alcanza el objetivo", () => {
+    vi.stubEnv("NEXT_PUBLIC_GAME_COMMUNITY", "1");
     let s = ok(initialState("u", T0), { type: "dev_set_level", level: 1 });
     const community = s.missions.find((m) => getMission(m.missionId).category === "community")!;
     s = ok(s, { type: "dev_community", missionId: community.id, amount: 999 });

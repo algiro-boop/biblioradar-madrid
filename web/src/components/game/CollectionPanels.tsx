@@ -4,6 +4,7 @@ import { Gift, MapPin } from "lucide-react";
 import { useMemo, useState } from "react";
 import { ACHIEVEMENTS, type AchievementCategory } from "@/game/data/achievements";
 import { findItem, ITEM_CATEGORIES, itemCategory, type CatalogItem } from "@/game/data/catalog";
+import { communityMissionsEnabled } from "@/game/data/missions";
 import { showcaseCapacity, type GameState, type OwnedItem, type Placement } from "@/game/engine";
 import { resaleValue } from "@/game/engine/shop";
 import { run } from "@/game/store";
@@ -155,7 +156,10 @@ export function AchievementsPanel({ state, notify, onOpenShowcase }: { state: Ga
 
       <p className="text-sm font-semibold text-slate-700">{unlocked} de {ACHIEVEMENTS.length} logros</p>
       {CATEGORIES.map((cat) => (
-        <Section key={cat} title={cat}>
+        <Section key={cat} title={cat} aside={cat === "Comunidad" && !communityMissionsEnabled() ? <span className="font-semibold text-sky-700">Próximamente</span> : undefined}>
+          {cat === "Comunidad" && !communityMissionsEnabled() && (
+            <p className="text-xs text-slate-500">Llegarán con las misiones comunitarias, cuando haya objetivos con la actividad real de todo Madrid.</p>
+          )}
           <div className="space-y-1.5">
             {ACHIEVEMENTS.filter((a) => a.category === cat).map((a) => {
               const got = state.achievements[a.id];

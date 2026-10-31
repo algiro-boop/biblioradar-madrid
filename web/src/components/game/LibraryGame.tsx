@@ -427,7 +427,7 @@ export default function LibraryGame() {
   }, [completedMissions]);
   const levelDef = LEVELS[state.level]!;
   const placedHere = input.placements.length;
-  const stageLabel = `${neighbor ? `${neighbor.libraryName}, de ${neighbor.alias}` : state.name}: ${input.room.name} con ${placedHere} objetos${placedHere ? `: ${input.placements.slice(0, 12).map((p) => findItem(p.itemId)?.name).join(", ")}` : ""}.`;
+  const stageLabel = `${neighbor ? `${neighbor.libraryName}, ${neighbor.blurb ? `de ${neighbor.alias}` : "biblioteca de ejemplo"}` : state.name}: ${input.room.name} con ${placedHere} objetos${placedHere ? `: ${input.placements.slice(0, 12).map((p) => findItem(p.itemId)?.name).join(", ")}` : ""}.`;
 
   const panel = activeTab && (
     <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain bg-slate-50 p-4 pb-8">
@@ -524,7 +524,7 @@ export default function LibraryGame() {
           {neighbor ? (
             // En móvil, nombre en una línea y botones en una fila desplazable: así el banner no tapa la sala.
             <div className="pointer-events-auto flex max-w-full flex-col items-center gap-1.5 rounded-2xl bg-sky-50/95 px-3 py-2 text-sm shadow-lg ring-1 ring-sky-200 backdrop-blur">
-              <span className="max-w-full truncate font-semibold text-sky-900">De visita en {neighbor.libraryName} <span className="font-normal text-sky-700">({neighbor.alias})</span></span>
+              <span className="max-w-full truncate font-semibold text-sky-900">De visita en {neighbor.libraryName} <span className="font-normal text-sky-700">({neighbor.blurb ? neighbor.alias : "ejemplo"})</span></span>
               <div className="flex max-w-full gap-1.5 overflow-x-auto sm:flex-wrap sm:justify-center">
               {canVisitOverview && (
                 <button type="button" aria-pressed={!!visitOverview} onClick={() => { setOverview(true); sfx("tab"); }}

@@ -27,9 +27,9 @@ const MapView = dynamic(() => import("./MapView"), {
   ),
 });
 
-// Entorno de pruebas: el literal de entorno se sustituye al compilar y, sin el flag, esto es
-// código muerto que el bundler elimina (ni botón ni juego en el build público).
-const MyLibraryButton = process.env.NEXT_PUBLIC_GAMIFICATION === "1"
+// «Mi Biblioteca»: el literal de entorno se sustituye al compilar y, con el juego apagado
+// (NEXT_PUBLIC_GAMIFICATION=0), esto es código muerto que el bundler elimina.
+const MyLibraryButton = process.env.NEXT_PUBLIC_GAMIFICATION !== "0"
   ? dynamic(() => import("./game/MyLibraryButton").then((m) => m.MyLibraryButton), { ssr: false })
   : null;
 
@@ -94,9 +94,9 @@ export function AppShell() {
 
   const selected = useMemo(() => libraries.find((l) => l.id === selectedId) ?? null, [libraries, selectedId]);
 
-  // Entorno de pruebas: abrir una ficha cuenta para las misiones de exploración del juego.
+  // Abrir una ficha cuenta para las misiones de exploración del juego.
   useEffect(() => {
-    if (process.env.NEXT_PUBLIC_GAMIFICATION === "1" && selectedId) void import("@/game/bridge").then((m) => m.viewLibrary(selectedId));
+    if (process.env.NEXT_PUBLIC_GAMIFICATION !== "0" && selectedId) void import("@/game/bridge").then((m) => m.viewLibrary(selectedId));
   }, [selectedId]);
 
   // Ubicación bloqueada: la ayuda queda abierta hasta que un reintento funcione o se cierre.

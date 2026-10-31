@@ -6,7 +6,7 @@
 
 import { findItem, shopGroup, type CatalogItem, type Tag } from "../data/catalog";
 import { hasFeature, LEVELS, MAX_LEVEL, roomsForLevel, STYLES } from "../data/levels";
-import { DAILY_MISSIONS, getMission, WEEKLY_MISSIONS, type MissionDef, type MissionRule } from "../data/missions";
+import { communityMissionsEnabled, DAILY_MISSIONS, getMission, WEEKLY_MISSIONS, type MissionDef, type MissionRule } from "../data/missions";
 import { NEIGHBORS } from "../data/neighbors";
 import { seeded, shuffle } from "../rng";
 import { addDays, DAY_MS, daysBetween, madridMidnightMs, weekday, weekStart } from "../time";
@@ -116,7 +116,9 @@ export function pickWeekly(state: GameState, week: string, today: string): strin
   };
   const ok = (d: MissionDef) => feasible(state, d, today);
   const communityCount = rand() < 0.5 ? 1 : 2;
-  const community = prefer(WEEKLY_MISSIONS.filter((d) => d.category === "community" && ok(d))).slice(0, communityCount);
+  const community = communityMissionsEnabled()
+    ? prefer(WEEKLY_MISSIONS.filter((d) => d.category === "community" && ok(d))).slice(0, communityCount)
+    : [];
   const personal: MissionDef[] = [];
   const add = (d: MissionDef | undefined) => {
     if (d && !personal.some((p) => ruleSignature(p.rule) === ruleSignature(d.rule) || p.id === d.id)) personal.push(d);

@@ -39,10 +39,10 @@ export function VisitPanel({ state, now, onVisit, notify }: { state: GameState; 
           ))}
         </div>
       </Section>
-      <PublicLibrary key={state.settings.alias} state={state} notify={notify} />
-      <Section title="Otras bibliotecas">
+      <PublicLibrary />
+      <Section title="Bibliotecas de ejemplo">
       <p className="text-xs text-slate-500">
-        Bibliotecas virtuales públicas <strong>ficticias</strong> del entorno de pruebas, para probar visitas y «me gusta». Solo se puede mirar: nadie toca la biblioteca de nadie.
+        Bibliotecas <strong>inventadas</strong>, con alias ficticios, para que pruebes las visitas y los «me gusta». Todavía no se pueden visitar las de otras personas.
       </p>
       <div className="space-y-2">
         {NEIGHBORS.filter((n) => !n.blurb).map((n) => {
@@ -53,7 +53,7 @@ export function VisitPanel({ state, now, onVisit, notify }: { state: GameState; 
               <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-amber-100 text-lg" aria-hidden>🏛️</span>
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-sm font-semibold">{n.libraryName}</span>
-                <span className="block text-xs text-slate-500">de {n.alias} · nivel {n.level} · {n.rooms.length} {n.rooms.length === 1 ? "sala" : "salas"}</span>
+                <span className="block text-xs text-slate-500">ejemplo · nivel {n.level} · {n.rooms.length} {n.rooms.length === 1 ? "sala" : "salas"}</span>
               </span>
               <span className="flex shrink-0 flex-col items-end gap-1 text-[11px]">
                 {state.likes[n.id] && <Heart className="size-4 fill-rose-500 text-rose-500" aria-label="Te gusta" />}
@@ -69,47 +69,16 @@ export function VisitPanel({ state, now, onVisit, notify }: { state: GameState; 
 }
 
 /**
- * «Mi biblioteca pública»: privada por defecto. Publicarla exige alias y una confirmación
- * explícita; dejar de publicarla es inmediato y no borra nada. Sin rankings.
+ * «Mi biblioteca pública»: aún no hay servidor que guarde y enseñe bibliotecas de otras personas,
+ * así que se anuncia sin ofrecer un «Publicar» que no llegaría a nadie.
  */
-function PublicLibrary({ state, notify }: { state: GameState; notify: Notify }) {
-  const [alias, setAlias] = useState(state.settings.alias);
-  const [confirming, setConfirming] = useState(false);
-  const published = state.settings.publish;
-  const saveAlias = () => {
-    run({ type: "set_settings", alias: alias.trim() });
-    notify("Alias guardado", "ok");
-  };
+function PublicLibrary() {
   return (
-    <Section title="Mi biblioteca pública" aside={published ? <span className="font-semibold text-emerald-700">Publicada</span> : <span className="font-semibold">Privada</span>}>
-      <div className="space-y-3 rounded-2xl bg-white p-3 ring-1 ring-slate-200">
-        <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); saveAlias(); }}>
-          <input value={alias} onChange={(e) => setAlias(e.target.value)} maxLength={24} placeholder="Alias público" aria-label="Alias público"
-            className="min-w-0 flex-1 rounded-xl bg-slate-50 px-3 py-2 text-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-sky-500 focus:outline-none" />
-          <Button type="submit" variant="secondary" disabled={alias.trim() === state.settings.alias}>Guardar</Button>
-        </form>
-        {published ? (
-          <div className="flex items-center justify-between gap-2">
-            <p className="text-xs text-slate-600">Otras personas pueden verla (solo mirar) como «{state.settings.alias}».</p>
-            <Button variant="secondary" onClick={() => { run({ type: "set_settings", publish: false }); notify("Tu biblioteca vuelve a ser privada.", "ok"); }}>Hacer privada</Button>
-          </div>
-        ) : confirming ? (
-          <div className="space-y-2 rounded-xl bg-amber-50 p-3 ring-1 ring-amber-200">
-            <p className="text-xs text-amber-900">
-              Vas a publicar tu biblioteca con el alias «{state.settings.alias}». Se verán tus salas y muebles; nunca tu ubicación, tus reportes ni tu nombre real. Puedes hacerla privada cuando quieras.
-            </p>
-            <div className="flex gap-2">
-              <Button onClick={() => { run({ type: "set_settings", publish: true }); setConfirming(false); notify("Biblioteca publicada", "ok"); }}>Sí, publicarla</Button>
-              <Button variant="ghost" onClick={() => setConfirming(false)}>Cancelar</Button>
-            </div>
-          </div>
-        ) : (
-          <Button className="w-full" disabled={!state.settings.alias} onClick={() => setConfirming(true)}>
-            {state.settings.alias ? "Publicar mi biblioteca…" : "Elige un alias para poder publicarla"}
-          </Button>
-        )}
-        <p className="text-[11px] text-slate-500">Es privada por defecto. En este entorno de pruebas no se envía a ningún sitio.</p>
-      </div>
+    <Section title="Mi biblioteca pública" aside={<span className="font-semibold text-sky-700">Próximamente</span>}>
+      <p className="rounded-2xl bg-white p-3 text-xs text-slate-600 ring-1 ring-slate-200">
+        Pronto podrás publicar tu biblioteca con un alias para que otras personas la visiten (solo mirar). De momento tu
+        biblioteca se guarda solo en este dispositivo y nadie más la ve.
+      </p>
     </Section>
   );
 }

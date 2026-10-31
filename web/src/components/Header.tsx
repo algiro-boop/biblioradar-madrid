@@ -144,9 +144,14 @@ export function Header({
             </button>
           )}
         </label>
+        {view === "map" && (
+          <span className="contents lg:hidden">
+            <FeedbackButton libraries={libraries} icon />
+          </span>
+        )}
       </div>
 
-      {/* En el mapa móvil «Actividad» va como icono arriba y «Sugerencias» queda en la vista de lista. */}
+      {/* En el mapa móvil «Actividad» va como icono arriba y «Sugerencias» junto al buscador. */}
       <div
         className={`mt-1.5 items-center justify-between gap-1 lg:mt-2 ${view === "map" ? "hidden lg:flex" : "flex"}`}
       >

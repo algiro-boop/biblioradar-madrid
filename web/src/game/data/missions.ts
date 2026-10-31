@@ -140,6 +140,12 @@ export const WEEKLY_MISSIONS: MissionDef[] = [
 
 export const ALL_MISSIONS = [...DAILY_MISSIONS, ...WEEKLY_MISSIONS];
 
+/**
+ * Las comunitarias necesitan la actividad real de toda la comunidad (un servidor). Hasta entonces
+ * no se asignan: su progreso global solo existe simulado. `NEXT_PUBLIC_GAME_COMMUNITY=1` las activa.
+ */
+export const communityMissionsEnabled = () => process.env.NEXT_PUBLIC_GAME_COMMUNITY === "1";
+
 export function getMission(id: string): MissionDef {
   const def = ALL_MISSIONS.find((m) => m.id === id);
   if (!def) throw new Error(`Misión desconocida: ${id}`);
