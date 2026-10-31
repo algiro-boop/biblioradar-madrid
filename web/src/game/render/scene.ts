@@ -862,7 +862,8 @@ export class Scene {
     }));
     const maxH = Math.max(...span.map((s) => s.h));
     const ox = maxH * (TW / 2) + MARGIN_X + 60 * ZS;
-    const bw = Math.round(Math.max(...span.map((s) => (s.w + maxH) * (TW / 2))) + MARGIN_X * 2 + 60 * ZS);
+    // Mismo margen a ambos lados (a la izquierda van los rótulos de planta) para que quede centrado.
+    const bw = Math.round(Math.max(...span.map((s) => (s.w + maxH) * (TW / 2))) + (MARGIN_X + 60 * ZS) * 2);
     const rowH = span.map((s) => (s.w + s.h) * (TH / 2) + TOP + SLAB + 12);
     const bh = Math.round(rowH.reduce((a, b) => a + b, 0) + ROW_GAP * rows.length);
     this.resizeBuffer(bw, bh);
