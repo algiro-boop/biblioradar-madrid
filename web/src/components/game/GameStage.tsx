@@ -1,6 +1,6 @@
 "use client";
 
-import { Minus, Plus, Scan } from "lucide-react";
+import { Camera, Minus, Plus, Scan } from "lucide-react";
 import { useEffect, useImperativeHandle, useRef, type Ref } from "react";
 import { Scene, type Cinematic, type Overlay, type SceneInput, type TileHit } from "@/game/render/scene";
 
@@ -21,9 +21,13 @@ export interface StageTap {
  * o coloca. El dibujo lo hace `Scene`; aquí solo se traducen los gestos.
  */
 export function GameStage({
-  input, overview, onOpenRoom, overlay, onTap, onHover, onCatNap, label, ref,
+  input, overview, onOpenRoom, overlay, onTap, onHover, onCatNap, label, controls = true, onPhoto, ref,
 }: {
   input: SceneInput;
+  /** Botones de zoom; en móvil se ocultan mientras la barra del editor ocupa el pie. */
+  controls?: boolean;
+  /** Activa el modo foto (sin interfaz); si no se pasa, no hay botón. */
+  onPhoto?: () => void;
   /** Vista general (casa de muñecas): todas las salas a la vez. */
   overview?: SceneInput[] | null;
   onOpenRoom?: (room: string) => void;
@@ -130,17 +134,25 @@ export function GameStage({
         onPointerCancel={(e) => pointers.current.delete(e.pointerId)}
         onWheel={(e) => sceneRef.current?.zoomBy(e.deltaY < 0 ? 1.12 : 1 / 1.12)}
       />
-      <div className="absolute top-1/2 right-3 flex -translate-y-1/2 flex-col overflow-hidden rounded-2xl bg-white/90 shadow-lg ring-1 ring-black/10 backdrop-blur">
-        <button type="button" aria-label="Acercar" className="grid size-10 place-items-center text-slate-700 hover:bg-slate-100" onClick={() => sceneRef.current?.zoomBy(1.25)}>
-          <Plus className="size-4" aria-hidden />
-        </button>
-        <button type="button" aria-label="Alejar" className="grid size-10 place-items-center text-slate-700 hover:bg-slate-100" onClick={() => sceneRef.current?.zoomBy(0.8)}>
-          <Minus className="size-4" aria-hidden />
-        </button>
-        <button type="button" aria-label={overview?.length ? "Encuadrar la biblioteca" : "Encuadrar la sala"} className="grid size-10 place-items-center text-slate-700 hover:bg-slate-100" onClick={() => sceneRef.current?.resetCamera()}>
-          <Scan className="size-4" aria-hidden />
-        </button>
-      </div>
+      {/* En escritorio, columna a media altura; en móvil, una pastilla en la esquina inferior para no tapar la sala. */}
+      {controls && (
+        <div className="absolute top-1/2 right-3 flex -translate-y-1/2 flex-col overflow-hidden rounded-2xl bg-white/90 shadow-lg ring-1 ring-black/10 backdrop-blur max-sm:top-auto max-sm:bottom-3 max-sm:translate-y-0 max-sm:flex-row max-sm:rounded-xl max-sm:bg-white/75">
+          <button type="button" aria-label="Alejar" className="grid size-10 place-items-center text-slate-700 hover:bg-slate-100 max-sm:order-1 max-sm:size-9" onClick={() => sceneRef.current?.zoomBy(0.8)}>
+            <Minus className="size-4" aria-hidden />
+          </button>
+          <button type="button" aria-label="Acercar" className="order-first grid size-10 place-items-center text-slate-700 hover:bg-slate-100 max-sm:order-2 max-sm:size-9" onClick={() => sceneRef.current?.zoomBy(1.25)}>
+            <Plus className="size-4" aria-hidden />
+          </button>
+          <button type="button" aria-label={overview?.length ? "Encuadrar la biblioteca" : "Encuadrar la sala"} className="order-last grid size-10 place-items-center text-slate-700 hover:bg-slate-100 max-sm:size-9" onClick={() => sceneRef.current?.resetCamera()}>
+            <Scan className="size-4" aria-hidden />
+          </button>
+          {onPhoto && (
+            <button type="button" aria-label="Modo foto: ocultar menús y botones" title="Modo foto" className="order-last grid size-10 place-items-center text-slate-700 hover:bg-slate-100 max-sm:size-9" onClick={onPhoto}>
+              <Camera className="size-4" aria-hidden />
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }

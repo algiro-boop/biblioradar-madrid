@@ -15,6 +15,15 @@ export function rotationsFor(item: CatalogItem): number[] {
 /** Hacia dónde mira el frente de un mueble según su giro (0: +y, 1: +x, 2: −y, 3: −x). */
 export const FRONT: readonly Cell[] = [[0, 1], [1, 0], [0, -1], [-1, 0]];
 
+/**
+ * Hacia dónde mira quien se sienta (0: +x, 1: +y, 2: −x, 3: −y). Las sillas de una casilla miran
+ * según su giro; los asientos alargados (sofás) miran por su lado largo, con el respaldo a lo ancho.
+ */
+export function seatFacing(item: CatalogItem, rot: number): number {
+  const r = ((rot % 4) + 4) % 4;
+  return item.w === item.h ? r : [1, 0, 3, 2][r]!;
+}
+
 /** Huella en casillas tras el giro (las orientaciones impares intercambian ancho y fondo). */
 export function footprint(item: CatalogItem, rot: number): { w: number; h: number } {
   if (item.layer === "wall") return { w: item.w, h: 1 };

@@ -4,9 +4,10 @@ import { ALL_ITEMS, EXCLUSIVE_ITEMS, getItem, PERMANENT_ITEMS, SPECIAL_ITEMS } f
 import { DEFAULT_STYLE, LEVELS, roomAt, roomMax, ROOMS, STYLES } from "@/game/data/levels";
 import { DAILY_MISSIONS, getMission, WEEKLY_MISSIONS } from "@/game/data/missions";
 import { NEIGHBORS } from "@/game/data/neighbors";
+import { SHOWCASES } from "@/game/data/showcases";
 import { availableStyles } from "@/game/engine/missions";
 import { coinsForOrdinal, dispatch, initialState, migrateState, type Command, type GameState } from "@/game/engine";
-import { rotationsFor, validateLayout } from "@/game/engine/layout";
+import { entranceOf, reachableFrom, rotationsFor, seatFacing, validateLayout, walkableGrid } from "@/game/engine/layout";
 import { drawRotation, rotationFor } from "@/game/engine/shop";
 import { computeStreak } from "@/game/engine/streak";
 import { addDays, madridDateKey, madridMidnightMs } from "@/game/time";
@@ -604,5 +605,35 @@ describe("acabados de pared y suelo en la tienda", () => {
 describe("giros de los muebles", () => {
   it("todo lo de suelo gira en las cuatro direcciones y lo de pared elige pared", () => {
     for (const item of ALL_ITEMS) expect(rotationsFor(item)).toEqual(item.layer === "wall" ? [0, 1] : [0, 1, 2, 3]);
+  });
+});
+
+describe("bibliotecas de muestra", () => {
+  it("son válidas en su nivel, solo usan muebles de su nivel y se llega andando a todo", () => {
+    expect(SHOWCASES.length).toBeGreaterThanOrEqual(5);
+    for (const n of SHOWCASES) {
+      const inventory = n.placements.map((p, i) => ({ uid: `u${i}`, itemId: p.itemId, source: "dev" as const, paid: 0, resellable: false, acquiredAt: 0 }));
+      const placements = n.placements.map((p, i) => ({ uid: `u${i}`, room: p.room, x: p.x, y: p.y, rot: p.rot }));
+      expect(validateLayout(placements, inventory, n.level), n.libraryName).toEqual([]);
+      expect(n.placements.filter((p) => getItem(p.itemId).minLevel > n.level).map((p) => p.itemId), n.libraryName).toEqual([]);
+      expect(n.blurb).toBeTruthy();
+      for (const id of n.rooms) {
+        const room = roomAt(id, n.level);
+        const here = placements.filter((p) => p.room === id);
+        const grid = walkableGrid(room, here, (uid) => getItem(inventory[Number(uid.slice(1))]!.itemId));
+        const reach = reachableFrom(grid, entranceOf(room));
+        const free = grid.flatMap((col, x) => col.flatMap((ok, y) => (ok ? [`${x},${y}`] : [])));
+        expect(free.filter((k) => !reach.has(k)), `${n.libraryName} ${id}`).toEqual([]);
+      }
+    }
+  });
+});
+
+describe("sofás", () => {
+  it("se sientan mirando por el lado largo; las sillas, según su giro", () => {
+    const sofa = getItem("P081");
+    expect([0, 1, 2, 3].map((r) => seatFacing(sofa, r))).toEqual([1, 0, 3, 2]);
+    expect([0, 1, 2, 3].map((r) => seatFacing(getItem("P011"), r))).toEqual([0, 1, 2, 3]);
+    expect([0, 1, 2, 3].map((r) => seatFacing(getItem("P083"), r))).toEqual([0, 1, 2, 3]);
   });
 });

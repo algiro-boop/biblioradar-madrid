@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  Archive, ArrowLeft, Building2, Check, Flame, Heart, Layers, ListChecks, Lock, Maximize2, Move, Music, Package, Paintbrush, Pencil,
+  Archive, ArrowLeft, Building2, Camera, Check, Flame, Heart, Layers, ListChecks, Lock, Maximize2, Move, Music, Package, Paintbrush, Pencil,
   RotateCw, Settings, Store, TrendingUp, Trophy, Users, Wrench, X,
 } from "lucide-react";
 import Link from "next/link";
@@ -9,7 +9,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 import { getAchievement } from "@/game/data/achievements";
 import { findItem } from "@/game/data/catalog";
 import { DEFAULT_STYLE, getRoom, hasFeature, LEVELS, nextExpansionPrice, roomAt, roomMax, ROOMS, roomsForLevel, STYLES, studentsForLevel, type RoomDef } from "@/game/data/levels";
-import { NEIGHBORS } from "@/game/data/neighbors";
+import { NEIGHBORS, type NeighborLibrary } from "@/game/data/neighbors";
 import { gameNow, type Celebration, type GameState } from "@/game/engine";
 import { itemLookup } from "@/game/engine/layout";
 import { activeMissions, availableStyles } from "@/game/engine/missions";
@@ -91,6 +91,14 @@ export default function LibraryGame() {
   const now = gameNow(state, realNow);
   const [tab, setTab] = useState<Tab | null>(null);
   const [editing, setEditing] = useState(false);
+  // Modo foto: solo la sala, sin menús ni botones, para hacer capturas limpias.
+  const [photo, setPhoto] = useState(false);
+  useEffect(() => {
+    if (!photo) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setPhoto(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [photo]);
   const [roomId, setRoomId] = useState("r1");
   const [visiting, setVisiting] = useState<string | null>(null);
   const [visitRoom, setVisitRoom] = useState("r1");
@@ -174,15 +182,27 @@ export default function LibraryGame() {
     [overview, canOverview, inputFor, state.level, state.expansions],
   );
 
-  const visitInput = useMemo<SceneInput | null>(() => {
-    if (!neighbor) return null;
-    const r = roomAt(neighbor.rooms.includes(visitRoom) ? visitRoom : neighbor.rooms[0]!, neighbor.level);
+  const neighborInput = useCallback((n: NeighborLibrary, id: string, home: boolean, share = 1): SceneInput => {
+    const r = roomAt(id, n.level);
     return {
-      room: r, style: { ...DEFAULT_STYLE, ...neighbor.styles[r.id] }, level: neighbor.level, trophies: 3,
-      placements: neighbor.placements.map((p, i) => ({ ...p, uid: `${neighbor.id}-${i}` })).filter((p) => p.room === r.id),
-      students: studentsForLevel(neighbor.level), librarian: neighbor.level >= 4, cat: neighbor.level >= 3, now: minute,
+      room: r, style: { ...DEFAULT_STYLE, ...n.styles[r.id] }, level: n.level, trophies: 3,
+      placements: n.placements.map((p, i) => ({ ...p, uid: `${n.id}-${i}` })).filter((p) => p.room === r.id),
+      students: Math.ceil(studentsForLevel(n.level) / share), librarian: n.level >= 4 && home, cat: n.level >= 3 && home, now: minute,
     };
-  }, [neighbor, visitRoom, minute]);
+  }, [minute]);
+  const visitInput = useMemo<SceneInput | null>(
+    () => (neighbor ? neighborInput(neighbor, neighbor.rooms.includes(visitRoom) ? visitRoom : neighbor.rooms[0]!, true) : null),
+    [neighbor, visitRoom, neighborInput],
+  );
+  // De visita también hay vista general cuando la biblioteca tiene varias salas.
+  const canVisitOverview = !!neighbor && neighbor.rooms.length > 1;
+  const visitOverview = useMemo(
+    () => (overview && neighbor && canVisitOverview
+      ? neighbor.rooms.map((id, i) => ({ ...neighborInput(neighbor, id, i === 0, neighbor.rooms.length), locked: false }))
+      : null),
+    [overview, neighbor, canVisitOverview, neighborInput],
+  );
+  const stageOverview = overviewInputs ?? visitOverview;
 
   const input = visitInput ?? ownInput;
   const overlay = useMemo(
@@ -382,6 +402,7 @@ export default function LibraryGame() {
   const visit = (id: string) => {
     const n = NEIGHBORS.find((x) => x.id === id)!;
     setEditing(false);
+    setOverview(false);
     setVisiting(id);
     setVisitRoom(n.rooms[0]!);
     run({ type: "visit_virtual", ownerId: id });
@@ -442,16 +463,30 @@ export default function LibraryGame() {
   return (
     <main className={`app-viewport flex w-full overflow-hidden bg-[#2b211b] text-slate-900 ${desktop ? "flex-row" : "flex-col"}`}>
       {/* Escenario */}
-      <div className="relative min-h-0 min-w-0 flex-1 bg-[radial-gradient(ellipse_at_center,#4a3426_0%,#2b211b_70%)]">
-        <GameStage key={visiting ?? "own"} ref={stageRef} input={input} overview={overviewInputs} overlay={overlay} onTap={onTap} onHover={onHover} onCatNap={onCatNap}
+      <div className={`relative min-h-0 min-w-0 flex-1 bg-[radial-gradient(ellipse_at_center,#4a3426_0%,#2b211b_70%)] ${photo ? "[&>*:not(:first-child):not([data-keep])]:hidden" : ""}`}>
+        <GameStage key={visiting ?? "own"} ref={stageRef} input={input} overview={stageOverview} controls={!photo && !(editing && !desktop)} onPhoto={editing ? undefined : () => { setPhoto(true); setTab(null); sfx("click"); }} overlay={overlay} onTap={onTap} onHover={onHover} onCatNap={onCatNap}
           onOpenRoom={(r) => {
+            if (neighbor) {
+              setVisitRoom(r);
+              setOverview(false);
+              run({ type: "visit_virtual", ownerId: neighbor.id, room: r });
+              sfx("tab");
+              return;
+            }
             const spec = getRoom(r);
             if (spec.level > state.level) return notify(`${spec.name} se desbloquea en el nivel ${spec.level}.`);
             setRoomId(r);
             setOverview(false);
             sfx("tab");
           }}
-          label={overviewInputs ? `${state.name}: vista general con ${overviewInputs.length} salas. Toca una sala para entrar.` : stageLabel} />
+          label={stageOverview ? `${neighbor ? neighbor.libraryName : state.name}: vista general con ${stageOverview.length} salas. Toca una sala para entrar.` : stageLabel} />
+
+        {photo && (
+          <button type="button" data-keep onClick={() => setPhoto(false)} aria-label="Salir del modo foto"
+            className="absolute top-[max(0.75rem,env(safe-area-inset-top))] left-3 grid size-9 place-items-center rounded-full bg-black/35 text-white/80 backdrop-blur hover:bg-black/55">
+            <X className="size-4" aria-hidden />
+          </button>
+        )}
 
         {/* Barra superior */}
         <header className="pointer-events-none absolute inset-x-0 top-0 flex items-start gap-2 p-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
@@ -479,19 +514,28 @@ export default function LibraryGame() {
         {/* Salas */}
         <div className="pointer-events-none absolute inset-x-0 top-[calc(max(0.75rem,env(safe-area-inset-top))+3.25rem)] flex justify-center px-3">
           {neighbor ? (
-            <div className="pointer-events-auto flex max-w-full flex-wrap items-center justify-center gap-2 rounded-2xl bg-sky-50/95 px-3 py-2 text-sm shadow-lg ring-1 ring-sky-200 backdrop-blur">
-              <span className="font-semibold text-sky-900">De visita en {neighbor.libraryName} <span className="font-normal text-sky-700">({neighbor.alias})</span></span>
+            // En móvil, nombre en una línea y botones en una fila desplazable: así el banner no tapa la sala.
+            <div className="pointer-events-auto flex max-w-full flex-col items-center gap-1.5 rounded-2xl bg-sky-50/95 px-3 py-2 text-sm shadow-lg ring-1 ring-sky-200 backdrop-blur">
+              <span className="max-w-full truncate font-semibold text-sky-900">De visita en {neighbor.libraryName} <span className="font-normal text-sky-700">({neighbor.alias})</span></span>
+              <div className="flex max-w-full gap-1.5 overflow-x-auto sm:flex-wrap sm:justify-center">
+              {canVisitOverview && (
+                <button type="button" aria-pressed={!!visitOverview} onClick={() => { setOverview(true); sfx("tab"); }}
+                  className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ${visitOverview ? "bg-amber-500 text-amber-950 ring-amber-500" : "bg-white text-sky-800 ring-sky-200"}`}>
+                  <Building2 className="size-3.5" aria-hidden />Todo
+                </button>
+              )}
               {neighbor.rooms.length > 1 && neighbor.rooms.map((r) => (
-                <button key={r} type="button" aria-pressed={visitRoom === r} onClick={() => { setVisitRoom(r); run({ type: "visit_virtual", ownerId: neighbor.id, room: r }); }}
-                  className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ${visitRoom === r ? "bg-sky-600 text-white ring-sky-600" : "bg-white text-sky-800 ring-sky-200"}`}>
+                <button key={r} type="button" aria-pressed={!visitOverview && visitRoom === r} onClick={() => { setVisitRoom(r); setOverview(false); run({ type: "visit_virtual", ownerId: neighbor.id, room: r }); }}
+                  className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ${!visitOverview && visitRoom === r ? "bg-sky-600 text-white ring-sky-600" : "bg-white text-sky-800 ring-sky-200"}`}>
                   {getRoom(r).name}
                 </button>
               ))}
               <button type="button" aria-pressed={!!state.likes[neighbor.id]} onClick={() => run({ type: "like", ownerId: neighbor.id, liked: !state.likes[neighbor.id] })}
-                className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-0.5 text-xs font-semibold text-rose-600 ring-1 ring-rose-200">
+                className="inline-flex shrink-0 items-center gap-1 rounded-full bg-white px-2.5 py-0.5 text-xs font-semibold text-rose-600 ring-1 ring-rose-200">
                 <Heart className={`size-3.5 ${state.likes[neighbor.id] ? "fill-rose-500" : ""}`} aria-hidden />{state.likes[neighbor.id] ? "Te gusta" : "Me gusta"}
               </button>
-              <button type="button" onClick={() => setVisiting(null)} className="rounded-full bg-sky-600 px-2.5 py-0.5 text-xs font-semibold text-white">Volver a la mía</button>
+              <button type="button" onClick={() => { setVisiting(null); setOverview(false); }} className="shrink-0 rounded-full bg-sky-600 px-2.5 py-0.5 text-xs font-semibold text-white">Volver a la mía</button>
+              </div>
             </div>
           ) : rooms.length > 1 && (
             <div className="pointer-events-auto flex gap-1 overflow-x-auto rounded-2xl bg-white/90 p-1 shadow-lg ring-1 ring-black/10 backdrop-blur">
@@ -527,7 +571,7 @@ export default function LibraryGame() {
             <Link href="/" className="mt-3 inline-flex rounded-xl bg-emerald-600 px-3 py-2 text-sm font-semibold text-white">Ir al mapa a reportar</Link>
           </div>
         )}
-        {overviewInputs && (
+        {stageOverview && (
           <p className="pointer-events-none absolute right-16 bottom-4 left-44 mx-auto max-w-xs rounded-2xl bg-slate-900/85 px-3 py-2 text-center text-xs font-semibold text-white max-sm:hidden">
             Pellizca o usa +/− para acercar y toca una sala para entrar.
           </p>
@@ -539,12 +583,12 @@ export default function LibraryGame() {
         )}
 
         {/* Acceso al editor y siesta accesible */}
-        {!editing && (canEdit || canOverview) && (
+        {!editing && (canEdit || canOverview || canVisitOverview) && (
           <div className="absolute bottom-3 left-3 flex flex-col items-start gap-2">
-            {canOverview && (
-              <Button variant={overviewInputs ? "gold" : "secondary"} className="shadow-lg" aria-pressed={!!overviewInputs}
-                onClick={() => { setOverview(!overviewInputs); sfx("tab"); }}>
-                <Building2 className="size-4" aria-hidden />{overviewInputs ? "Volver a la sala" : "Vista general"}
+            {(canOverview || canVisitOverview) && (
+              <Button variant={stageOverview ? "gold" : "secondary"} className="shadow-lg" aria-pressed={!!stageOverview}
+                onClick={() => { setOverview(!stageOverview); sfx("tab"); }}>
+                <Building2 className="size-4" aria-hidden />{stageOverview ? "Volver a la sala" : "Vista general"}
               </Button>
             )}
             {canEdit && !overviewInputs && (
@@ -563,7 +607,7 @@ export default function LibraryGame() {
       </div>
 
       {/* Panel lateral (escritorio) u hoja inferior (móvil) */}
-      {desktop ? (
+      {photo ? null : desktop ? (
         <aside className="flex w-[420px] shrink-0 flex-col border-l border-black/20 bg-slate-50">
           {nav}
           {panel}

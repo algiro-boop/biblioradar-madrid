@@ -6,7 +6,7 @@
 
 import { findItem, type CatalogItem } from "../data/catalog";
 import type { RoomDef } from "../data/levels";
-import { cellsOf, entranceOf, findPath, footprint, FRONT, walkableGrid, type Cell } from "../engine/layout";
+import { cellsOf, entranceOf, findPath, footprint, FRONT, seatFacing, walkableGrid, type Cell } from "../engine/layout";
 import { mulberry32 } from "../rng";
 import { DISCIPLINES, LIBRARIAN_LOOK, randomLook, type Act, type Discipline, type Look } from "./characters";
 import { makeKit, type DeskSpot, type StudyKit } from "./study";
@@ -104,7 +104,7 @@ export function buildSpots(room: RoomDef, placements: ScenePlacement[], grid: bo
     const cells = cellsOf(item, p);
     const depth = depthOf(item, p);
     if (item.tags.includes("seat")) {
-      const facing = ((p.rot % 4) + 4) % 4;
+      const facing = seatFacing(item, p.rot);
       const F = DIRS[facing]!;
       const lounge = item.kind === "sofa" || item.kind === "armchair" || item.kind === "throne" || item.kind === "pouf";
       // Sofás: una plaza por casilla de la fila del respaldo; sillones de 2×2: una plaza centrada.

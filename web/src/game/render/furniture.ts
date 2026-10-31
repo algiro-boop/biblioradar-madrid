@@ -5,6 +5,7 @@
  */
 
 import { ART_VARIANT, type CatalogItem } from "../data/catalog";
+import { seatFacing } from "../engine/layout";
 import { alpha, mix, Painter, shade, tone, type Tone, WallPainter } from "./pixel";
 
 const BOOKS = ["#b84a44", "#4c78b5", "#d6a33a", "#5f8f5a", "#7b5aa6", "#e8d9b8", "#3f8f8a", "#c07a45"];
@@ -404,7 +405,7 @@ export function paintItem(P: Painter, item: CatalogItem, o: PaintOpts): void {
       return;
     }
     case "armchair": case "sofa": {
-      paintSofa(P, item, fw, fh, facing);
+      paintSofa(P, item, fw, fh, seatFacing(item, facing));
       return;
     }
     case "pouf": {

@@ -5,6 +5,7 @@
 
 import { seeded, shuffle } from "../rng";
 import type { RoomStyle } from "../engine/types";
+import { SHOWCASES } from "./showcases";
 
 export interface NeighborPlacement {
   itemId: string;
@@ -22,6 +23,8 @@ export interface NeighborLibrary {
   rooms: string[];
   styles: Record<string, RoomStyle>;
   placements: NeighborPlacement[];
+  /** Solo en las bibliotecas de muestra: una frase que la presenta. */
+  blurb?: string;
 }
 
 // Distribuciones base válidas (sala 8×8, puerta en la casilla 6 de la pared izquierda).
@@ -47,7 +50,7 @@ const TEMPLATES: NeighborPlacement[][] = [
     { itemId: "P078", room: "r1", x: 1, y: 0, rot: 1 }, { itemId: "P066", room: "r1", x: 2, y: 5, rot: 1 },
   ],
   [
-    { itemId: "P081", room: "r1", x: 3, y: 5, rot: 3 }, { itemId: "P084", room: "r1", x: 3, y: 3, rot: 0 },
+    { itemId: "P081", room: "r1", x: 3, y: 5, rot: 2 }, { itemId: "P084", room: "r1", x: 3, y: 3, rot: 0 },
     { itemId: "P019", room: "r1", x: 5, y: 2, rot: 2 }, { itemId: "P029", room: "r1", x: 0, y: 0, rot: 0 },
     { itemId: "P043", room: "r1", x: 7, y: 1, rot: 0 }, { itemId: "P051", room: "r1", x: 3, y: 3, rot: 0 },
     { itemId: "P050", room: "r1", x: 4, y: 0, rot: 0 }, { itemId: "P031", room: "r1", x: 2, y: 0, rot: 0 },
@@ -60,7 +63,7 @@ const NAMES = ["La Buhardilla", "El Atril", "Sala Malasaña", "Rincón del Café
 const FLOORS = ["floor-roble", "floor-ajedrez", "floor-moqueta", "floor-terracota", "floor-espiga"];
 const WALLS = ["wall-crema", "wall-salvia", "wall-azul", "wall-ladrillo"];
 
-export const NEIGHBORS: NeighborLibrary[] = ALIASES.map((alias, i) => {
+const FAKE: NeighborLibrary[] = ALIASES.map((alias, i) => {
   const rand = seeded(`neighbor:${i}`);
   const template = TEMPLATES[i % TEMPLATES.length]!;
   const styles: Record<string, RoomStyle> = {
@@ -77,3 +80,6 @@ export const NEIGHBORS: NeighborLibrary[] = ALIASES.map((alias, i) => {
   }
   return { id: `vecino-${i + 1}`, alias, libraryName: NAMES[i]!, level: 3 + ((i * 5) % 9), rooms, styles, placements };
 });
+
+/** Primero las bibliotecas de muestra (escaparate de lo que se puede montar), luego las de prueba. */
+export const NEIGHBORS: NeighborLibrary[] = [...SHOWCASES, ...FAKE];

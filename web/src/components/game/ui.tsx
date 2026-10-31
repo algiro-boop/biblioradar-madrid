@@ -81,7 +81,7 @@ export function ProgressBar({ value, max, tone = "emerald" }: { value: number; m
 }
 
 export function Button({
-  children, onClick, disabled, variant = "primary", className = "", title, type = "button",
+  children, onClick, disabled, variant = "primary", className = "", title, type = "button", "aria-pressed": pressed,
 }: {
   children: ReactNode;
   onClick?: () => void;
@@ -90,6 +90,7 @@ export function Button({
   className?: string;
   title?: string;
   type?: "button" | "submit";
+  "aria-pressed"?: boolean;
 }) {
   const styles = {
     primary: "bg-emerald-600 text-white hover:bg-emerald-700",
@@ -104,6 +105,7 @@ export function Button({
       onClick={onClick}
       disabled={disabled}
       title={title}
+      aria-pressed={pressed}
       className={`inline-flex min-h-9 items-center justify-center gap-1.5 rounded-xl px-3 text-sm font-semibold transition-[background-color,scale,opacity] duration-150 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-45 focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:outline-none ${styles} ${className}`}
     >
       {children}

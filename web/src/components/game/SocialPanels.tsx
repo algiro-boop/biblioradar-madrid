@@ -1,9 +1,10 @@
 "use client";
 
-import { Heart, Music, Volume2 } from "lucide-react";
+import { Heart, Music, Sparkles, Volume2 } from "lucide-react";
 import { useState } from "react";
 import { hasFeature } from "@/game/data/levels";
 import { NEIGHBORS } from "@/game/data/neighbors";
+import { SHOWCASES } from "@/game/data/showcases";
 import type { GameState, MusicSettings } from "@/game/engine";
 import { run } from "@/game/store";
 import { madridDateKey } from "@/game/time";
@@ -19,13 +20,32 @@ export function VisitPanel({ state, now, onVisit, notify }: { state: GameState; 
   const today = madridDateKey(now);
   return (
     <div className="space-y-6">
+      <Section title="Inspiración" aside={`${SHOWCASES.length} bibliotecas de muestra`}>
+        <p className="text-xs text-slate-500">Montadas con piezas del catálogo para que veas todo lo que se puede construir.</p>
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
+          {SHOWCASES.map((n) => (
+            <button key={n.id} type="button" onClick={() => onVisit(n.id)}
+              className="flex w-full items-start gap-3 rounded-2xl bg-gradient-to-br from-amber-50 to-rose-50 p-3 text-left ring-1 ring-amber-200 transition-[scale,box-shadow] hover:shadow-md active:scale-[0.98]">
+              <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-amber-200 text-amber-900" aria-hidden><Sparkles className="size-5" /></span>
+              <span className="min-w-0 flex-1">
+                <span className="flex items-center gap-1.5 text-sm font-semibold">
+                  <span className="truncate">{n.libraryName}</span>
+                  {state.likes[n.id] && <Heart className="size-3.5 shrink-0 fill-rose-500 text-rose-500" aria-label="Te gusta" />}
+                </span>
+                <span className="mt-0.5 block text-xs leading-snug text-slate-600">{n.blurb}</span>
+                <span className="mt-1 block text-[11px] font-semibold text-amber-800">Nivel {n.level} · {n.rooms.length} {n.rooms.length === 1 ? "sala" : "salas"}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+      </Section>
       <PublicLibrary key={state.settings.alias} state={state} notify={notify} />
       <Section title="Otras bibliotecas">
       <p className="text-xs text-slate-500">
         Bibliotecas virtuales públicas <strong>ficticias</strong> del entorno de pruebas, para probar visitas y «me gusta». Solo se puede mirar: nadie toca la biblioteca de nadie.
       </p>
       <div className="space-y-2">
-        {NEIGHBORS.map((n) => {
+        {NEIGHBORS.filter((n) => !n.blurb).map((n) => {
           const visited = state.virtualVisits.some((v) => v.ownerId === n.id && v.date === today);
           return (
             <button key={n.id} type="button" onClick={() => onVisit(n.id)}

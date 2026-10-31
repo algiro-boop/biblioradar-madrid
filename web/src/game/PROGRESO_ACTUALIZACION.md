@@ -47,9 +47,18 @@ Especificación: `ACTUALIZACION_BIBLIORADAR_PARA_CLAUDE.md` del usuario. Rama lo
 - **Móvil.** Miniaturas de la tienda que pisaban el nombre (iOS), botón del mapa y racha encima del selector Mapa/Lista, pestañas que no cabían a 375 px y la etiqueta de planta repetida («1.ª planta» / «Planta baja»). La página lleva `notranslate` para que la barra de traducir de Chrome no la desplace.
 - **Pared y suelo en la tienda.** 21 acabados a la venta, de nivel 2 a nivel 15 (`STYLES` con `price`), con dibujos propios: parquet, espiga, moqueta, cuadros, hidráulica, mármol, pizarra, mosaico, ladrillo, topos, rayas, friso de madera, azulejo y damasco. Se compran una vez (`buy_style`, `ownedStyles`, esquema 3) y se aplican en Decorar → Acabados, que ya está disponible desde el nivel 1.
 
+### Bibliotecas de muestra y modo foto
+
+- **Inspiración** (`data/showcases.ts`, sección en «Visitar»): 6 bibliotecas montadas a mano para enseñar lo que se puede hacer: Jardín de Invierno (2 salas), Café Vinilo, Observatorio de Medianoche, La Biblioteca Infinita (4 salas en 2 plantas), Estudio Nórdico (2 salas) y Nube de Algodón. Se visitan como las demás (solo mirar) y entran en `NEIGHBORS`.
+- **Vista general de visita**: «Todo» en el banner de visita y botón «Vista general» cuando la biblioteca visitada tiene varias salas; tocar una sala entra en ella.
+- **Modo foto**: botón de cámara junto al zoom; oculta menús, banners y botones para hacer capturas limpias. Se sale con la × o con Esc.
+- **Zoom en móvil**: los botones pasan a una pastilla horizontal en la esquina inferior derecha y se ocultan mientras está abierta la barra del editor.
+- **Sofás**: se dibujaban «de lado» (respaldo en el lado corto) y los lectores se sentaban en la punta. `seatFacing` hace que los asientos alargados miren por su lado largo; las sillas de una casilla no cambian.
+- Banner de visita compacto en móvil (botones en una fila desplazable) y `Button` transmite `aria-pressed`.
+
 ## Verificado
 
-- `tsc` limpio y 306/306 tests de vitest.
+- `tsc` limpio y 308/308 tests de vitest (incluye que las bibliotecas de muestra son válidas en su nivel, solo usan muebles de su nivel y no dejan casillas inaccesibles).
 - `next build` con el flag a 0: no hay ruta `/mi-biblioteca` y ningún chunk de `.next/static` contiene textos del juego.
 - `next build` con el flag: incluye `/mi-biblioteca`.
 - Navegador (panel de escritorio y móvil emulado de 375×812), con niveles 1, 5, 10 y 15:
@@ -59,7 +68,8 @@ Especificación: `ACTUALIZACION_BIBLIORADAR_PARA_CLAUDE.md` del usuario. Rama lo
   - vitrina con zoom;
   - racha en el mapa;
   - hoja de sprites con 22 muebles asimétricos en los 4 giros;
-  - compra de un suelo, aplicación en una sala y guardado; vista general y El Atril tras arreglar el remate.
+  - compra de un suelo, aplicación en una sala y guardado; vista general y El Atril tras arreglar el remate;
+  - las 6 bibliotecas de muestra en móvil emulado, la vista general de visita y el modo foto.
 
 ## Limitaciones conocidas
 
@@ -71,3 +81,4 @@ Especificación: `ACTUALIZACION_BIBLIORADAR_PARA_CLAUDE.md` del usuario. Rama lo
 - En móvil, el borde derecho de la vista general puede quedar bajo los botones de zoom con algunas combinaciones de salas.
 - Los arreglos de esta ronda no se han vuelto a probar en un móvil real, solo emulado; el efecto de `notranslate` está sin confirmar.
 - Las vistas traseras de los muebles son sencillas (tablero o panel liso).
+- Las bibliotecas de muestra son datos locales del entorno de pruebas, como las vecinas ficticias; no hay galería de capturas generada, se hacen con el modo foto.
