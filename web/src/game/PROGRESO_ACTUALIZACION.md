@@ -61,6 +61,7 @@ Especificación: `ACTUALIZACION_BIBLIORADAR_PARA_CLAUDE.md` del usuario. Rama lo
 
 - La tarjeta «Un solar vacío… por ahora» tapaba la pastilla de zoom en móvil: ahora queda por encima (`max-sm:bottom-16`).
 - **Cabecera del mapa (código de la app pública)**: entre ~430 y 440 px de ancho, «Instalar app» se salía por la derecha porque el hijo de `Reveal` (un grid) conservaba `min-width: auto` y el título no podía encoger. Con `min-w-0` cabe en 375, 393, 430 y 440 px. Este cambio afecta a la app pública cuando se publique la rama.
+- **Racha en el mapa**: se ocultaba en nivel 0 con 0 días, así que una partida nueva no la veía. Ahora se muestra siempre (llama apagada y «0» hasta el primer reporte), como pide la especificación.
 
 ## Verificado
 

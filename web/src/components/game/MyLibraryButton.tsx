@@ -50,8 +50,6 @@ function StreakChip() {
     };
   }, [open]);
 
-  if (state.level < 1 && current === 0) return null;
-
   return (
     <div ref={box} className="pointer-events-auto relative">
       <button
