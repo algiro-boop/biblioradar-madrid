@@ -42,7 +42,7 @@ export function LocationHelpModal({
   }, [onClose]);
 
   return (
-    <div className="anim-backdrop fixed inset-0 z-[1300] flex items-end justify-center bg-slate-950/40 p-3 md:items-center" onClick={onClose}>
+    <div className="anim-backdrop fixed inset-0 z-[1300] flex items-end justify-center bg-black/40 p-3 md:items-center" onClick={onClose}>
       <div
         role="dialog"
         aria-modal="true"

@@ -204,7 +204,7 @@ export function LibraryDrawer({
     <>
       {/* A media altura el mapa sigue siendo usable (tocar otro pin cambia de biblioteca). */}
       <div
-        className={`fixed inset-0 z-[1100] bg-slate-950/30 transition-opacity lg:hidden ${
+        className={`fixed inset-0 z-[1100] bg-black/30 transition-opacity lg:hidden ${
           open && expanded ? "opacity-100 duration-300" : "pointer-events-none opacity-0 duration-200"
         }`}
         onClick={onClose}

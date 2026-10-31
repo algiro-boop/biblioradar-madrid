@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { PwaMetrics } from "@/components/PwaMetrics";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { ICON_VERSION } from "@/lib/brand";
+import { THEME_INIT_SCRIPT } from "@/lib/theme";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -30,7 +31,12 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es">
+    // La clase `dark` la pone el script antes de hidratar; de ahí suppressHydrationWarning.
+    <html lang="es" suppressHydrationWarning>
+      <head>
+        {/* En línea y bloqueante a propósito: debe ejecutarse antes del primer pintado. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body className="font-sans antialiased">
         {children}
         <ServiceWorkerRegister />

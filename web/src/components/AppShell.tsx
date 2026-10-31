@@ -8,13 +8,14 @@ import { useGeolocation } from "@/hooks/useGeolocation";
 import { useLibraries } from "@/hooks/useLibraries";
 import { useNow } from "@/hooks/useNow";
 import { withCurrentOccupancy } from "@/lib/estimate";
-import { applyFilters, EMPTY_FILTERS, hasActiveFilters, type FilterInstitution, type LibraryFilters } from "@/lib/filters";
+import { applyFilters, EMPTY_FILTERS, hasActiveFilters, type LibraryFilters } from "@/lib/filters";
 import { GeolocationFailure, geolocationError, haversineMeters, PERMISSION_DENIED } from "@/lib/geo";
 import { isPermissionDenied, locateWithHelp, type LocationPurpose } from "@/lib/location";
 import type { UserPosition } from "@/lib/types";
 import { Header, type ViewMode } from "./Header";
 import { LibraryDrawer } from "./LibraryDrawer";
 import { LibraryList } from "./LibraryList";
+import { MapControls } from "./MapControls";
 import { LocationHelpModal } from "./LocationHelpModal";
 import { ProximityBanner } from "./ProximityBanner";
 import { ViewToggle } from "./ViewToggle";
@@ -167,13 +168,6 @@ export function AppShell() {
     await findNearMe();
   }, [nearMe, findNearMe]);
 
-  const toggleInstitution = useCallback((i: FilterInstitution) => {
-    setFilters((f) => ({
-      ...f,
-      institutions: f.institutions.includes(i) ? f.institutions.filter((x) => x !== i) : [...f.institutions, i],
-    }));
-  }, []);
-
   const clearFilters = useCallback(() => {
     setFilters(EMPTY_FILTERS);
     setNearMe(false);
@@ -213,11 +207,8 @@ export function AppShell() {
       >
         <div className="p-3 pt-[max(0.75rem,env(safe-area-inset-top))] lg:p-0">
           <Header
-            filters={filters}
+            query={filters.query}
             onQueryChange={(query) => setFilters((f) => ({ ...f, query }))}
-            onToggleRoom={() => setFilters((f) => ({ ...f, onlyWithRoom: !f.onlyWithRoom }))}
-            onToggleInstitution={toggleInstitution}
-            onToggleNear={() => void toggleNear()}
             locating={geo.status === "locating"}
             geoMessage={geoMessage}
             onGeoRetry={geoRetryable ? () => void findNearMe() : undefined}
@@ -260,8 +251,13 @@ export function AppShell() {
       </section>
 
       <div className="pointer-events-none fixed inset-x-0 bottom-0 z-[1050] flex flex-col gap-2 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] lg:left-[320px] xl:left-[400px]">
-        <div className="lg:hidden">
-          <ViewToggle view={view} onChange={setView} />
+        <div className="relative flex min-h-11 items-end justify-center">
+          <div className="lg:hidden">
+            <ViewToggle view={view} onChange={setView} />
+          </div>
+          <div className="absolute right-0 bottom-0">
+            <MapControls near={nearMe} locating={geo.status === "locating"} onToggleNear={() => void toggleNear()} />
+          </div>
         </div>
         <ProximityBanner
           libraries={libraries}

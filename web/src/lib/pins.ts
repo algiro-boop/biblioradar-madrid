@@ -40,7 +40,7 @@ export function pinHtml({ level, pct, name, selected, live, changed }: PinState)
     <div class="relative ${changed ? "pin-pop" : ""}" role="img" aria-label="${escapeHtml(label)}${live ? ", confirmada hace poco" : ""}">
       ${halo}
       <div class="relative flex flex-col items-center transition-[scale,opacity] duration-200 ${scale}">
-        <div class="relative z-10 flex h-8 min-w-11 items-center justify-center rounded-full px-2 text-[13px] leading-none font-bold tabular-nums shadow-md shadow-slate-900/20 ring-2 ${selected ? "ring-slate-900" : "ring-white"} ${s.bg} ${s.text}">${level === "closed" ? "Cerrada" : formatPinText(pct)}</div>
+        <div class="relative z-10 flex h-8 min-w-11 items-center justify-center rounded-full px-2 text-[13px] leading-none font-bold tabular-nums shadow-md shadow-black/20 ring-2 ${selected ? "ring-slate-900" : "ring-white"} ${s.bg} ${s.text}">${level === "closed" ? "Cerrada" : formatPinText(pct)}</div>
         <div class="-mt-1.5 size-3 rotate-45 rounded-[2px] shadow-md ${s.bg}"></div>
       </div>
     </div>`;

@@ -1,9 +1,8 @@
 "use client";
 
-import { LoaderCircle, LocateFixed, RotateCw, Search, SlidersHorizontal, X } from "lucide-react";
+import { RotateCw, Search, X } from "lucide-react";
 import { useState } from "react";
 import { BRAND_ICON_SRC } from "@/lib/brand";
-import type { FilterInstitution, LibraryFilters } from "@/lib/filters";
 import type { RealtimeConnection } from "@/lib/types";
 import type { Library } from "@/lib/types";
 import { FeedbackButton } from "./FeedbackButton";
@@ -12,46 +11,12 @@ import { ShareAppButton } from "./ShareAppButton";
 
 export type ViewMode = "map" | "list";
 
-const INSTITUTION_PILLS: ReadonlyArray<{ value: FilterInstitution; label: string }> = [
-  { value: "ayuntamiento", label: "Ayuntamiento" },
-  { value: "comunidad", label: "Comunidad" },
-  { value: "ucm", label: "UCM" },
-];
-
 const CONNECTION_TEXT: Record<RealtimeConnection, { label: string; dot: string }> = {
   connecting: { label: "Conectando", dot: "bg-slate-400" },
   live: { label: "En vivo", dot: "bg-emerald-500" },
   reconnecting: { label: "Reconectando", dot: "bg-amber-400" },
   offline: { label: "Sin conexión", dot: "bg-red-500" },
 };
-
-function Pill({
-  active,
-  onClick,
-  children,
-  busy = false,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-  busy?: boolean;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      disabled={busy}
-      className={`inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full px-3 text-[13px] font-medium whitespace-nowrap ring-1 transition-[background-color,color,box-shadow,scale] duration-150 active:scale-[0.97] lg:h-9 lg:px-3.5 lg:text-sm focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:outline-none ${
-        active
-          ? "bg-slate-900 text-white shadow-md shadow-slate-900/20 ring-slate-900"
-          : "bg-white text-slate-700 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300"
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
 
 /**
  * Pliega una fila de la cabecera animando su altura (0fr ↔ 1fr). Al terminar de abrirse deja de
@@ -80,11 +45,8 @@ function Reveal({ open, className = "", children }: { open: boolean; className?:
 }
 
 export function Header({
-  filters,
+  query,
   onQueryChange,
-  onToggleRoom,
-  onToggleInstitution,
-  onToggleNear,
   locating,
   geoMessage,
   onGeoRetry,
@@ -98,23 +60,20 @@ export function Header({
   libraries: Pick<Library, "id" | "name">[];
   /** Botón de actividad; `compact` es la variante de solo icono de la fila superior en móvil. */
   activityAction?: (compact: boolean) => React.ReactNode;
-  filters: LibraryFilters;
+  query: string;
   onQueryChange: (q: string) => void;
-  onToggleRoom: () => void;
-  onToggleInstitution: (i: FilterInstitution) => void;
-  onToggleNear: () => void;
+  /** Para desactivar «Reintentar» mientras se busca la ubicación. */
   locating: boolean;
   geoMessage: string | null;
   /** Solo para fallos que no son un bloqueo de permisos (tiempo agotado, sin señal). */
   onGeoRetry?: () => void;
   connection: RealtimeConnection;
   view: ViewMode;
-  /** Móvil: al arrastrar el mapa se pliegan marca y filtros y queda solo la búsqueda. */
+  /** Móvil: al arrastrar el mapa se pliega la fila de la marca y queda solo la búsqueda. */
   collapsed?: boolean;
   onExpand?: () => void;
 }) {
   const conn = CONNECTION_TEXT[connection];
-  const activeFilters = (filters.near ? 1 : 0) + (filters.onlyWithRoom ? 1 : 0) + filters.institutions.length;
   return (
     <header className="pointer-events-auto relative z-10 rounded-3xl bg-white/95 p-2.5 shadow-lg ring-1 ring-slate-900/5 backdrop-blur lg:rounded-none lg:bg-transparent lg:px-4 lg:pt-4 lg:pb-2 lg:shadow-none lg:ring-0">
       <Reveal open={!collapsed}>
@@ -157,6 +116,16 @@ export function Header({
       </Reveal>
 
       <div className="flex items-center gap-2">
+        {collapsed && (
+          <button
+            type="button"
+            onClick={onExpand}
+            aria-label="Mostrar la cabecera"
+            className="anim-pop grid size-10 shrink-0 place-items-center rounded-2xl transition active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:outline-none lg:hidden"
+          >
+            <img src={BRAND_ICON_SRC} alt="" width={32} height={32} className="size-8 rounded-[10px] shadow-sm" />
+          </button>
+        )}
         <label className="relative flex-1">
           <span className="sr-only">Buscar biblioteca o distrito</span>
           <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-slate-400" />
@@ -165,13 +134,13 @@ export function Header({
             inputMode="search"
             enterKeyHint="search"
             autoComplete="off"
-            value={filters.query}
+            value={query}
             onChange={(e) => onQueryChange(e.target.value)}
             onFocus={onExpand}
             placeholder="Busca biblioteca o distrito…"
             className="h-10 w-full rounded-2xl lg:h-11 bg-slate-100 pr-10 pl-10 text-[16px] text-slate-900 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-slate-900 focus:outline-none lg:text-sm [&::-webkit-search-cancel-button]:hidden"
           />
-          {filters.query && (
+          {query && (
             <button
               type="button"
               onClick={() => onQueryChange("")}
@@ -182,44 +151,7 @@ export function Header({
             </button>
           )}
         </label>
-
-        {collapsed && (
-          <button
-            type="button"
-            onClick={onExpand}
-            aria-label={activeFilters ? `Mostrar filtros (${activeFilters} activos)` : "Mostrar filtros"}
-            className="anim-pop relative grid size-10 shrink-0 place-items-center rounded-2xl bg-slate-100 text-slate-700 transition active:scale-[0.97] hover:bg-slate-200 focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:outline-none lg:hidden"
-          >
-            <SlidersHorizontal className="size-4" />
-            {activeFilters > 0 && (
-              <span className="absolute -top-1 -right-1 grid h-4 min-w-4 place-items-center rounded-full bg-slate-900 px-1 text-[10px] font-semibold text-white ring-2 ring-white">
-                {activeFilters}
-              </span>
-            )}
-          </button>
-        )}
       </div>
-
-      <Reveal open={!collapsed} className="-mx-2.5 lg:mx-0">
-        <div className="flex gap-1.5 overflow-x-auto px-2.5 pt-2 pb-0.5 [scrollbar-width:none] lg:flex-wrap lg:gap-2 lg:px-0 lg:pt-2.5 [&::-webkit-scrollbar]:hidden">
-          <Pill active={filters.near !== null} onClick={onToggleNear} busy={locating}>
-            {locating ? <LoaderCircle className="size-4 animate-spin" /> : <LocateFixed className="size-4" />}
-            Cerca de mí
-          </Pill>
-          <Pill active={filters.onlyWithRoom} onClick={onToggleRoom}>
-            🟢 Con sitio (&lt;70%)
-          </Pill>
-          {INSTITUTION_PILLS.map((p) => (
-            <Pill
-              key={p.value}
-              active={filters.institutions.includes(p.value)}
-              onClick={() => onToggleInstitution(p.value)}
-            >
-              {p.label}
-            </Pill>
-          ))}
-        </div>
-      </Reveal>
 
       {/* En el mapa móvil «Actividad» va como icono arriba y «Sugerencias» queda en la vista de lista. */}
       <div

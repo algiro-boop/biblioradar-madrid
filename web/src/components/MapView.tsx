@@ -2,18 +2,18 @@
 
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Circle, CircleMarker, MapContainer, Marker, TileLayer, useMap, useMapEvents, ZoomControl } from "react-leaflet";
 import { MADRID_CENTER, REPORT_RADIUS_M } from "@/lib/geo";
 import { recentAt } from "@/lib/community";
 import { getOccupancyLevel } from "@/lib/occupancy";
 import { pinClassName, pinHtml, type PinState } from "@/lib/pins";
 import { observeMapSize } from "@/lib/map-resize";
-import { getTileConfig } from "@/lib/tiles";
+import { getTileConfig, OSM_TILES, type TileConfig } from "@/lib/tiles";
+import { useTheme } from "@/hooks/useTheme";
 import type { LibraryWithOccupancy, UserPosition } from "@/lib/types";
 
 const PIN_SIZE: [number, number] = [56, 44];
-const TILES = getTileConfig();
 const iconCache = new Map<string, L.DivIcon>();
 
 /** divIcon con Tailwind; se cachea por estado para no recrear el DOM del pin sin motivo. */
@@ -82,6 +82,53 @@ function MapController({
   return null;
 }
 
+/** Errores de tesela seguidos tras los que se abandona un proveedor (clave rechazada, cupo agotado…). */
+const TILE_ERRORS_BEFORE_FALLBACK = 4;
+
+/**
+ * Capa base según el tema. Al cambiar de proveedor la capa anterior sigue debajo hasta que la nueva
+ * termina de cargar (sin hueco durante la animación del tema), y si el proveedor configurado falla
+ * se vuelve a OpenStreetMap con filtro para que el mapa nunca quede en negro.
+ */
+function ThemedTiles() {
+  const { theme } = useTheme();
+  const [failed, setFailed] = useState(false);
+  const wanted = failed ? OSM_TILES : getTileConfig(theme);
+  const [layers, setLayers] = useState<TileConfig[]>([wanted]);
+  if (layers.at(-1)?.url !== wanted.url) {
+    setLayers([...layers.filter((l) => l.url !== wanted.url), wanted]);
+  }
+  const errors = useRef(0);
+
+  return layers.map((tiles, i) => {
+    const current = i === layers.length - 1;
+    return (
+      <TileLayer
+        key={tiles.url}
+        attribution={tiles.attribution}
+        url={tiles.url}
+        maxNativeZoom={19}
+        maxZoom={19}
+        zIndex={current ? 2 : 1}
+        className={tiles.softened ? "biblio-tiles-soft" : undefined}
+        eventHandlers={
+          current
+            ? {
+                load: () => setLayers((all) => (all.length > 1 ? [tiles] : all)),
+                tileload: () => (errors.current = 0),
+                tileerror: () => {
+                  if (tiles.url === OSM_TILES.url) return;
+                  errors.current += 1;
+                  if (errors.current >= TILE_ERRORS_BEFORE_FALLBACK) setFailed(true);
+                },
+              }
+            : undefined
+        }
+      />
+    );
+  });
+}
+
 export default function MapView({
   libraries,
   selectedId,
@@ -122,21 +169,15 @@ export default function MapView({
       className="h-full min-h-0 w-full min-w-0 bg-slate-100"
       attributionControl
     >
-      <TileLayer
-        attribution={TILES.attribution}
-        url={TILES.url}
-        maxNativeZoom={19}
-        maxZoom={19}
-        className={TILES.softened ? "biblio-tiles-soft" : undefined}
-      />
-      <ZoomControl position="bottomright" />
+      <ThemedTiles />
+      <ZoomControl position="topright" />
 
       {selected && (
         <Circle
           center={[selected.lat, selected.lng]}
           radius={REPORT_RADIUS_M}
           interactive={false}
-          pathOptions={{ color: "#0f172a", weight: 1, opacity: 0.35, dashArray: "4 6", fillOpacity: 0.04 }}
+          pathOptions={{ color: "#64748b", weight: 1, opacity: 0.6, dashArray: "4 6", fillOpacity: 0.05 }}
         />
       )}
 

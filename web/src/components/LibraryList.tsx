@@ -110,7 +110,7 @@ export function LibraryList({
             <li
               key={library.id}
               style={{ animationDelay: `${staggerDelay(index)}ms` }}
-              className={`anim-rise rounded-2xl bg-white shadow-sm shadow-slate-900/[0.03] transition-shadow hover:shadow-md hover:shadow-slate-900/5 ${selected ? "ring-2 ring-slate-900" : "ring-1 ring-slate-200 hover:ring-slate-300"}`}
+              className={`anim-rise rounded-2xl bg-white shadow-sm shadow-black/[0.03] transition-shadow hover:shadow-md hover:shadow-black/5 ${selected ? "ring-2 ring-slate-900" : "ring-1 ring-slate-200 hover:ring-slate-300"}`}
             >
               <button
                 type="button"
