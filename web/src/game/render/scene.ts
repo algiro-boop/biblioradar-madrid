@@ -398,7 +398,11 @@ function paintWalls(ctx: Ctx2D, o: Iso, w: number, h: number, H: number, pattern
   Lw.rect(0, 0, h, 4, shade(wb, -0.42));
   R.rect(0, H - 3, w, H, shade(wa, -0.06));
   Lw.rect(0, H - 3, h, H, shade(leftWall, -0.06));
-  poly(ctx, [project(o, 0, 0, H), project(o, w, 0, H), project(o, w, -0.15, H), project(o, -0.15, -0.15, H), project(o, -0.15, h, H), project(o, 0, h, H)], shade(wb, -0.15));
+  // Canto superior en dos tiras: `poly` rellena cada fila de lado a lado (solo vale para figuras
+  // convexas) y la «V» entera tapaba media pared con un triángulo liso.
+  const cap = shade(wb, -0.15);
+  poly(ctx, [project(o, -0.15, -0.15, H), project(o, w, -0.15, H), project(o, w, 0, H), project(o, 0, 0, H)], cap);
+  poly(ctx, [project(o, -0.15, -0.15, H), project(o, 0, 0, H), project(o, 0, h, H), project(o, -0.15, h, H)], cap);
   line(ctx, ...project(o, 0, 0, 0), ...project(o, 0, 0, H), shade(wa, -0.3));
 }
 
@@ -411,8 +415,9 @@ export function styleThumbnail(id: string): string {
   const def = styleDef(id);
   const floor = def?.kind === "floor" ? def : styleDef(DEFAULT_STYLE.floor)!;
   const wall = def?.kind === "wall" ? def : styleDef(DEFAULT_STYLE.wall)!;
-  const n = 3;
-  const H = WALL_H * 0.75;
+  // Para un suelo, más baldosas y pared baja; para una pared, el rincón con la pared entera.
+  const n = def?.kind === "floor" ? 4 : 3;
+  const H = WALL_H * (def?.kind === "floor" ? 0.35 : 0.9);
   const c = document.createElement("canvas");
   c.width = n * TW + 8;
   c.height = n * TH + H * ZS + 12;

@@ -39,9 +39,17 @@ Especificación: `ACTUALIZACION_BIBLIORADAR_PARA_CLAUDE.md` del usuario. Rama lo
   - El alias y la publicación se movieron a «Visitar» → «Mi biblioteca pública».
   - Es privada por defecto; publicarla pide confirmación y alias.
 
+### Ronda de arreglos tras probar en el móvil
+
+- **Giro en 4 direcciones.** Todo lo de suelo gira 0/90/180/270° (`rotationsFor`); lo colgado elige pared. Cada mueble asimétrico dibuja su parte trasera a 180° y 270° (`paintItem`, `alongX`, `flip`). La IA de lectores y mostrador usa `FRONT`/`TOWARD` para cualquier giro.
+- **Orden de dibujo.** `paintOrder` ordena por huella (orden topológico) en vez de por la suma del centro, así un mueble ya no tapa a otro que está delante. Lo que va encima de una mesa comparte la caja de la mesa.
+- **Remate de las paredes.** Era un polígono no convexo y `poly` solo rellena convexos; pintaba un triángulo sobre las paredes de todas las salas (el «ladrillo solo en los bordes» de El Atril). Ahora son dos cuadriláteros.
+- **Móvil.** Miniaturas de la tienda que pisaban el nombre (iOS), botón del mapa y racha encima del selector Mapa/Lista, pestañas que no cabían a 375 px y la etiqueta de planta repetida («1.ª planta» / «Planta baja»). La página lleva `notranslate` para que la barra de traducir de Chrome no la desplace.
+- **Pared y suelo en la tienda.** 21 acabados a la venta, de nivel 2 a nivel 15 (`STYLES` con `price`), con dibujos propios: parquet, espiga, moqueta, cuadros, hidráulica, mármol, pizarra, mosaico, ladrillo, topos, rayas, friso de madera, azulejo y damasco. Se compran una vez (`buy_style`, `ownedStyles`, esquema 3) y se aplican en Decorar → Acabados, que ya está disponible desde el nivel 1.
+
 ## Verificado
 
-- `tsc` limpio y 301/301 tests de vitest.
+- `tsc` limpio y 306/306 tests de vitest.
 - `next build` con el flag a 0: no hay ruta `/mi-biblioteca` y ningún chunk de `.next/static` contiene textos del juego.
 - `next build` con el flag: incluye `/mi-biblioteca`.
 - Navegador (panel de escritorio y móvil emulado de 375×812), con niveles 1, 5, 10 y 15:
@@ -49,7 +57,9 @@ Especificación: `ACTUALIZACION_BIBLIORADAR_PARA_CLAUDE.md` del usuario. Rama lo
   - colocación continua y movimiento en grupo;
   - filtros del inventario;
   - vitrina con zoom;
-  - racha en el mapa.
+  - racha en el mapa;
+  - hoja de sprites con 22 muebles asimétricos en los 4 giros;
+  - compra de un suelo, aplicación en una sala y guardado; vista general y El Atril tras arreglar el remate.
 
 ## Limitaciones conocidas
 
@@ -59,3 +69,5 @@ Especificación: `ACTUALIZACION_BIBLIORADAR_PARA_CLAUDE.md` del usuario. Rama lo
 - El sonido no se ha comprobado de oído; solo que el contexto de audio se desbloquea con el primer gesto.
 - El pellizco de la vitrina y el táctil no se han probado en un móvil real, solo emulado.
 - En móvil, el borde derecho de la vista general puede quedar bajo los botones de zoom con algunas combinaciones de salas.
+- Los arreglos de esta ronda no se han vuelto a probar en un móvil real, solo emulado; el efecto de `notranslate` está sin confirmar.
+- Las vistas traseras de los muebles son sencillas (tablero o panel liso).
