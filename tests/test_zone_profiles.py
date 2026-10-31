@@ -27,7 +27,7 @@ def real_rows():
     locations = json.loads((ROOT / "data/csv/verified_locations.json").read_text())
     overrides = json.loads((ROOT / "data/csv/name_matches.json").read_text())
     expanded, _ = sync.expand_catalog(
-        json.loads((ROOT / "data/catalogo_actual.json").read_text()), locations, overrides
+        json.loads((ROOT / "tests/fixtures/zone_catalog.json").read_text()), locations, overrides
     )
     rows, problems = sync.match_catalog(rows, expanded, overrides)
     assert not problems

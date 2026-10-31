@@ -1,0 +1,835 @@
+[
+  {
+    "id": "00524a4b-a82e-4004-ba16-92921109ee50",
+    "name": "Biblioteca Pública Municipal San Blas (San Blas-Canillejas)",
+    "district": "San Blas-Canillejas",
+    "lat": 40.420231627535,
+    "lng": -3.62181138609091
+  },
+  {
+    "id": "04b017d1-ad45-49df-a6a8-3525c1bf7de0",
+    "name": "Salas de estudio Miguel de Cervantes (San Blas - Canillejas)",
+    "district": "San Blas-Canillejas",
+    "lat": 40.4366557020283,
+    "lng": -3.61135172822992
+  },
+  {
+    "id": "0f319415-e283-4fdb-8ea2-4189bb21a811",
+    "name": "Sala de estudio José Luis López Vázquez (San Blas - Canillejas)",
+    "district": "San Blas-Canillejas",
+    "lat": 40.4468267299092,
+    "lng": -3.57273828935233
+  },
+  {
+    "id": "114ecd78-e56c-449a-a239-e9c02bfd6e35",
+    "name": "Sala de estudio Luis García Berlanga (Tetuán)",
+    "district": "Tetuán",
+    "lat": 40.4652835428932,
+    "lng": -3.69406004814381
+  },
+  {
+    "id": "11eb6448-3998-4e20-80a5-8a8a68460b4f",
+    "name": "Sala de estudio Alfonso XII (Fuencarral - El Pardo)",
+    "district": "Fuencarral-El Pardo",
+    "lat": 40.5196733116587,
+    "lng": -3.77790556877265
+  },
+  {
+    "id": "13192434-f47b-4cb1-9eb7-a4e117f4d977",
+    "name": "Sala de estudio Centro Sociocultural Siena (Ciudad Lineal)",
+    "district": "Ciudad Lineal",
+    "lat": 40.4331689085053,
+    "lng": -3.65187134101764
+  },
+  {
+    "id": "15e27271-a7ab-4cfb-a65a-9ab63e4e8d6c",
+    "name": "Biblioteca Pública Municipal Gloria Fuertes (Barajas)",
+    "district": "Barajas",
+    "lat": 40.460559472287,
+    "lng": -3.59374618117853
+  },
+  {
+    "id": "1762a3e7-5f23-49a3-8f2a-647a70179b89",
+    "name": "Sala de estudio Valdebernardo (Vicálvaro)",
+    "district": "Vicálvaro",
+    "lat": 40.399832138328,
+    "lng": -3.62127202652279
+  },
+  {
+    "id": "1cd208d1-c46d-4dbf-bafe-302d77980145",
+    "name": "Biblioteca Pública Municipal Benito Pérez Galdós (Centro)",
+    "district": "Centro",
+    "lat": 40.4273866830047,
+    "lng": -3.71059999554736
+  },
+  {
+    "id": "203f27de-a0da-4dc2-b7a2-c92622cc2145",
+    "name": "Biblioteca Pública Pedro Salinas (Centro)",
+    "district": "Centro",
+    "lat": 40.4070959783734,
+    "lng": -3.71104393552386
+  },
+  {
+    "id": "204547a8-6d6b-452b-a82b-6dcae180b86c",
+    "name": "Sala de estudio Carril del Conde (Hortaleza)",
+    "district": "Hortaleza",
+    "lat": 40.4608949955531,
+    "lng": -3.65436682139155
+  },
+  {
+    "id": "2190256e-86d5-4f6f-91e3-befaa0d9ec9b",
+    "name": "Sala de estudio y lectura Cebreros (Latina)",
+    "district": "Latina",
+    "lat": 40.4051411190765,
+    "lng": -3.74846794336061
+  },
+  {
+    "id": "21e4091f-6656-4429-a24f-d044737ddc18",
+    "name": "Sala de estudio Antonio López (Chamartín)",
+    "district": "Chamartín",
+    "lat": 40.4449024052135,
+    "lng": -3.67807883634045
+  },
+  {
+    "id": "24d71411-dfc9-4813-8dcb-54d98fb5fcfb",
+    "name": "Biblioteca Pública Municipal Gerardo Diego (Villa de Vallecas)",
+    "district": "Villa de Vallecas",
+    "lat": 40.3779019624043,
+    "lng": -3.62272966050395
+  },
+  {
+    "id": "25a8ee52-1165-4efb-99ee-0025faa17802",
+    "name": "Biblioteca Pública Rafael Alberti (Fuencarral - El Pardo)",
+    "district": "Fuencarral-El Pardo",
+    "lat": 40.48785071406,
+    "lng": -3.69857353447889
+  },
+  {
+    "id": "26e6ed48-1734-420f-9026-8173dd9f3c29",
+    "name": "Sala de estudio Centro Sociocultural Ciudad Lineal (Ciudad Lineal)",
+    "district": "Ciudad Lineal",
+    "lat": 40.4228571576887,
+    "lng": -3.65168007611388
+  },
+  {
+    "id": "28de1656-8e6c-4dda-8db9-5dc8320a1ab6",
+    "name": "Sala de estudio San Cristóbal",
+    "district": "Villaverde",
+    "lat": 40.3426731709949,
+    "lng": -3.69144873805088
+  },
+  {
+    "id": "29747fb5-6d23-492e-9131-e45100e210c1",
+    "name": "Biblioteca Pública Luis Martín Santos (Villa de Vallecas)",
+    "district": "Villa de Vallecas",
+    "lat": 40.3809204373184,
+    "lng": -3.61367250456624
+  },
+  {
+    "id": "29dfa626-e4c3-4457-ba57-d2c563191151",
+    "name": "Sala de estudio Centro cultural El Torito (Moratalaz)",
+    "district": "Moratalaz",
+    "lat": 40.406106559944,
+    "lng": -3.64652148259275
+  },
+  {
+    "id": "2da783dd-f100-4b3d-883b-29a0084c10e1",
+    "name": "Sala de lectura Pilares (Barajas)",
+    "district": "Barajas",
+    "lat": 40.4750525909635,
+    "lng": -3.57778871899443
+  },
+  {
+    "id": "31f93921-26ed-480e-a836-b7b6532efbff",
+    "name": "Biblioteca Pública del Estado Manuel Alvar (Salamanca)",
+    "district": "Salamanca",
+    "lat": 40.4344013219248,
+    "lng": -3.66897009857642
+  },
+  {
+    "id": "346b9921-09ca-48b1-b4ce-e46d34c6963b",
+    "name": "Sala de estudios Espacio Cultural Núñez de Balboa, 40 (Salamanca)",
+    "district": "Salamanca",
+    "lat": 40.4268261595074,
+    "lng": -3.68253494819851
+  },
+  {
+    "id": "350a1d18-d039-4d96-bcbb-efea01e2200d",
+    "name": "Biblioteca Pública Municipal Ángel González (Latina)",
+    "district": "Latina",
+    "lat": 40.3970746251159,
+    "lng": -3.76648854748416
+  },
+  {
+    "id": "36b8b426-43e7-480e-a664-9b94628b1df5",
+    "name": "Sala de estudio Montecarmelo (Fuencarral - El Pardo)",
+    "district": "Fuencarral-El Pardo",
+    "lat": 40.5163549561534,
+    "lng": -3.68594656268117
+  },
+  {
+    "id": "376767ca-1e21-4f91-bc31-beb41308877d",
+    "name": "Plaza Lugar Poetas (Moncloa-Aravaca)",
+    "district": "Moncloa-Aravaca",
+    "lat": 40.4664479133099,
+    "lng": -3.71900341693326
+  },
+  {
+    "id": "3a0be4f6-0339-4c3a-b2a1-8d652f1b8bd3",
+    "name": "Sala de estudio Santa Petronila",
+    "district": "Villaverde",
+    "lat": 40.3508711416228,
+    "lng": -3.69150890925519
+  },
+  {
+    "id": "461f1836-d303-4b9a-b0e4-a38754f50b93",
+    "name": "Salas de estudio Centro Cultural Pozo del tío Raimundo (Puente de Vallecas)",
+    "district": "Puente de Vallecas",
+    "lat": 40.3738162435889,
+    "lng": -3.6599325731671
+  },
+  {
+    "id": "48fe052b-2e7b-4592-b5fe-66da3ac48830",
+    "name": "Biblioteca Pública Municipal La Elipa (Ciudad Lineal)",
+    "district": "Ciudad Lineal",
+    "lat": 40.4234335286347,
+    "lng": -3.65182886443657
+  },
+  {
+    "id": "49de1584-157b-4afb-9bb7-8dc55f054bbd",
+    "name": "Biblioteca Pública Municipal Francisco Umbral (Villaverde)",
+    "district": "Villaverde",
+    "lat": 40.35118703272,
+    "lng": -3.67934588937655
+  },
+  {
+    "id": "4a2775ef-4e9a-45ab-8637-07e0e09c23f0",
+    "name": "Biblioteca Pública Municipal Mario Vargas Llosa (Centro)",
+    "district": "Centro",
+    "lat": 40.4266422153682,
+    "lng": -3.69972299490834
+  },
+  {
+    "id": "4bc06d31-b406-4503-b001-cc8b86ce2c40",
+    "name": "Sala de estudio Centro cultural Quinta del Berro - Rafael Altamira (Salamanca)",
+    "district": "Salamanca",
+    "lat": 40.4220692341943,
+    "lng": -3.66296080416394
+  },
+  {
+    "id": "4e9a913d-0fe5-4388-9b0f-676a48131c11",
+    "name": "Sala de estudio Ciudad Pegaso (San Blas - Canillejas)",
+    "district": "San Blas-Canillejas",
+    "lat": 40.4484475757202,
+    "lng": -3.5980998711556
+  },
+  {
+    "id": "50de2940-015d-4f3d-b04a-444b8f2c1b6d",
+    "name": "Sala de estudio Centro Juvenil El Sitio de mi Recreo (Villa de Vallecas)",
+    "district": "Villa de Vallecas",
+    "lat": 40.379536824272,
+    "lng": -3.61690158560319
+  },
+  {
+    "id": "51e44c0c-7b3d-4d99-9477-8b06cf1b97dd",
+    "name": "Sala de estudio Ágata",
+    "district": "Villaverde",
+    "lat": 40.3463626833418,
+    "lng": -3.70852439589738
+  },
+  {
+    "id": "52a8a38e-19da-4028-bf0d-682eaa640ab5",
+    "name": "Sala de estudio del Centro Cultural Galileo (Chamberí)",
+    "district": "Chamberí",
+    "lat": 40.4337194542835,
+    "lng": -3.71044689928418
+  },
+  {
+    "id": "530a652b-fbff-4a9d-ac86-da3783fb666c",
+    "name": "Sala de estudio Fernando Lázaro Carreter (Carabanchel)",
+    "district": "Carabanchel",
+    "lat": 40.3916445540376,
+    "lng": -3.71713758286007
+  },
+  {
+    "id": "53e91451-4157-46ec-a2c6-f9aed87526f9",
+    "name": "Sala de lectura Centro sociocultural Cánovas del Castillo (Usera)",
+    "district": "Usera",
+    "lat": 40.3862731237903,
+    "lng": -3.70007475560949
+  },
+  {
+    "id": "5a0e1e58-b6c4-4b73-b535-571bb2e0c6d8",
+    "name": "Biblioteca Pública Municipal José Saramago (Fuencarral-El Pardo)",
+    "district": "Fuencarral-El Pardo",
+    "lat": 40.4786008733455,
+    "lng": -3.709440834298
+  },
+  {
+    "id": "5a70feb4-dcf4-4caf-9fba-2e506e26b5aa",
+    "name": "Sala de estudio Motilla del Palancar (Hortaleza)",
+    "district": "Hortaleza",
+    "lat": 40.4653206798484,
+    "lng": -3.63332159843664
+  },
+  {
+    "id": "5fb8fa09-32cc-49c3-aa12-d51423a24d8e",
+    "name": "Sala de Estudio del Centro Sociocultural Clara Campoamor (Retiro)",
+    "district": "Retiro",
+    "lat": 40.4023260874799,
+    "lng": -3.67744119392743
+  },
+  {
+    "id": "617d9555-7706-403b-aa26-9819275b0e84",
+    "name": "Biblioteca Pública Municipal Portazgo (Puente de Vallecas)",
+    "district": "Puente de Vallecas",
+    "lat": 40.3931899680147,
+    "lng": -3.65541476491839
+  },
+  {
+    "id": "63322c24-07e7-49c3-9a28-43e77a62a7b1",
+    "name": "Biblioteca Pública Municipal Manuel Vázquez Montalbán (Tetuán)",
+    "district": "Tetuán",
+    "lat": 40.4574951348596,
+    "lng": -3.71053971253592
+  },
+  {
+    "id": "713b6b2a-c7a0-40e9-abbf-5c2825928209",
+    "name": "Sala de estudio y lectura Arquitecto Juan de Herrera (Latina)",
+    "district": "Latina",
+    "lat": 40.4064903649811,
+    "lng": -3.73272119336649
+  },
+  {
+    "id": "724bd8d2-1fdd-414c-94bf-c905d9b02c09",
+    "name": "Biblioteca Pública Municipal Victoria Prego (Carabanchel)",
+    "district": "Carabanchel",
+    "lat": 40.3616184996902,
+    "lng": -3.75370190502969
+  },
+  {
+    "id": "76cfa48b-5030-4fa0-8510-4fc136cc0bc8",
+    "name": "Sala de estudio y lectura Miguel Hernández (Latina)",
+    "district": "Latina",
+    "lat": 40.3788537971283,
+    "lng": -3.78196161130321
+  },
+  {
+    "id": "77642b49-ff31-4ead-a4b7-704542e91c59",
+    "name": "Sala de estudio y lectura José Luis Sampedro (Latina)",
+    "district": "Latina",
+    "lat": 40.401791822856,
+    "lng": -3.7491601722548
+  },
+  {
+    "id": "7a1de0b1-7aa2-4f57-bb16-135abca62ab5",
+    "name": "Sala de Lectura León Felipe",
+    "district": "Villaverde",
+    "lat": 40.3507530255486,
+    "lng": -3.68719058819004
+  },
+  {
+    "id": "7c79e51c-8969-4e95-8e00-a166ba1c3681",
+    "name": "Sala de estudio Oporto (Carabanchel)",
+    "district": "Carabanchel",
+    "lat": 40.3868274075654,
+    "lng": -3.72774930662624
+  },
+  {
+    "id": "7e7cf98d-7dbd-431c-8ae0-647dafd6027f",
+    "name": "Biblioteca Pública Municipal Gabriel García Márquez (Usera)",
+    "district": "Usera",
+    "lat": 40.3667683247534,
+    "lng": -3.70114106308381
+  },
+  {
+    "id": "7e7d5349-bddc-4e32-bee7-b0ee9ed595eb",
+    "name": "Biblioteca Pública Municipal Vicálvaro",
+    "district": "Vicálvaro",
+    "lat": 40.4052836507443,
+    "lng": -3.60862782329228
+  },
+  {
+    "id": "7ed49f46-61ee-4d6f-b7b8-68d583de4531",
+    "name": "Biblioteca Pública Municipal Ciudad Lineal (Ciudad Lineal)",
+    "district": "Ciudad Lineal",
+    "lat": 40.4364465105709,
+    "lng": -3.637292426115
+  },
+  {
+    "id": "7f715999-b2bd-4e02-ad2c-ece5e1b74908",
+    "name": "Biblioteca Pública Municipal Iván de Vargas (Centro)",
+    "district": "Centro",
+    "lat": 40.4141029084467,
+    "lng": -3.70985912127359
+  },
+  {
+    "id": "7fc757e1-ded5-48b4-9de7-371829472bcc",
+    "name": "Centro Cultural Paco Rabal. Biblioteca Pública (Puente de Vallecas)",
+    "district": "Puente de Vallecas",
+    "lat": 40.3794591092833,
+    "lng": -3.661114669233
+  },
+  {
+    "id": "80ee00e5-12bd-4bda-98e7-6b160e4f41ba",
+    "name": "Sala de estudio Marconi",
+    "district": "Villaverde",
+    "lat": 40.3347518321138,
+    "lng": -3.7008095609216
+  },
+  {
+    "id": "812ea8f3-5f82-45b6-a56e-2ce008b74243",
+    "name": "Sala de estudio El Madroño (Vicálvaro)",
+    "district": "Vicálvaro",
+    "lat": 40.4052922927429,
+    "lng": -3.60861529599295
+  },
+  {
+    "id": "81430c37-a2bf-476f-be83-ecdf5dfa32f8",
+    "name": "Espacio de lectura Dolores Catarineu (Moncloa-Aravaca)",
+    "district": "Moncloa-Aravaca",
+    "lat": 40.4587461132216,
+    "lng": -3.78471376846693
+  },
+  {
+    "id": "8375a502-d18e-4df4-b9bb-967e423fafda",
+    "name": "Biblioteca Pública Municipal Pozo del Tío Raimundo (Puente de Vallecas)",
+    "district": "Puente de Vallecas",
+    "lat": 40.3735856436473,
+    "lng": -3.66025460649054
+  },
+  {
+    "id": "85fe1b2f-d8e3-47a9-bc2e-a8387154d63a",
+    "name": "Biblioteca Pública Antonio Mingote (Latina)",
+    "district": "Latina",
+    "lat": 40.3794417915995,
+    "lng": -3.76943899720024
+  },
+  {
+    "id": "8613774f-949a-499d-914f-340ea59873d9",
+    "name": "Biblioteca Pública Municipal La Chata (Carabanchel)",
+    "district": "Carabanchel",
+    "lat": 40.3833059350434,
+    "lng": -3.74206338611758
+  },
+  {
+    "id": "8721aec8-df5d-4c86-9562-78601e7045d9",
+    "name": "Sala de estudio Julio Cortázar (Moncloa-Aravaca)",
+    "district": "Moncloa-Aravaca",
+    "lat": 40.4667841784369,
+    "lng": -3.71955986709293
+  },
+  {
+    "id": "896c4ffc-8e25-4932-b181-e472ef16834a",
+    "name": "Biblioteca Pública Elena Fortún (Retiro)",
+    "district": "Retiro",
+    "lat": 40.4035778144442,
+    "lng": -3.67240860769572
+  },
+  {
+    "id": "89832fd3-c290-466e-92dc-a5d16ecdcc15",
+    "name": "Biblioteca Pública Municipal San Fermín (Usera)",
+    "district": "Usera",
+    "lat": 40.3711623444796,
+    "lng": -3.69274282199002
+  },
+  {
+    "id": "8af019cf-e93c-408e-88e4-2f7a451d92d0",
+    "name": "Sala de estudio Fernando Vizcaíno Casas (Chamberí)",
+    "district": "Chamberí",
+    "lat": 40.4338448909744,
+    "lng": -3.71143798482586
+  },
+  {
+    "id": "8c88f0d0-380d-4b1b-945e-26120316b996",
+    "name": "Biblioteca Pública Municipal Pablo Neruda (Ciudad Lineal)",
+    "district": "Ciudad Lineal",
+    "lat": 40.4294113344114,
+    "lng": -3.64168998397877
+  },
+  {
+    "id": "8cce03f5-0f95-4cb6-a40f-fb3635a12d44",
+    "name": "Biblioteca Pública Municipal María Zambrano (Tetuán)",
+    "district": "Tetuán",
+    "lat": 40.4690329914409,
+    "lng": -3.6976620067965
+  },
+  {
+    "id": "901bc4b1-c27d-4390-a544-5b50aea6b506",
+    "name": "Sala de estudio Centro Dotacional Integrado Arganzuela Ángel del Río",
+    "district": "Arganzuela",
+    "lat": 40.4024241654492,
+    "lng": -3.6954440062549
+  },
+  {
+    "id": "90c265c2-619d-4c09-8cc1-ae8f74b2946c",
+    "name": "Sala de estudio Centro Sociocultural Moratalaz",
+    "district": "Moratalaz",
+    "lat": 40.3968383966296,
+    "lng": -3.63916062998113
+  },
+  {
+    "id": "91044a34-3574-4c62-8d5f-f084e3ffc5f8",
+    "name": "Biblioteca Pública Hortaleza",
+    "district": "Hortaleza",
+    "lat": 40.4771927977982,
+    "lng": -3.64961961288958
+  },
+  {
+    "id": "9182c4e2-648f-414d-bc81-66a077ea539e",
+    "name": "Sala de estudio y lectura Sara Montiel (Latina)",
+    "district": "Latina",
+    "lat": 40.3995035556907,
+    "lng": -3.77502020126412
+  },
+  {
+    "id": "91afbac8-9c0d-4ea6-b476-c26060648501",
+    "name": "Biblioteca Pública Municipal María Lejárraga (Hortaleza)",
+    "district": "Hortaleza",
+    "lat": 40.4904156254654,
+    "lng": -3.655356751728
+  },
+  {
+    "id": "94af1be1-37f0-463b-88b5-48c5d5d2c6ab",
+    "name": "Sala de estudio y lectura Paseo de Extremadura (Latina)",
+    "district": "Latina",
+    "lat": 40.4111149898497,
+    "lng": -3.73581189294094
+  },
+  {
+    "id": "94ea0ddb-0009-41df-85c8-ebad2ad07fb6",
+    "name": "Sala de estudio Francisco José González Tejera (Hortaleza)",
+    "district": "Hortaleza",
+    "lat": 40.4768241077574,
+    "lng": -3.6420497457238
+  },
+  {
+    "id": "97f60655-e452-49a9-803c-acc8d039b1c4",
+    "name": "Biblioteca Pública Miguel Hernández (Puente de Vallecas)",
+    "district": "Puente de Vallecas",
+    "lat": 40.3844974423214,
+    "lng": -3.64291767500641
+  },
+  {
+    "id": "98e07ce3-5d41-49ee-95cd-6537c43e6590",
+    "name": "Biblioteca Pública José Acuña (Moncloa - Aravaca)",
+    "district": "Moncloa-Aravaca",
+    "lat": 40.427947044751,
+    "lng": -3.7169508066401
+  },
+  {
+    "id": "99b4856c-bb30-4744-875b-f1612d3e487e",
+    "name": "Sala de Estudio del Centro Intergeneracional Río Esmeralda",
+    "district": "Puente de Vallecas",
+    "lat": 40.3832026728323,
+    "lng": -3.65202124856063
+  },
+  {
+    "id": "9f544e30-cece-4607-9ab4-675370e858fe",
+    "name": "Sala de trabajo y lectura Centro Cultural Emilia Pardo Bazán",
+    "district": "Salamanca",
+    "lat": 40.4258580051598,
+    "lng": -3.68960159429047
+  },
+  {
+    "id": "a3c4f262-5835-4f51-bdec-8111d8683009",
+    "name": "Biblioteca Pública Municipal José Hierro (San Blas-Canillejas)",
+    "district": "San Blas-Canillejas",
+    "lat": 40.4332916259736,
+    "lng": -3.61056623119275
+  },
+  {
+    "id": "a639243a-5b69-40ed-9e3f-862a5c654141",
+    "name": "Sala de estudio Almirante Churruca (Latina)",
+    "district": "Latina",
+    "lat": 40.3829926784081,
+    "lng": -3.78007738021181
+  },
+  {
+    "id": "a7234aae-cb2d-4cae-8f2b-0fad3794791f",
+    "name": "Sala de estudio Corín Tellado (Moncloa-Aravaca)",
+    "district": "Moncloa-Aravaca",
+    "lat": 40.4322433106419,
+    "lng": -3.73666133789025
+  },
+  {
+    "id": "a76c3326-8e70-40ac-b786-11858a54c2e5",
+    "name": "Biblioteca Pública Municipal Benjamín Palencia (Villa de Vallecas)",
+    "district": "Villa de Vallecas",
+    "lat": 40.3669110985685,
+    "lng": -3.61644194662467
+  },
+  {
+    "id": "a7e15652-115a-4f4f-8de9-136344fd991a",
+    "name": "Biblioteca Pública Luis Rosales (Carabanchel)",
+    "district": "Carabanchel",
+    "lat": 40.3734255454554,
+    "lng": -3.74807073310544
+  },
+  {
+    "id": "a9593621-7b72-44b0-9d5e-dd31df35ef20",
+    "name": "Sala de estudio y lectura Centro Sociocultural Latina",
+    "district": "Latina",
+    "lat": 40.3796456555054,
+    "lng": -3.765949346901
+  },
+  {
+    "id": "af0bf76b-4f0d-45e6-bf58-29f6b86e5046",
+    "name": "Centro Cultural San Juan Bautista (Ciudad Lineal)",
+    "district": "Ciudad Lineal",
+    "lat": 40.45224710166,
+    "lng": -3.65802902776776
+  },
+  {
+    "id": "af4dc333-b76a-4b02-8e1c-1585116964b3",
+    "name": "Biblioteca Pública Ruiz Egea (Chamberí)",
+    "district": "Chamberí",
+    "lat": 40.4466026500469,
+    "lng": -3.70287871406839
+  },
+  {
+    "id": "b168e15c-407f-4938-9212-ffe3422cb032",
+    "name": "Sala de estudio Centro Cultural San Juan Bautista (Ciudad Lineal)",
+    "district": "Ciudad Lineal",
+    "lat": 40.45224710166,
+    "lng": -3.65802902776776
+  },
+  {
+    "id": "b2ba793e-75ae-4f1f-8131-3814817f6d7d",
+    "name": "Biblioteca Pública Municipal Vallecas (Puente de Vallecas)",
+    "district": "Puente de Vallecas",
+    "lat": 40.3950239598106,
+    "lng": -3.66555430212749
+  },
+  {
+    "id": "b52b0a2e-f643-4659-bff2-2c61e3912f89",
+    "name": "Sala de estudio y lectura Escritor Pedro de Répide (Latina)",
+    "district": "Latina",
+    "lat": 40.4064903649811,
+    "lng": -3.73272119336649
+  },
+  {
+    "id": "b5c36930-fff1-4bc0-9819-34f39dd451dc",
+    "name": "Aula de estudio de Manoteras. Sala de estudio (Hortaleza)",
+    "district": "Hortaleza",
+    "lat": 40.4777751648804,
+    "lng": -3.65833979117563
+  },
+  {
+    "id": "b8655e1f-285e-4b36-9590-33ed0bd302b8",
+    "name": "Sala de estudio Luis Gonzaga (Chamartín)",
+    "district": "Chamartín",
+    "lat": 40.4449024052135,
+    "lng": -3.67807883634045
+  },
+  {
+    "id": "b87f167b-22be-472a-adfa-f528823ef3da",
+    "name": "Biblioteca Pública Municipal David Gistau (Salamanca)",
+    "district": "Salamanca",
+    "lat": 40.4319930972051,
+    "lng": -3.67092924354371
+  },
+  {
+    "id": "ba9e2a63-16ef-456e-b65d-1f4e272a4b97",
+    "name": "Biblioteca Pública Municipal Pío Baroja (Arganzuela)",
+    "district": "Arganzuela",
+    "lat": 40.4000365268201,
+    "lng": -3.70744881549506
+  },
+  {
+    "id": "baf3b5e0-a47b-437b-a895-13cb9f630b77",
+    "name": "Salas de estudio Centro cultural Mercado de Ibiza (Retiro)",
+    "district": "Retiro",
+    "lat": 40.4181787203752,
+    "lng": -3.67737633712539
+  },
+  {
+    "id": "bd3a9851-0e06-4eff-9209-854df8e57974",
+    "name": "Sala de estudio Centro cultural Lope de Vega (Puente de Vallecas)",
+    "district": "Puente de Vallecas",
+    "lat": 40.3862969914311,
+    "lng": -3.67185841638796
+  },
+  {
+    "id": "c7c41005-0834-4415-bc0c-17bc99425c2e",
+    "name": "Biblioteca Pública Municipal Eugenio Trías. Casa de Fieras de El Retiro (Retiro)",
+    "district": "Retiro",
+    "lat": 40.4166091081099,
+    "lng": -3.67959303680348
+  },
+  {
+    "id": "c81bb808-9d4a-4189-ade8-791c12e837d5",
+    "name": "Biblioteca Pública Municipal Francisco Ayala (Vicálvaro)",
+    "district": "Vicálvaro",
+    "lat": 40.3998289141041,
+    "lng": -3.62128189057038
+  },
+  {
+    "id": "c9451376-fb0b-4b57-8418-34bdbf4ed572",
+    "name": "Sala de estudio Centro Sociocultural El Greco (Latina)",
+    "district": "Latina",
+    "lat": 40.4083642179946,
+    "lng": -3.7444454382161
+  },
+  {
+    "id": "cda745c3-57a4-4f33-a718-f04f40d6f341",
+    "name": "Sala de estudio Alfredo Kraus (Fuencarral - El Pardo)",
+    "district": "Fuencarral-El Pardo",
+    "lat": 40.4908227561017,
+    "lng": -3.72160543300536
+  },
+  {
+    "id": "cf70cb4a-6b4d-4966-8c62-9c49fc204021",
+    "name": "Sala de estudio y lectura del Centro Cultural Las Californias (Retiro)",
+    "district": "Retiro",
+    "lat": 40.3970232448735,
+    "lng": -3.6735257547703
+  },
+  {
+    "id": "d1219a88-e579-4702-81cd-524beb03804f",
+    "name": "Biblioteca Pública José Hierro (Usera)",
+    "district": "Usera",
+    "lat": 40.3818823012918,
+    "lng": -3.71061571114706
+  },
+  {
+    "id": "d246ddc7-8e49-42d3-95a4-d0d76e15f9f6",
+    "name": "Biblioteca Pública Municipal Dámaso Alonso (Chamartín)",
+    "district": "Chamartín",
+    "lat": 40.4674533792132,
+    "lng": -3.68461127744427
+  },
+  {
+    "id": "d515cbf0-4b72-4eae-8bbc-22582773a82b",
+    "name": "Sala de estudios Casita del Reloj (Salamanca)",
+    "district": "Salamanca",
+    "lat": 40.4247629060017,
+    "lng": -3.6608579170962
+  },
+  {
+    "id": "daab995e-532f-4fef-9ca7-b1c86cf80760",
+    "name": "Sala de estudio y lectura Maqueda (Latina)",
+    "district": "Latina",
+    "lat": 40.3946826466726,
+    "lng": -3.76462574277251
+  },
+  {
+    "id": "db1d7f29-ebfe-4ff4-9f62-2907dc5e8b28",
+    "name": "Sala de estudio Centro Sociocultural Talleres de Creatividad (Puente de Vallecas)",
+    "district": "Puente de Vallecas",
+    "lat": 40.3901013887024,
+    "lng": -3.665323571696
+  },
+  {
+    "id": "dee9406c-26b3-4c1e-896c-05a36dc06ac3",
+    "name": "Biblioteca Pública José Luis Sampedro (Chamberí)",
+    "district": "Chamberí",
+    "lat": 40.4353996211461,
+    "lng": -3.69966592825407
+  },
+  {
+    "id": "df642255-a752-413c-ad55-62dff8b104ea",
+    "name": "Sala de estudio Villa del Prado de Arganzuela",
+    "district": "Arganzuela",
+    "lat": 40.3995185054406,
+    "lng": -3.6865740180089
+  },
+  {
+    "id": "e0b79b4a-a342-4784-9000-e67f7f60dce7",
+    "name": "Biblioteca Pública Javier Marías (Moratalaz)",
+    "district": "Moratalaz",
+    "lat": 40.4039923588428,
+    "lng": -3.64943848566076
+  },
+  {
+    "id": "e11b55cb-f246-4d04-b04a-9e9a678d6b6b",
+    "name": "Sala de estudio y lectura Fuente de San Pedro - Valderrivas",
+    "district": "Vicálvaro",
+    "lat": 40.4021808588039,
+    "lng": -3.60141148450391
+  },
+  {
+    "id": "e2660238-9a9f-4bdf-a437-98b02c8f488f",
+    "name": "Biblioteca Pública María Moliner (Villaverde)",
+    "district": "Villaverde",
+    "lat": 40.3495248859275,
+    "lng": -3.71011594649041
+  },
+  {
+    "id": "e4d844d5-0e76-42e2-b675-57d88c0ecd6c",
+    "name": "Biblioteca Pública Municipal Aluche (Latina)",
+    "district": "Latina",
+    "lat": 40.3959707236793,
+    "lng": -3.75627168529878
+  },
+  {
+    "id": "e843ff67-0200-4452-960b-390b32b2c3f5",
+    "name": "Biblioteca Pública Municipal Miguel Delibes (Moratalaz)",
+    "district": "Moratalaz",
+    "lat": 40.4097173769292,
+    "lng": -3.65298221091151
+  },
+  {
+    "id": "ed488d03-095c-4664-a950-0948a52d0034",
+    "name": "Biblioteca Pública Municipal Ana María Matute (Carabanchel)",
+    "district": "Carabanchel",
+    "lat": 40.3978673408794,
+    "lng": -3.7200882450089
+  },
+  {
+    "id": "f378e5fb-a2f1-440f-92f1-f896fd0062c1",
+    "name": "Biblioteca Pública Municipal Francisco Ibáñez (Chamartín)",
+    "district": "Chamartín",
+    "lat": 40.4481063619572,
+    "lng": -3.67623096200974
+  },
+  {
+    "id": "f950882c-8f04-41a5-abc4-78534ab46283",
+    "name": "Biblioteca Pública Municipal Canillejas (San Blas-Canillejas)",
+    "district": "San Blas-Canillejas",
+    "lat": 40.4464022918828,
+    "lng": -3.61179332042711
+  },
+  {
+    "id": "f95bbc44-e2da-4dab-a5d5-1b33914301d4",
+    "name": "Biblioteca Pública Municipal Huerta de la Salud (Hortaleza)",
+    "district": "Hortaleza",
+    "lat": 40.4757168810307,
+    "lng": -3.64667257750353
+  },
+  {
+    "id": "fb74764c-1f4f-4372-af2a-1278c32a91a1",
+    "name": "Sala de estudio Los Rosales",
+    "district": "Villaverde",
+    "lat": 40.3507479743351,
+    "lng": -3.67730644219692
+  },
+  {
+    "id": "fc1bc336-9cb0-46b0-b3c5-15c7631159a8",
+    "name": "Sala de estudio y lectura Cayetano Pando (Latina)",
+    "district": "Latina",
+    "lat": 40.4028137162069,
+    "lng": -3.7465317777879
+  },
+  {
+    "id": "fc87e25d-4bfd-4f6d-8114-b3814ad175a6",
+    "name": "Sala de estudio Sanchinarro (Hortaleza)",
+    "district": "Hortaleza",
+    "lat": 40.4904220059931,
+    "lng": -3.65534678910799
+  },
+  {
+    "id": "fcc93ebc-95b6-4b16-9792-d1f135c7df6c",
+    "name": "Sala de estudio y lectura Centro Sociocultural Teresa de Calcuta (Barajas)",
+    "district": "Barajas",
+    "lat": 40.4553207402328,
+    "lng": -3.58763018584694
+  },
+  {
+    "id": "fec99a20-5cba-4550-996b-e17f2899a329",
+    "name": "Sala de estudio del Centro Cultural Alfonso Ussía (Hortaleza)",
+    "district": "Hortaleza",
+    "lat": 40.493229722464,
+    "lng": -3.60780580026068
+  }
+]
