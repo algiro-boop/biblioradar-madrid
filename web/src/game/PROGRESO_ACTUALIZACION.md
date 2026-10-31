@@ -55,12 +55,13 @@ Especificación: `ACTUALIZACION_BIBLIORADAR_PARA_CLAUDE.md` del usuario. Rama lo
 - **Zoom en móvil**: los botones pasan a una pastilla horizontal en la esquina inferior derecha y se ocultan mientras está abierta la barra del editor.
 - **Sofás**: se dibujaban «de lado» (respaldo en el lado corto) y los lectores se sentaban en la punta. `seatFacing` hace que los asientos alargados miren por su lado largo; las sillas de una casilla no cambian.
 - Banner de visita compacto en móvil (botones en una fila desplazable) y `Button` transmite `aria-pressed`.
+- **Aviso de hidratación en el iPhone** (Chrome para iOS): el navegador añade `__gcruniqueid` a los campos de formulario antes de que React hidrate (buscador del mapa y formulario de sugerencias). Esos campos llevan `suppressHydrationWarning`; no era un fallo de la app y en producción no se mostraba.
 
 ## Verificado
 
 - `tsc` limpio y 308/308 tests de vitest (incluye que las bibliotecas de muestra son válidas en su nivel, solo usan muebles de su nivel y no dejan casillas inaccesibles).
 - `next build` con el flag a 0: no hay ruta `/mi-biblioteca` y ningún chunk de `.next/static` contiene textos del juego.
-- `next build` con el flag: incluye `/mi-biblioteca`.
+- `next build` con el flag: incluye `/mi-biblioteca` (repetido tras las bibliotecas de muestra; sin el flag sigue sin ruta ni textos del juego).
 - Navegador (panel de escritorio y móvil emulado de 375×812), con niveles 1, 5, 10 y 15:
   - vista de sala y vista general;
   - colocación continua y movimiento en grupo;
