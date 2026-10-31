@@ -1057,10 +1057,10 @@ export async function createPromo(canvas: HTMLCanvasElement): Promise<Promo> {
       },
       draw: (t) => {
         warmBg(t, "#2a1f1a", "#0e0a08");
-        if (Math.abs(t - 30) < 0.5 / FPS) roomShot.scene.setInput(showcaseInput("muestra-observatorio", "r1", noon));
+        if (Math.abs(t - 30) < 0.5 / FPS) roomShot.scene.setInput(showcaseInput("muestra-infinita", "r2", noon, 2));
         const since = t < 30 ? 29 : 30;
         drawShot(roomShot, 480, 1 + 0.05 * (1 - easeOutCubic((t - since) / 0.3)) + (t - since) * 0.03);
-        const name = t < 30 ? "Café Vinilo" : "Observatorio de Medianoche";
+        const name = t < 30 ? "Café Vinilo" : "La Biblioteca Infinita";
         const s = pop(t, since + 0.05, 0.3);
         if (s) {
           ctx.save();
@@ -1082,7 +1082,7 @@ export async function createPromo(canvas: HTMLCanvasElement): Promise<Promo> {
     {
       start: 31, end: 35,
       enter: () => {
-        roomShot.scene.setInput(showcaseInput("muestra-invernadero", "r1", sunrise - 30 * 60_000, 2));
+        roomShot.scene.setInput(showcaseInput("muestra-vinilo", "r1", sunrise - 30 * 60_000));
         roomShot.scene.zoom = 1.5;
         cue(31, "whoosh");
         cue(34, "sparkle");
@@ -1094,7 +1094,7 @@ export async function createPromo(canvas: HTMLCanvasElement): Promise<Promo> {
         const now = lerp(keys[seg]!, keys[seg + 1]!, easeInOut(k * (keys.length - 1) - seg));
         const night = now < sunrise || now > sunset + 20 * 60_000;
         warmBg(t, night ? "#141a3a" : "#3b2a20", night ? "#05070f" : "#120c08", false);
-        roomShot.scene.setInput(showcaseInput("muestra-invernadero", "r1", now, 2));
+        roomShot.scene.setInput(showcaseInput("muestra-vinilo", "r1", now));
         drawShot(roomShot, 480);
         const clock = new Intl.DateTimeFormat("es-ES", { timeZone: "Europe/Madrid", hour: "2-digit", minute: "2-digit" }).format(now);
         const s = pop(t, 31.15, 0.3);

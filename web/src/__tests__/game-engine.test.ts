@@ -5,6 +5,7 @@ import { DEFAULT_STYLE, LEVELS, roomAt, roomMax, ROOMS, STYLES } from "@/game/da
 import { DAILY_MISSIONS, getMission, WEEKLY_MISSIONS } from "@/game/data/missions";
 import { NEIGHBORS } from "@/game/data/neighbors";
 import { SHOWCASES } from "@/game/data/showcases";
+import { achievementAvailable } from "@/game/engine/achievements";
 import { availableStyles } from "@/game/engine/missions";
 import { coinsForOrdinal, dispatch, initialState, migrateState, type Command, type GameState } from "@/game/engine";
 import { entranceOf, reachableFrom, rotationsFor, seatFacing, validateLayout, walkableGrid } from "@/game/engine/layout";
@@ -80,7 +81,7 @@ describe("catálogo y datos", () => {
     expect(s.placements).toHaveLength(placedGifts.length);
   });
 
-  it("las bibliotecas vecinas ficticias son distribuciones válidas", () => {
+  it("las bibliotecas visitables son distribuciones válidas", () => {
     for (const n of NEIGHBORS) {
       const inventory = n.placements.map((p, i) => ({ uid: `u${i}`, itemId: p.itemId, source: "dev" as const, paid: 0, resellable: false, acquiredAt: 0 }));
       const placements = n.placements.map((p, i) => ({ uid: `u${i}`, room: p.room, x: p.x, y: p.y, rot: p.rot }));
@@ -622,8 +623,26 @@ describe("giros de los muebles", () => {
 });
 
 describe("bibliotecas de muestra", () => {
+  it("no asigna misiones ni promete logros de visitas que no se pueden cumplir con 2 bibliotecas", () => {
+    for (let k = 0; k < 30; k++) {
+      const s = ok(initialState(`visitas-${k}`, T0), { type: "dev_set_level", level: 1 + (k % 15) });
+      for (const m of s.missions) {
+        const rule = getMission(m.missionId).rule;
+        if (rule.type === "virtualVisits") expect(rule.n).toBeLessThanOrEqual(NEIGHBORS.length);
+        if (rule.type === "mixedViews") expect(rule.virtual).toBeLessThanOrEqual(NEIGHBORS.length);
+      }
+    }
+    const byId = (id: string) => ACHIEVEMENTS.find((a) => a.id === id)!;
+    expect(achievementAvailable(byId("A30"))).toBe(true);
+    expect(achievementAvailable(byId("A31"))).toBe(false);
+    expect(achievementAvailable(byId("A32"))).toBe(false);
+    expect(achievementAvailable(byId("A33"))).toBe(false);
+    expect(achievementAvailable(byId("A01"))).toBe(true);
+  });
+
   it("son válidas en su nivel, solo usan muebles de su nivel y se llega andando a todo", () => {
-    expect(SHOWCASES.length).toBeGreaterThanOrEqual(5);
+    expect(SHOWCASES.map((n) => n.libraryName)).toEqual(["Café Vinilo", "La Biblioteca Infinita"]);
+    expect(NEIGHBORS).toEqual(SHOWCASES);
     for (const n of SHOWCASES) {
       const inventory = n.placements.map((p, i) => ({ uid: `u${i}`, itemId: p.itemId, source: "dev" as const, paid: 0, resellable: false, acquiredAt: 0 }));
       const placements = n.placements.map((p, i) => ({ uid: `u${i}`, room: p.room, x: p.x, y: p.y, rot: p.rot }));

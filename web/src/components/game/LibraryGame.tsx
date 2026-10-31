@@ -446,7 +446,7 @@ export default function LibraryGame() {
       {activeTab === "missions" && <MissionsPanel state={state} now={now} notify={notify} />}
       {activeTab === "achievements" && <AchievementsPanel state={state} notify={notify} onOpenShowcase={() => setShowcaseOpen(true)} />}
       {activeTab === "progress" && <ProgressPanel state={state} now={now} notify={notify} />}
-      {activeTab === "visit" && <VisitPanel state={state} now={now} onVisit={visit} notify={notify} />}
+      {activeTab === "visit" && <VisitPanel state={state} onVisit={visit} />}
       {activeTab === "settings" && <SettingsPanel key={`${state.name}|${state.catName}`} state={state} notify={notify} onTutorial={() => { setTab(desktop ? "settings" : null); setTutorial(true); }} />}
       {activeTab === "dev" && GAME_DEV_TOOLS && (
         <DevPanel state={state} now={now} notify={notify} showAllRooms={showAllRooms} setShowAllRooms={setShowAllRooms} previewCat={previewCat} setPreviewCat={setPreviewCat} lightPreview={lightPreview} setLightPreview={setLightPreview} />

@@ -2,22 +2,24 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { unlockAudioNow } from "@/game/sfx";
 import { run, useGameState } from "@/game/store";
 
-/** Acceso flotante a «Mi Biblioteca» y racha (solo se monta con el flag del entorno de pruebas). */
+/** Acceso flotante a «Mi Biblioteca» y racha (no se monta con el juego apagado). */
 export function MyLibraryButton() {
   return (
     // En móvil, la racha va encima del acceso para no pisar el conmutador Mapa/Lista centrado.
     <div className="flex flex-col-reverse items-start gap-2 sm:flex-row sm:items-end">
       <Link
         href="/mi-biblioteca"
+        // El toque que abre la biblioteca también desbloquea el audio: la música suena al entrar.
+        onClick={unlockAudioNow}
         aria-label="Abrir Mi Biblioteca"
         title="Mi Biblioteca"
         className="pointer-events-auto flex h-11 items-center gap-2 rounded-2xl bg-white/95 px-2.5 text-sm font-semibold text-slate-700 shadow-lg shadow-black/15 ring-1 ring-slate-900/10 backdrop-blur transition-[background-color,scale] duration-150 hover:bg-slate-100 active:scale-[0.96] focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:outline-none"
       >
         <PixelLibraryIcon />
         <span className="hidden sm:inline">Mi Biblioteca</span>
-        <span className="hidden rounded-md bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-amber-800 uppercase sm:inline">Pruebas</span>
       </Link>
       <StreakChip />
     </div>

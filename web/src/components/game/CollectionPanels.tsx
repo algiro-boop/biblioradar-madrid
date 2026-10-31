@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { ACHIEVEMENTS, type AchievementCategory } from "@/game/data/achievements";
 import { findItem, ITEM_CATEGORIES, itemCategory, type CatalogItem } from "@/game/data/catalog";
 import { communityMissionsEnabled } from "@/game/data/missions";
+import { achievementAvailable } from "@/game/engine/achievements";
 import { showcaseCapacity, type GameState, type OwnedItem, type Placement } from "@/game/engine";
 import { resaleValue } from "@/game/engine/shop";
 import { run } from "@/game/store";
@@ -164,6 +165,7 @@ export function AchievementsPanel({ state, notify, onOpenShowcase }: { state: Ga
             {ACHIEVEMENTS.filter((a) => a.category === cat).map((a) => {
               const got = state.achievements[a.id];
               const hidden = a.secret && !got;
+              const soon = !got && !achievementAvailable(a);
               return (
                 <div key={a.id} className={`flex items-center gap-3 rounded-2xl p-2.5 ring-1 ${got ? "bg-white ring-amber-200" : "bg-slate-50 ring-slate-200"}`}>
                   <AchievementIcon icon={a.icon} locked={!got} />
@@ -174,6 +176,7 @@ export function AchievementsPanel({ state, notify, onOpenShowcase }: { state: Ga
                       <Coins value={a.coins} />
                       {a.rewardLabel && !hidden && <span>+ {a.rewardLabel}</span>}
                       {got && <span>· {new Date(got.unlockedAt).toLocaleDateString("es-ES", { timeZone: "Europe/Madrid" })}</span>}
+                      {soon && <span className="rounded bg-sky-100 px-1.5 font-semibold text-sky-800">Próximamente</span>}
                     </p>
                   </div>
                   {got && cap > 0 && (

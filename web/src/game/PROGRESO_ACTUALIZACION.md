@@ -106,6 +106,12 @@ Especificación: `ACTUALIZACION_BIBLIORADAR_PARA_CLAUDE.md` del usuario. Rama lo
   - Las vecinas son «Bibliotecas de ejemplo» inventadas, sin alias de personas en el banner de visita.
   - «Mi biblioteca pública» aparece como «Próximamente»: no hay servidor que la enseñe a nadie.
   - Las misiones comunitarias no se asignan, porque su progreso global solo existía simulado. Se activan con `NEXT_PUBLIC_GAME_COMMUNITY=1`, y sus logros salen como «Próximamente».
+- **Tras publicar** (a petición del usuario):
+  - El botón «Mi Biblioteca» del mapa ya no lleva la etiqueta «Pruebas».
+  - La música suena al entrar sin otro toque: el toque en «Mi Biblioteca» desbloquea el audio (`unlockAudioNow`, síncrono para Safari). Si se abre la ruta directamente, Chrome y Firefox aprovechan la activación previa del documento; Safari espera al primer toque.
+  - En Visitar solo quedan Café Vinilo y La Biblioteca Infinita. Las vecinas inventadas y las otras 4 de muestra se eliminan y `NEIGHBORS` pasa a ser `SHOWCASES`.
+  - Las misiones que piden más visitas de las posibles no se asignan, porque `feasible` ya lo comprueba. Los logros A31 y A32 (10 y 20 visitas) salen como «Próximamente» (`achievementAvailable`).
+  - El anuncio usa esas dos bibliotecas.
 - **Sugerencias en el mapa móvil**: el botón se había perdido al compactar la cabecera. Vuelve como icono junto al buscador.
   - Como ahora hay dos instancias del formulario, sus `id` se generan con `useId`.
   - En la fila superior no cabía: a 375–393 px cortaba «BiblioRadar».

@@ -3,6 +3,8 @@
 import { ACHIEVEMENTS, type AchievementDef } from "../data/achievements";
 import { findItem, shopGroup, type Tag } from "../data/catalog";
 import { roomsForLevel } from "../data/levels";
+import { communityMissionsEnabled } from "../data/missions";
+import { NEIGHBORS } from "../data/neighbors";
 import { itemLookup, placedInRoom, roomAccessible } from "./layout";
 import type { GameState } from "./types";
 
@@ -53,6 +55,16 @@ export function achievementMet(state: GameState, def: AchievementDef, communityD
         return item?.tags.includes("culture") && item.kind === "vitrine";
       });
   }
+}
+
+/**
+ * Logros que todavía no se pueden conseguir: los comunitarios sin misiones comunitarias y los de
+ * visitas que piden más bibliotecas distintas de las que hay. Se enseñan como «Próximamente».
+ */
+export function achievementAvailable(def: AchievementDef): boolean {
+  if (def.rule.type === "communityMissions") return communityMissionsEnabled();
+  if (def.rule.type === "virtualVisits") return NEIGHBORS.length >= def.rule.n;
+  return true;
 }
 
 export function pendingAchievements(state: GameState, communityDone: number): AchievementDef[] {

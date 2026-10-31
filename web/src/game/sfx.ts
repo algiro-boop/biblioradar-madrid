@@ -1,3 +1,4 @@
+import { audio } from "./audio";
 import { getGameState } from "./store";
 
 export type SfxKind =
@@ -10,14 +11,24 @@ const last = new Map<SfxKind, number>();
 let unlocked = false;
 
 /**
- * Los navegadores no dejan sonar audio hasta el primer gesto: se espera a él y entonces se crea
- * (o reanuda) el contexto de audio. Devuelve una función para dejar de escuchar.
+ * Desbloquea el audio ya. Hay que llamarlo dentro de un gesto (Safari solo deja arrancar el
+ * contexto de audio en el propio toque), p. ej. al pulsar «Mi Biblioteca» en el mapa: así la
+ * música suena en cuanto se abre la biblioteca, sin otro toque.
+ */
+export function unlockAudioNow() {
+  if (typeof window === "undefined") return;
+  unlocked = true;
+  audio().unlock();
+}
+
+/**
+ * Los navegadores no dejan sonar audio hasta el primer gesto. Si ya lo hubo (se llegó desde el mapa)
+ * suena enseguida; si no, se espera al primero. Devuelve una función para dejar de escuchar.
  */
 export function unlockAudioOnGesture(onUnlock?: () => void): () => void {
   if (typeof window === "undefined") return () => {};
   const go = () => {
-    unlocked = true;
-    void import("./audio").then(({ audio }) => audio().unlock());
+    unlockAudioNow();
     onUnlock?.();
     off();
   };
@@ -25,6 +36,8 @@ export function unlockAudioOnGesture(onUnlock?: () => void): () => void {
     window.removeEventListener("pointerdown", go, true);
     window.removeEventListener("keydown", go, true);
   };
+  // Activación «pegajosa» del documento: Chrome y Firefox dejan reanudar el audio sin otro toque.
+  if (!unlocked && navigator.userActivation?.hasBeenActive) unlockAudioNow();
   if (unlocked) {
     queueMicrotask(() => onUnlock?.());
     return () => {};
@@ -43,5 +56,5 @@ export function sfx(kind: SfxKind) {
   last.set(kind, now);
   const volume = settings.sfxVolume ?? 0.6;
   if (volume <= 0) return;
-  void import("./audio").then(({ audio }) => audio().sfx(kind, volume));
+  audio().sfx(kind, volume);
 }

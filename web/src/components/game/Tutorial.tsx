@@ -71,7 +71,7 @@ export const TUTORIAL_STEPS: TutorialStep[] = [
   {
     icon: <Users className="size-5" aria-hidden />,
     title: "Visitar y ajustes",
-    body: "Visita otras bibliotecas y las de Inspiración para coger ideas, y dales «me gusta». En Ajustes cambias el nombre y la música, y puedes repetir este tutorial.",
+    body: "En Visitar tienes bibliotecas de inspiración para coger ideas y darles «me gusta». En Ajustes cambias el nombre y la música, y puedes repetir este tutorial.",
     tabs: ["visit", "settings"],
   },
   {

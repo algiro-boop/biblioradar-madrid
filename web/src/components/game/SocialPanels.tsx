@@ -3,11 +3,9 @@
 import { GraduationCap, Heart, Music, Sparkles, Volume2 } from "lucide-react";
 import { useState } from "react";
 import { hasFeature } from "@/game/data/levels";
-import { NEIGHBORS } from "@/game/data/neighbors";
 import { SHOWCASES } from "@/game/data/showcases";
 import type { GameState, MusicSettings } from "@/game/engine";
 import { run } from "@/game/store";
-import { madridDateKey } from "@/game/time";
 import { sfx } from "@/game/sfx";
 import { report } from "./ShopPanel";
 import { Button, Section } from "./ui";
@@ -16,11 +14,10 @@ type Notify = (m: string, k?: "ok" | "error") => void;
 
 // ---------------------------------------------------------------- visitas
 
-export function VisitPanel({ state, now, onVisit, notify }: { state: GameState; now: number; onVisit: (id: string) => void; notify: Notify }) {
-  const today = madridDateKey(now);
+export function VisitPanel({ state, onVisit }: { state: GameState; onVisit: (id: string) => void }) {
   return (
     <div className="space-y-6">
-      <Section title="Inspiración" aside={`${SHOWCASES.length} bibliotecas de muestra`}>
+      <Section title="Inspiración" aside={`${SHOWCASES.length} bibliotecas`}>
         <p className="text-xs text-slate-500">Montadas con piezas del catálogo para que veas todo lo que se puede construir.</p>
         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
           {SHOWCASES.map((n) => (
@@ -40,30 +37,6 @@ export function VisitPanel({ state, now, onVisit, notify }: { state: GameState; 
         </div>
       </Section>
       <PublicLibrary />
-      <Section title="Bibliotecas de ejemplo">
-      <p className="text-xs text-slate-500">
-        Bibliotecas <strong>inventadas</strong>, con alias ficticios, para que pruebes las visitas y los «me gusta». Todavía no se pueden visitar las de otras personas.
-      </p>
-      <div className="space-y-2">
-        {NEIGHBORS.filter((n) => !n.blurb).map((n) => {
-          const visited = state.virtualVisits.some((v) => v.ownerId === n.id && v.date === today);
-          return (
-            <button key={n.id} type="button" onClick={() => onVisit(n.id)}
-              className="flex w-full items-center gap-3 rounded-2xl bg-white p-3 text-left ring-1 ring-slate-200 transition-[scale,box-shadow] hover:shadow-md active:scale-[0.98]">
-              <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-amber-100 text-lg" aria-hidden>🏛️</span>
-              <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm font-semibold">{n.libraryName}</span>
-                <span className="block text-xs text-slate-500">ejemplo · nivel {n.level} · {n.rooms.length} {n.rooms.length === 1 ? "sala" : "salas"}</span>
-              </span>
-              <span className="flex shrink-0 flex-col items-end gap-1 text-[11px]">
-                {state.likes[n.id] && <Heart className="size-4 fill-rose-500 text-rose-500" aria-label="Te gusta" />}
-                {visited && <span className="rounded bg-emerald-100 px-1.5 font-semibold text-emerald-800">Visitada hoy</span>}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-      </Section>
     </div>
   );
 }
