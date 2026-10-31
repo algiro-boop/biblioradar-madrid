@@ -28,6 +28,8 @@ export interface SceneInput {
   librarian: boolean;
   cat: boolean;
   now: number;
+  /** Vista general: sala aún bloqueada (se enseña atenuada con candado). */
+  locked?: boolean;
 }
 
 export interface Ghost {
@@ -249,6 +251,11 @@ class RoomView {
     this.ox = ox;
     this.oy = oy;
     this.iso = { ox: this.local.ox + ox, oy: this.local.oy + oy };
+  }
+
+  /** Coloca la sala por su origen isométrico (salas contiguas sobre una misma rejilla). */
+  placeIso(iso: Iso) {
+    this.place(Math.round(iso.ox - this.local.ox), Math.round(iso.oy - this.local.oy));
   }
 
   private cacheKey(): string {
@@ -780,7 +787,8 @@ export class Scene {
   private offX = 0;
   private offY = 0;
   private zzzTimer = 0;
-  private labels: { id: string; name: string; floor: number; x: number; y: number }[] = [];
+  private labels: { id: string; name: string; floor: number; x: number; y: number; locked: number }[] = [];
+  private floorLabels: { text: string; x: number; y: number }[] = [];
   zoom = 1;
   panX = 0;
   panY = 0;
@@ -827,6 +835,7 @@ export class Scene {
     v.setInput(input);
     this.resizeBuffer(v.bw, v.bh);
     this.labels = [];
+    this.floorLabels = [];
     if (switched) this.particles = [];
     this.draw();
   }
@@ -841,34 +850,45 @@ export class Scene {
       this.particles = [];
     }
     this.mode = "overview";
-    const GAP = 28 * ZS;
-    const LABEL = 30 * ZS;
+    // Cada planta es un edificio continuo: sus salas se suceden a lo largo de x sobre la misma
+    // rejilla isométrica, separadas solo por un tabique. La planta alta se despega hacia arriba
+    // (vista «explotada») para que no tape la baja.
+    const WALL = 0.3;
+    const ROW_GAP = 30 * ZS;
     const rows = [1, 0].map((f) => inputs.filter((i) => i.room.floor === f)).filter((r) => r.length);
     for (const i of inputs) this.view(i.room.id).setInput(i);
-    const rowSize = rows.map((r) => {
-      const views = r.map((i) => this.view(i.room.id));
-      return { w: views.reduce((n, v) => n + v.bw, 0) + GAP * (views.length - 1), h: Math.max(...views.map((v) => v.bh)) + LABEL };
-    });
-    const bw = Math.max(...rowSize.map((r) => r.w)) + GAP * 2;
-    const bh = rowSize.reduce((n, r) => n + r.h, 0) + GAP * (rows.length + 1);
+    const span = rows.map((r) => ({
+      w: r.reduce((n, i) => n + i.room.w, 0) + WALL * (r.length - 1),
+      h: Math.max(...r.map((i) => i.room.h)),
+    }));
+    const maxH = Math.max(...span.map((s) => s.h));
+    const ox = maxH * (TW / 2) + MARGIN_X + 60 * ZS;
+    const bw = Math.round(Math.max(...span.map((s) => (s.w + maxH) * (TW / 2))) + MARGIN_X * 2 + 60 * ZS);
+    const rowH = span.map((s) => (s.w + s.h) * (TH / 2) + TOP + SLAB + 12);
+    const bh = Math.round(rowH.reduce((a, b) => a + b, 0) + ROW_GAP * rows.length);
     this.resizeBuffer(bw, bh);
     this.labels = [];
+    this.floorLabels = [];
     this.order = [];
-    let y = GAP;
+    let top = ROW_GAP / 2;
     rows.forEach((r, ri) => {
-      const size = rowSize[ri]!;
-      let x = Math.round((bw - size.w) / 2);
+      const base: Iso = { ox, oy: top + TOP };
+      let x = 0;
+      const placed: string[] = [];
       for (const i of r) {
         const v = this.view(i.room.id);
-        const vy = y + LABEL + (size.h - LABEL - v.bh);
-        v.place(x, vy);
-        // Etiqueta sobre el centro de la pared del fondo
-        const [lx, ly] = project(v.iso, 0, 0, WALL_H + 8);
-        this.labels.push({ id: i.room.id, name: i.room.name, floor: i.room.floor, x: lx, y: Math.max(y + 8, ly - LABEL) });
-        this.order.push(i.room.id);
-        x += v.bw + GAP;
+        v.placeIso({ ox: project(base, x, 0)[0], oy: project(base, x, 0)[1] });
+        const [lx, ly] = project(v.iso, i.room.w / 2, 0, WALL_H + 10);
+        this.labels.push({ id: i.room.id, name: i.room.name, floor: i.room.floor, x: lx, y: ly, locked: i.locked ? i.room.level : 0 });
+        placed.push(i.room.id);
+        x += i.room.w + WALL;
       }
-      y += size.h + GAP;
+      // Se pinta de la sala más a la derecha a la más a la izquierda: el tabique queda tapado
+      // por la sala vecina y el corte se lee como una casa de muñecas abierta.
+      this.order.push(...placed.reverse());
+      const [fx, fy] = project(base, 0, span[ri]!.h, 0);
+      this.floorLabels.push({ text: r[0]!.room.floor ? "Planta alta" : "Planta baja", x: fx - 8 * ZS, y: fy - 40 * ZS });
+      top += rowH[ri]! + ROW_GAP;
     });
     this.draw();
   }
@@ -990,10 +1010,14 @@ export class Scene {
     const overlay = this.mode === "room" ? this.overlay : null;
     let night = 0;
     for (const v of views) {
+      // Salas aún bloqueadas en la vista general: maqueta vacía y atenuada.
+      const ghostRoom = this.mode === "overview" && v.input.locked;
+      if (ghostRoom) ctx.globalAlpha = 0.42;
       if (building) v.drawBuilding(ctx, ct);
       else v.drawStatic(ctx);
       if (overlay?.editing) v.drawGrid(ctx);
-      v.drawDynamic(ctx, this.time, overlay, { on: building, ct });
+      if (!ghostRoom) v.drawDynamic(ctx, this.time, overlay, { on: building, ct });
+      ctx.globalAlpha = 1;
       night = Math.max(night, daylight(v.input.now).night);
     }
     // Penumbra nocturna solo sobre lo pintado; halos de lámparas por encima.
@@ -1019,19 +1043,21 @@ export class Scene {
     ctx.font = `700 ${13 * ZS}px ui-sans-serif, system-ui, sans-serif`;
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
-    for (const l of this.labels) {
-      const text = `${l.floor ? "Planta alta" : "Planta baja"} · ${l.name}`;
+    const pill = (text: string, cx: number, cy: number, bg: string, fg: string) => {
       const w = ctx.measureText(text).width + 16 * ZS;
       const h = 22 * ZS;
-      const x = Math.round(l.x - w / 2);
-      const y = Math.round(l.y - h / 2);
-      ctx.fillStyle = "rgba(20,14,10,0.78)";
+      ctx.fillStyle = bg;
       ctx.beginPath();
-      ctx.roundRect(x, y, w, h, 8 * ZS);
+      ctx.roundRect(Math.round(cx - w / 2), Math.round(cy - h / 2), w, h, 8 * ZS);
       ctx.fill();
-      ctx.fillStyle = "#fff6e3";
-      ctx.fillText(text, l.x, l.y + 1);
+      ctx.fillStyle = fg;
+      ctx.fillText(text, cx, cy + 1);
+    };
+    for (const l of this.labels) {
+      pill(l.locked ? `🔒 ${l.name} · nivel ${l.locked}` : l.name, l.x, l.y, l.locked ? "rgba(60,52,46,0.85)" : "rgba(20,14,10,0.8)", l.locked ? "#e8dccb" : "#fff6e3");
     }
+    ctx.font = `800 ${15 * ZS}px ui-sans-serif, system-ui, sans-serif`;
+    for (const f of this.floorLabels) pill(f.text, f.x, f.y, "rgba(224,176,74,0.95)", "#2a1f1a");
   }
 
   private drawParticles(ctx: Ctx2D) {
@@ -1160,12 +1186,16 @@ export class Scene {
   roomAt(clientX: number, clientY: number): string | null {
     if (this.mode !== "overview") return null;
     const [bx, by] = this.toBuffer(clientX, clientY);
-    for (const v of this.active()) {
-      const { room } = v.input;
+    const views = this.active();
+    // Primero el suelo; si no, la sala cuya pared (proyectada al suelo) queda más cerca.
+    for (const v of views) {
       const [gx, gy] = unproject(v.iso, bx, by);
-      const onFloor = gx >= 0 && gy >= 0 && gx <= room.w && gy <= room.h;
-      const inBox = bx >= v.ox && bx <= v.ox + v.bw && by >= v.oy + TOP - WALL_H * ZS && by <= v.oy + v.bh;
-      if (onFloor || (inBox && gx + gy >= -2)) return room.id;
+      if (gx >= 0 && gy >= 0 && gx <= v.input.room.w && gy <= v.input.room.h) return v.input.room.id;
+    }
+    for (const v of views) {
+      const { room } = v.input;
+      const [gx, gy] = unproject(v.iso, bx, by + (WALL_H * ZS) / 2);
+      if (gx >= -1 && gy >= -1 && gx <= room.w && gy <= room.h) return room.id;
     }
     return null;
   }

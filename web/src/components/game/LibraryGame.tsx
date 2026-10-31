@@ -160,10 +160,16 @@ export default function LibraryGame() {
     [allPlacements, editor.styles, state.level, state.showcase.length, students, catHere, minute],
   );
   const ownInput = useMemo<SceneInput>(() => inputFor(room, roomLocked, true), [inputFor, room, roomLocked]);
-  const canOverview = unlocked.length > 1 && !visiting && !editing;
+  // Vista general desde el nivel 1: las salas aún bloqueadas se ven como maqueta con candado.
+  const canOverview = state.level >= 1 && !visiting && !editing;
   const overviewInputs = useMemo(
-    () => (overview && canOverview ? unlocked.map((r) => inputFor(r, false, r.id === "r1")) : null),
-    [overview, canOverview, unlocked, inputFor],
+    () => (overview && canOverview
+      ? ROOMS.map((spec) => {
+        const locked = spec.level > state.level;
+        return { ...inputFor(roomAt(spec.id, Math.max(state.level, spec.level), state.expansions[spec.id]), locked, spec.id === "r1"), locked };
+      })
+      : null),
+    [overview, canOverview, inputFor, state.level, state.expansions],
   );
 
   const visitInput = useMemo<SceneInput | null>(() => {
@@ -432,7 +438,13 @@ export default function LibraryGame() {
       {/* Escenario */}
       <div className="relative min-h-0 min-w-0 flex-1 bg-[radial-gradient(ellipse_at_center,#4a3426_0%,#2b211b_70%)]">
         <GameStage key={visiting ?? "own"} ref={stageRef} input={input} overview={overviewInputs} overlay={overlay} onTap={onTap} onHover={onHover} onCatNap={onCatNap}
-          onOpenRoom={(r) => { setRoomId(r); setOverview(false); sfx("tab"); }}
+          onOpenRoom={(r) => {
+            const spec = getRoom(r);
+            if (spec.level > state.level) return notify(`${spec.name} se desbloquea en el nivel ${spec.level}.`);
+            setRoomId(r);
+            setOverview(false);
+            sfx("tab");
+          }}
           label={overviewInputs ? `${state.name}: vista general con ${overviewInputs.length} salas. Toca una sala para entrar.` : stageLabel} />
 
         {/* Barra superior */}
@@ -510,8 +522,8 @@ export default function LibraryGame() {
           </div>
         )}
         {overviewInputs && (
-          <p className="pointer-events-none absolute inset-x-4 bottom-4 mx-auto max-w-xs rounded-2xl bg-slate-900/85 px-3 py-2 text-center text-xs font-semibold text-white">
-            Vista general · pellizca o usa +/− para acercar y toca una sala para entrar.
+          <p className="pointer-events-none absolute right-16 bottom-4 left-44 mx-auto max-w-xs rounded-2xl bg-slate-900/85 px-3 py-2 text-center text-xs font-semibold text-white max-sm:hidden">
+            Pellizca o usa +/− para acercar y toca una sala para entrar.
           </p>
         )}
         {roomLocked && !neighbor && !overviewInputs && (
@@ -521,11 +533,19 @@ export default function LibraryGame() {
         )}
 
         {/* Acceso al editor y siesta accesible */}
-        {!editing && canEdit && !overviewInputs && (
-          <div className="absolute bottom-3 left-3 flex flex-col gap-2">
-            <Button onClick={() => { setEditing(true); setOverview(false); setTab(desktop ? tab : null); sfx("tab"); }} className="shadow-lg">
-              <Pencil className="size-4" aria-hidden />Decorar
-            </Button>
+        {!editing && (canEdit || canOverview) && (
+          <div className="absolute bottom-3 left-3 flex flex-col items-start gap-2">
+            {canOverview && (
+              <Button variant={overviewInputs ? "gold" : "secondary"} className="shadow-lg" aria-pressed={!!overviewInputs}
+                onClick={() => { setOverview(!overviewInputs); sfx("tab"); }}>
+                <Building2 className="size-4" aria-hidden />{overviewInputs ? "Volver a la sala" : "Vista general"}
+              </Button>
+            )}
+            {canEdit && !overviewInputs && (
+              <Button onClick={() => { setEditing(true); setOverview(false); setTab(desktop ? tab : null); sfx("tab"); }} className="shadow-lg">
+                <Pencil className="size-4" aria-hidden />Decorar
+              </Button>
+            )}
             {hasFeature(state.level, "cat") && !state.catNapSeen && reducedMotion() && (
               <Button variant="secondary" onClick={() => onCatNap()}>Ver la siesta de {state.catName}</Button>
             )}
