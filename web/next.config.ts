@@ -1,7 +1,16 @@
+import { networkInterfaces } from "node:os";
 import type { NextConfig } from "next";
+
+// IPs del Mac en la red local: permiten abrir el servidor de desarrollo desde el móvil
+// (http://<ip>:3100). Solo afecta a `next dev`; el build de producción lo ignora.
+const lanIps = Object.values(networkInterfaces())
+  .flat()
+  .filter((n) => n && n.family === "IPv4" && !n.internal)
+  .map((n) => n!.address);
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  allowedDevOrigins: lanIps,
   // Aislar las pruebas sin interrumpir el servidor de desarrollo del usuario.
   distDir: process.env.BIBLIORADAR_E2E === "1" ? ".next-e2e" : ".next",
   poweredByHeader: false,
