@@ -565,7 +565,7 @@ export default function LibraryGame() {
 
         {/* Solar vacío y salas bloqueadas */}
         {state.level === 0 && !neighbor && (
-          <div className="absolute inset-x-4 bottom-4 mx-auto max-w-sm rounded-3xl bg-white/95 p-4 text-center shadow-xl ring-1 ring-black/10">
+          <div className="absolute inset-x-4 bottom-4 mx-auto max-w-sm rounded-3xl max-sm:bottom-16 bg-white/95 p-4 text-center shadow-xl ring-1 ring-black/10">
             <p className="text-base font-bold">Un solar vacío… por ahora</p>
             <p className="mt-1 text-sm text-slate-600">Haz tu primer reporte válido en una biblioteca real y aquí se construirá tu primera sala.</p>
             <Link href="/" className="mt-3 inline-flex rounded-xl bg-emerald-600 px-3 py-2 text-sm font-semibold text-white">Ir al mapa a reportar</Link>

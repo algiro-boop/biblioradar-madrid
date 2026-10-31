@@ -39,7 +39,7 @@ function Reveal({ open, className = "", children }: { open: boolean; className?:
         open ? "grid-rows-[1fr] opacity-100 duration-300" : "grid-rows-[0fr] opacity-0 duration-200"
       } ${className}`}
     >
-      <div className={`min-h-0 ${open && settled ? "" : "overflow-hidden"}`}>{children}</div>
+      <div className={`min-h-0 min-w-0 ${open && settled ? "" : "overflow-hidden"}`}>{children}</div>
     </div>
   );
 }

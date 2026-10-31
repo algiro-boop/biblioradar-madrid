@@ -57,6 +57,11 @@ Especificación: `ACTUALIZACION_BIBLIORADAR_PARA_CLAUDE.md` del usuario. Rama lo
 - Banner de visita compacto en móvil (botones en una fila desplazable) y `Button` transmite `aria-pressed`.
 - **Aviso de hidratación en el iPhone** (Chrome para iOS): el navegador añade `__gcruniqueid` a los campos de formulario antes de que React hidrate (buscador del mapa y formulario de sugerencias). Esos campos llevan `suppressHydrationWarning`; no era un fallo de la app y en producción no se mostraba.
 
+### Revisión en el simulador de iOS (Safari, iPhone 17 Pro Max)
+
+- La tarjeta «Un solar vacío… por ahora» tapaba la pastilla de zoom en móvil: ahora queda por encima (`max-sm:bottom-16`).
+- **Cabecera del mapa (código de la app pública)**: entre ~430 y 440 px de ancho, «Instalar app» se salía por la derecha porque el hijo de `Reveal` (un grid) conservaba `min-width: auto` y el título no podía encoger. Con `min-w-0` cabe en 375, 393, 430 y 440 px. Este cambio afecta a la app pública cuando se publique la rama.
+
 ## Verificado
 
 - `tsc` limpio y 308/308 tests de vitest (incluye que las bibliotecas de muestra son válidas en su nivel, solo usan muebles de su nivel y no dejan casillas inaccesibles).
@@ -71,6 +76,7 @@ Especificación: `ACTUALIZACION_BIBLIORADAR_PARA_CLAUDE.md` del usuario. Rama lo
   - hoja de sprites con 22 muebles asimétricos en los 4 giros;
   - compra de un suelo, aplicación en una sala y guardado; vista general y El Atril tras arreglar el remate;
   - las 6 bibliotecas de muestra en móvil emulado, la vista general de visita y el modo foto.
+- Simulador de iOS (Safari, modo claro y oscuro): mapa, Mi Biblioteca en nivel 0, panel «Visitar» con Inspiración, visita a una muestra de una sala y a otra de dos (chips, «Vista general», zoom), aviso de logro y modo foto.
 
 ## Limitaciones conocidas
 
