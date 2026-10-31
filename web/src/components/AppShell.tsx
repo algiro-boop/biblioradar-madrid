@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useDeferredValue, useMemo, useRef, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { useCommunityActivity } from "@/hooks/useCommunityActivity";
 import { LiveActivityButton } from "./LiveActivityButton";
 import { useGeolocation } from "@/hooks/useGeolocation";
@@ -26,6 +26,12 @@ const MapView = dynamic(() => import("./MapView"), {
     <div className="grid h-full w-full place-items-center bg-slate-100 text-sm text-slate-400">Cargando mapa…</div>
   ),
 });
+
+// Entorno de pruebas: el literal de entorno se sustituye al compilar y, sin el flag, esto es
+// código muerto que el bundler elimina (ni botón ni juego en el build público).
+const MyLibraryButton = process.env.NEXT_PUBLIC_GAMIFICATION === "1"
+  ? dynamic(() => import("./game/MyLibraryButton").then((m) => m.MyLibraryButton), { ssr: false })
+  : null;
 
 function ConfigNotice({ message }: { message: string }) {
   return (
@@ -87,6 +93,11 @@ export function AppShell() {
   const mapLibraries = useMemo(() => items.map((i) => i.library), [items]);
 
   const selected = useMemo(() => libraries.find((l) => l.id === selectedId) ?? null, [libraries, selectedId]);
+
+  // Entorno de pruebas: abrir una ficha cuenta para las misiones de exploración del juego.
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_GAMIFICATION === "1" && selectedId) void import("@/game/bridge").then((m) => m.viewLibrary(selectedId));
+  }, [selectedId]);
 
   // Ubicación bloqueada: la ayuda queda abierta hasta que un reintento funcione o se cierre.
   type Blocked = { purpose: LocationPurpose; resolve: (p: UserPosition) => void; reject: (e: unknown) => void };
@@ -255,6 +266,11 @@ export function AppShell() {
           <div className="lg:hidden">
             <ViewToggle view={view} onChange={setView} />
           </div>
+          {MyLibraryButton && (
+            <div className="absolute left-0 bottom-0">
+              <MyLibraryButton />
+            </div>
+          )}
           <div className="absolute right-0 bottom-0">
             <MapControls near={nearMe} locating={geo.status === "locating"} onToggleNear={() => void toggleNear()} />
           </div>
