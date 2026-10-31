@@ -1,10 +1,10 @@
 // Service worker de BiblioRadar Madrid.
 // Solo cachea el "shell" de la app del mismo origen. Nunca cachea Supabase (datos en tiempo real)
 // ni teselas de mapa de terceros.
-const VERSION = "v3"; // Subir al cambiar iconos u otros ficheros de PRECACHE.
+const VERSION = "v4"; // Subir al cambiar iconos u otros ficheros de PRECACHE.
 const SHELL_CACHE = `biblioradar-shell-${VERSION}`;
 const STATIC_CACHE = `biblioradar-static-${VERSION}`;
-const PRECACHE = ["/", "/app", "/manifest.webmanifest", "/icon.svg", "/icon-192.png", "/icon-512.png"];
+const PRECACHE = ["/", "/app", "/manifest.webmanifest", "/icon-mark.png", "/icon-192.png", "/icon-512.png"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

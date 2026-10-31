@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   formatDetection: { telephone: false },
   icons: {
     icon: [
-      { url: `/icon.svg?v=${ICON_VERSION}`, type: "image/svg+xml" },
+      { url: `/icon-mark.png?v=${ICON_VERSION}`, type: "image/png", sizes: "192x192" },
       { url: `/favicon.ico?v=${ICON_VERSION}`, sizes: "16x16 32x32 48x48" },
     ],
     apple: [{ url: `/apple-touch-icon.png?v=${ICON_VERSION}`, sizes: "180x180" }],

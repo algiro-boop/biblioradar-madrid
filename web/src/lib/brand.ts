@@ -1,4 +1,5 @@
 /** Subir al regenerar los iconos (`npm run icons`) para que iOS/Android no usen los viejos. */
-export const ICON_VERSION = 2;
+export const ICON_VERSION = 3;
 
-export const BRAND_ICON_SRC = `/icon.svg?v=${ICON_VERSION}`;
+/** Solo la ilustración del logo (sin el nombre), que es lo que se distingue a 28–48 px. */
+export const BRAND_ICON_SRC = `/icon-mark.png?v=${ICON_VERSION}`;

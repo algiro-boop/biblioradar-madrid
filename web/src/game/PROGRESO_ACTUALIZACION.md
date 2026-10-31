@@ -69,6 +69,14 @@ Especificación: `ACTUALIZACION_BIBLIORADAR_PARA_CLAUDE.md` del usuario. Rama lo
 - En Dev, «Luz del día» enseña las horas de hoy y deja ver amanecer, día, atardecer o noche sin mover el reloj del juego (que afectaría a rachas y misiones).
 - **Tutorial** (`components/game/Tutorial.tsx`): 10 pasos breves (reportes y niveles, monedas, racha, misiones, tienda, inventario y decorar, logros y progreso, visitar y ajustes, luz de Madrid). Cada paso ilumina su pestaña y las cifras salen del motor. Sale una sola vez por navegador: se marca al mostrarse, así que no se repite aunque se cierre a medias. Se puede volver a ver desde Ajustes → Ayuda. Espera a que no haya ninguna celebración en pantalla.
 
+### Nuevo logo (afecta a la app pública cuando se publique la rama)
+
+- El logo pixel art (`scripts/brand/logo.webp`) sustituye al radar vectorial. `npm run icons` genera desde él:
+  - con el logo completo a sangre: el icono de iOS (180), los de la PWA (192 y 512 con esquinas redondeadas) y el maskable de Android (el nombre cabe en el círculo del 80 %);
+  - con la escena sin el nombre (las letras no se leen a 16–48 px): el favicon y `icon-mark.png`, usado en la cabecera, en el diálogo de instalación y en sus maquetas.
+- `icon.svg` se elimina. `ICON_VERSION` pasa a 3 y el service worker a `v4`, para que iOS y Android no sigan mostrando los iconos viejos.
+- Se quita el barrido verde que giraba sobre el logo de la cabecera (pensado para el radar): el estado «en vivo» ya lo indica el punto verde.
+
 ## Verificado
 
 - `tsc` limpio y 308/308 tests de vitest (incluye que las bibliotecas de muestra son válidas en su nivel, solo usan muebles de su nivel y no dejan casillas inaccesibles).

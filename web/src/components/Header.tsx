@@ -79,16 +79,7 @@ export function Header({
       <Reveal open={!collapsed}>
         <div className="flex items-center justify-between gap-2 px-1 pb-2 lg:pb-2.5">
           <h1 className="flex min-w-0 items-center gap-2 text-base font-extrabold tracking-tight text-slate-900">
-            <span className="relative size-7 shrink-0 overflow-hidden rounded-lg">
-              <img src={BRAND_ICON_SRC} alt="" width={28} height={28} className="size-7" />
-              {/* Barrido de radar sobre el logo mientras llegan datos en vivo. */}
-              {connection === "live" && (
-                <span
-                  className="absolute inset-[3px] rounded-full bg-[conic-gradient(from_0deg,transparent_0deg,rgb(52_211_153/0.55)_40deg,transparent_70deg)] mix-blend-screen motion-safe:animate-[radar-spin_3.2s_linear_infinite] motion-reduce:hidden"
-                  aria-hidden
-                />
-              )}
-            </span>
+            <img src={BRAND_ICON_SRC} alt="" width={28} height={28} className="size-7 shrink-0 rounded-lg" />
             <span className="truncate">
               BiblioRadar <span className="font-semibold text-slate-400 max-[379px]:hidden">Madrid</span>
             </span>

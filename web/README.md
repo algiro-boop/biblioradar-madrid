@@ -16,7 +16,7 @@ npm run dev
 | `npm run build` / `npm start` | Build de producción y servidor |
 | `npm run typecheck` | `tsc --noEmit` en modo estricto |
 | `npm test` | Tests de Vitest (`src/__tests__`) |
-| `npm run icons` | Regenera los PNG de la PWA desde `public/icon.svg` |
+| `npm run icons` | Regenera los iconos (PWA, iOS, favicon y cabecera) desde el logo `scripts/brand/logo.webp` |
 
 Geolocalización y Web Crypto solo funcionan en contexto seguro: `localhost` o HTTPS. Para probar en el móvil usa un túnel HTTPS o el despliegue, no la IP de la red local.
 

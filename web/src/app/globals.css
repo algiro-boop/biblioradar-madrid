@@ -180,12 +180,6 @@ body {
   animation: radar-ping 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
-@keyframes radar-spin {
-  to {
-    rotate: 360deg;
-  }
-}
-
 @keyframes bar-grow {
   from {
     scale: 0 1;
