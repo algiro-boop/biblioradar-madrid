@@ -96,27 +96,28 @@ export function FeedbackButton({ libraries, compact = false }: { libraries: Choi
               <button type="button" onClick={() => setOpen(false)} className="mt-5 rounded-full bg-slate-900 px-6 py-3 font-semibold text-white">Cerrar</button>
             </div>
           ) : (
-            <form onSubmit={(e) => void send(e)} aria-busy={phase === "sending"} className="mt-4 min-h-0 space-y-3 overflow-y-auto overscroll-contain px-0.5 pb-0.5">
+            // suppressHydrationWarning: Chrome para iOS añade __gcruniqueid a los campos antes de hidratar.
+            <form suppressHydrationWarning onSubmit={(e) => void send(e)} aria-busy={phase === "sending"} className="mt-4 min-h-0 space-y-3 overflow-y-auto overscroll-contain px-0.5 pb-0.5">
               <fieldset disabled={phase === "sending"} className="min-w-0 space-y-3 disabled:opacity-60">
                 <label className="block text-sm font-medium">Tipo de mensaje
-                  <select value={category} onChange={(e) => setCategory(e.target.value as FeedbackCategory)} className={field}>
+                  <select suppressHydrationWarning value={category} onChange={(e) => setCategory(e.target.value as FeedbackCategory)} className={field}>
                     {FEEDBACK_CATEGORIES.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
                   </select>
                 </label>
                 <label className="block text-sm font-medium">Biblioteca (opcional)
-                  <select value={libraryId} onChange={(e) => setLibraryId(e.target.value)} className={field}>
+                  <select suppressHydrationWarning value={libraryId} onChange={(e) => setLibraryId(e.target.value)} className={field}>
                     <option value="">Ninguna / no aparece en el catálogo</option>
                     {libraries.map((library) => <option key={library.id} value={library.id}>{library.name}</option>)}
                   </select>
                 </label>
                 <div>
                   <label htmlFor="feedback-message" className="block text-sm font-medium">Mensaje</label>
-                  <textarea id="feedback-message" required minLength={5} maxLength={1000} rows={4} value={message} onChange={(e) => setMessage(e.target.value)}
+                  <textarea suppressHydrationWarning id="feedback-message" required minLength={5} maxLength={1000} rows={4} value={message} onChange={(e) => setMessage(e.target.value)}
                     placeholder="Cuéntanos qué falta o qué podemos corregir…" className={`${field} resize-y`} aria-describedby="feedback-length" />
                 </div>
                 <p id="feedback-length" className="text-right text-xs text-slate-500">{[...message].length}/1000 caracteres</p>
                 <label className="block text-sm font-medium">Email o usuario de contacto (opcional)
-                  <input type="text" maxLength={200} autoComplete="off" value={contact} onChange={(e) => setContact(e.target.value)} className={field} placeholder="Solo si quieres que podamos responderte" />
+                  <input suppressHydrationWarning type="text" maxLength={200} autoComplete="off" value={contact} onChange={(e) => setContact(e.target.value)} className={field} placeholder="Solo si quieres que podamos responderte" />
                 </label>
               </fieldset>
               <p className="text-xs text-slate-500">Tu mensaje y contacto no se publican. No necesitas cuenta ni compartir tu ubicación. Máximo 3 envíos por hora.</p>

@@ -129,7 +129,9 @@ export function Header({
         <label className="relative flex-1">
           <span className="sr-only">Buscar biblioteca o distrito</span>
           <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-slate-400" />
+          {/* Chrome para iOS añade __gcruniqueid a los campos antes de hidratar: no es un desajuste real. */}
           <input
+            suppressHydrationWarning
             type="search"
             inputMode="search"
             enterKeyHint="search"
