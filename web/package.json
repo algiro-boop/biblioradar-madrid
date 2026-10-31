@@ -14,6 +14,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "icons": "node scripts/generate-icons.mjs",
+    "ad": "node scripts/ad/record.mjs",
     "test:e2e": "playwright test"
   },
   "dependencies": {

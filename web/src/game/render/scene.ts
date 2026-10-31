@@ -1149,6 +1149,12 @@ export class Scene {
     this.raf = requestAnimationFrame(loop);
   }
 
+  /** Avanza y dibuja un paso sin bucle propio (grabación fotograma a fotograma del anuncio). */
+  step(dt: number) {
+    this.update(dt);
+    this.draw();
+  }
+
   pause() {
     this.running = false;
     cancelAnimationFrame(this.raf);

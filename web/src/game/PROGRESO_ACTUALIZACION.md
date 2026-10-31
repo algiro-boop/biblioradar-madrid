@@ -77,6 +77,28 @@ Especificación: `ACTUALIZACION_BIBLIORADAR_PARA_CLAUDE.md` del usuario. Rama lo
 - `icon.svg` se elimina. `ICON_VERSION` pasa a 3 y el service worker a `v4`, para que iOS y Android no sigan mostrando los iconos viejos.
 - Se quita el barrido verde que giraba sobre el logo de la cabecera (pensado para el radar): el estado «en vivo» ya lo indica el punto verde.
 
+### Anuncio vertical (TikTok / Reels)
+
+- **`npm run ad`** (con `npm run dev` y el flag en marcha) graba un MP4 de 41 s, 1080×1920 a 30 fps, en `web/anuncio/biblioradar-anuncio.mp4` con portada en `anuncio/portada.jpg`. La carpeta no se versiona.
+- Lo dibuja el propio motor (`game/ad/promo.ts`) desde la ruta de desarrollo `/mi-biblioteca/anuncio`, que da 404 sin `next dev` y sin el flag. Con `?preview` se reproduce en el navegador.
+  - `scripts/ad/record.mjs` pide los fotogramas en orden a Chromium sin ventana (Playwright).
+  - `soundtrack.mjs` sintetiza la música, un chiptune propio a 120 ppm, y los efectos sincronizados.
+  - `encode.swift` (AVFoundation) lo une en H.264 + AAC, sin ffmpeg.
+  - `Scene.step(dt)` avanza la escena sin su bucle.
+- **Guion:**
+
+  | Tiempo | Plano |
+  | --- | --- |
+  | 0–3 s | Gancho «¿Llegas a la biblio… y está LLENA?» con sello 100 %. |
+  | 3–9 s | Mapa con aforo en vivo y ficha de una biblioteca («105 bibliotecas»). |
+  | 9–13 s | Reporte en 2 toques y +10 monedas. |
+  | 13–23 s | Del solar al nivel 15, con las cinemáticas del juego. |
+  | 23–31 s | Racha, tienda, misiones y logros, y visitas. |
+  | 31–35 s | Luz de Madrid de amanecer a noche. |
+  | 35–41 s | Logo y «¡Pruébala gratis!». |
+
+- Los porcentajes del mapa son ilustrativos (lo dice el propio plano). El anuncio enseña Mi Biblioteca, que aún no es pública: no se debería difundir hasta publicarla.
+
 ## Verificado
 
 - `tsc` limpio y 308/308 tests de vitest (incluye que las bibliotecas de muestra son válidas en su nivel, solo usan muebles de su nivel y no dejan casillas inaccesibles).
