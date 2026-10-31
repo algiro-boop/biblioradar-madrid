@@ -599,8 +599,7 @@ class RoomView {
           hits.push({ id: "cat", x0: x - 16 * CAT_SCALE, y0: y - 26 * CAT_SCALE, x1: x + 16 * CAT_SCALE, y1: y + 2, depth });
           return;
         }
-        if (a.z === 0) ellipse(ctx, x, y, 8 * PERSON_SCALE, 2 * PERSON_SCALE, "rgba(40,25,15,0.22)");
-        scaled(ctx, x, y, PERSON_SCALE, () => drawPerson(ctx, 0, 0, a.look, {
+        if (a.z === 0) ellipse(ctx, x, y, 8 * PERSON_SCALE, 2 * PERSON_SCALE, "rgba(40,25,15,0.22)");        scaled(ctx, x, y, PERSON_SCALE, () => drawPerson(ctx, 0, 0, a.look, {
           act: a.act, t, back: a.back, flip: a.flip, seated, gaze: a.gaze,
           carry: a.kind === "librarian" && a.path.length > 0,
         }));

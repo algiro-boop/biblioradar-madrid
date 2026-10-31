@@ -237,7 +237,7 @@ export function useEditor(state: GameState, notify: Notify, onPlaced?: () => voi
     if (series && move.fresh) {
       seriesPlaced.current += 1;
       const placed = new Set(next.map((p) => p.uid));
-      const following = state.inventory.find((o) => o.itemId === series && !placed.has(o.uid));
+      const following = state.inventory.find((o) => o.itemId === series && !o.soldAt && !placed.has(o.uid));
       if (following) {
         const spot = findSpot(following.uid, following.itemId, move.room, { x: move.x + 1, y: move.y });
         const rot = move.pieces[0]!.rot;
@@ -246,7 +246,7 @@ export function useEditor(state: GameState, notify: Notify, onPlaced?: () => voi
         return;
       }
       setSeries(null);
-      if (seriesPlaced.current > 0) notify("Has colocado todas las unidades.");
+      if (seriesPlaced.current > 1) notify("Has colocado todas las unidades.");
     }
     setMove(null);
     setSelectedState([...uids]);
@@ -256,7 +256,7 @@ export function useEditor(state: GameState, notify: Notify, onPlaced?: () => voi
   const remaining = useMemo(() => {
     if (!series) return 0;
     const placed = new Set(placements.map((p) => p.uid));
-    return state.inventory.filter((o) => o.itemId === series && !placed.has(o.uid)).length;
+    return state.inventory.filter((o) => o.itemId === series && !o.soldAt && !placed.has(o.uid)).length;
   }, [series, placements, state.inventory]);
 
   const rotateSelected = useCallback(() => {

@@ -3,12 +3,13 @@
 import { Gift, MapPin } from "lucide-react";
 import { useMemo, useState } from "react";
 import { ACHIEVEMENTS, type AchievementCategory } from "@/game/data/achievements";
-import { findItem, type CatalogItem } from "@/game/data/catalog";
+import { findItem, ITEM_CATEGORIES, itemCategory, type CatalogItem } from "@/game/data/catalog";
 import { showcaseCapacity, type GameState, type OwnedItem, type Placement } from "@/game/engine";
 import { resaleValue } from "@/game/engine/shop";
 import { run } from "@/game/store";
+import { sfx } from "@/game/sfx";
 import { report } from "./ShopPanel";
-import { AchievementIcon, Button, Coin, Coins, Empty, Modal, RARITY_STYLE, Section, Thumb } from "./ui";
+import { AchievementIcon, Button, CategoryChips, Coin, Coins, Empty, Modal, normalize, RARITY_STYLE, SearchBox, Section, Thumb } from "./ui";
 
 type Notify = (m: string, k?: "ok" | "error") => void;
 
@@ -21,25 +22,47 @@ export function InventoryPanel({ state, placements, onPlace, notify }: {
   notify: Notify;
 }) {
   const [selling, setSelling] = useState<OwnedItem | null>(null);
+  const [category, setCategory] = useState("Todo");
+  const [query, setQuery] = useState("");
+  const [onlyStored, setOnlyStored] = useState(false);
   const placed = useMemo(() => new Set(placements.map((p) => p.uid)), [placements]);
   const groups = useMemo(() => {
     const map = new Map<string, OwnedItem[]>();
     for (const o of state.inventory) if (!o.soldAt) map.set(o.itemId, [...(map.get(o.itemId) ?? []), o]);
-    return [...map.entries()].map(([id, owned]) => ({ item: findItem(id)!, owned })).sort((a, b) => a.item.name.localeCompare(b.item.name, "es"));
-  }, [state.inventory]);
+    return [...map.entries()].map(([id, owned]) => ({ item: findItem(id)!, owned, free: owned.filter((o) => !placed.has(o.uid)).length }))
+      // Lo que queda por colocar, primero.
+      .sort((a, b) => Number(b.free > 0) - Number(a.free > 0) || a.item.name.localeCompare(b.item.name, "es"));
+  }, [state.inventory, placed]);
+  const counts = useMemo(() => {
+    const c: Record<string, number> = { Todo: groups.length };
+    for (const g of groups) c[itemCategory(g.item)] = (c[itemCategory(g.item)] ?? 0) + 1;
+    return c;
+  }, [groups]);
 
   if (state.level < 1) return <Empty>Tu inventario aparecerá en el nivel 1, con los primeros muebles de regalo.</Empty>;
   if (!groups.length) return <Empty>No tienes objetos todavía.</Empty>;
 
-  const stored = groups.filter((g) => g.owned.some((o) => !placed.has(o.uid)));
+  const stored = groups.filter((g) => g.free > 0);
+  const q = normalize(query.trim());
+  const visible = groups.filter((g) => (category === "Todo" || itemCategory(g.item) === category) && (!onlyStored || g.free > 0) && (!q || normalize(g.item.name).includes(q)));
+  const options = ["Todo", ...ITEM_CATEGORIES.filter((c) => counts[c])];
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-3">
+      <CategoryChips options={options} value={category} onChange={(c) => { setCategory(c); sfx("click"); }} counts={counts} />
+      <div className="flex items-center gap-2">
+        <SearchBox value={query} onChange={setQuery} placeholder="Buscar en el inventario" />
+        <label className="flex shrink-0 items-center gap-1.5 text-xs text-slate-600">
+          <input type="checkbox" checked={onlyStored} onChange={(e) => setOnlyStored(e.target.checked)} className="accent-emerald-600" />
+          Solo guardados
+        </label>
+      </div>
       <p className="text-xs text-slate-500">
-        {stored.length ? `${stored.length} tipos de objeto guardados listos para colocar.` : "Todo está colocado."} Los regalos no se venden; lo comprado se revende por la mitad de lo pagado.
+        {stored.length ? `${stored.length} tipos de objeto guardados listos para colocar. «Colocar» deja una unidad tras otra hasta acabarlas.` : "Todo está colocado."} Los regalos no se venden; lo comprado se revende por la mitad de lo pagado.
       </p>
+      {!visible.length && <Empty>Nada coincide con el filtro.</Empty>}
       <div className="space-y-2">
-        {groups.map(({ item, owned }) => {
+        {visible.map(({ item, owned }) => {
           const free = owned.filter((o) => !placed.has(o.uid));
           const sellable = [...free, ...owned.filter((o) => placed.has(o.uid))].find((o) => o.resellable);
           return (
@@ -55,7 +78,7 @@ export function InventoryPanel({ state, placements, onPlace, notify }: {
               </div>
               <div className="flex shrink-0 flex-col gap-1">
                 <Button variant="secondary" disabled={!free.length} onClick={() => onPlace(free[0]!.uid)}>
-                  <MapPin className="size-3.5" aria-hidden />Colocar
+                  <MapPin className="size-3.5" aria-hidden />{free.length > 1 ? `Colocar (${free.length})` : "Colocar"}
                 </Button>
                 {sellable && <Button variant="ghost" onClick={() => setSelling(sellable)}>Vender</Button>}
               </div>
@@ -80,7 +103,7 @@ function SellDialog({ owned, item, placed, onClose, notify }: { owned: OwnedItem
       <div className="mt-4 flex gap-2">
         <Button variant="secondary" className="flex-1" onClick={onClose}>No, conservar</Button>
         <Button variant="danger" className="flex-1" onClick={() => {
-          report(run({ type: "sell", uid: owned.uid }), notify, "coin");
+          report(run({ type: "sell", uid: owned.uid }), notify, "sell");
           onClose();
         }}>Vender por {value}</Button>
       </div>

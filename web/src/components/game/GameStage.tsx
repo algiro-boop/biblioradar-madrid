@@ -43,6 +43,7 @@ export function GameStage({
     const canvas = canvasRef.current!;
     const scene = new Scene(canvas, { onCatNap: () => napRef.current?.() });
     sceneRef.current = scene;
+    if (process.env.NODE_ENV === "development") (window as unknown as { __gameScene?: Scene }).__gameScene = scene;
     const ro = new ResizeObserver(() => scene.resize());
     ro.observe(canvas);
     scene.start();

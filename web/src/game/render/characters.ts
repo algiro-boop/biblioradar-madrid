@@ -267,9 +267,13 @@ export function drawPerson(ctx: Ctx2D, sx: number, sy: number, look: Look, s: Pe
     const adjust = act === "adjust" ? (Math.floor(t * 4) % 2) : 0;
     const restLean = act === "rest" ? 1 : 0;
     if (!back) {
-      parts.push([-half + 1, -2, W - 2, 4, look.pants]);
-      parts.push([-5, 2, 4, 9, look.pants], [1, 2, 4, 9, look.pants]);
-      parts.push([-5, 10, 4, 2, look.shoes], [1, 10, 4, 2, look.shoes]);
+      // Muslos escorzados hacia la cámara (regazo con luz arriba), rodillas y espinillas cortas:
+      // así se lee «sentado» aunque el asiento quede tapado por el cuerpo.
+      parts.push([-half + 1, -2, W - 2, 6, look.pants]);
+      parts.push([-6, 4, 5, 6, look.pants], [1, 4, 5, 6, look.pants]);
+      parts.push([-7, 9, 6, 2, look.shoes], [1, 9, 6, 2, look.shoes]);
+      detail.push([-half + 2, -2, W - 4, 1, shade(look.pants, 0.22)], [-5, 3, 3, 1, shade(look.pants, 0.12)], [2, 3, 3, 1, shade(look.pants, 0.12)]);
+      detail.push([-half + 2, 3, W - 4, 1, shade(look.pants, -0.25)]);
     }
     const top = -14 - tall + adjust + restLean;
     const tr = torso(look, -half, top, W, 14, back);

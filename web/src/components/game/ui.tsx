@@ -105,6 +105,35 @@ export function Section({ title, aside, children }: { title: string; aside?: Rea
   );
 }
 
+/** Filtros por categoría en forma de chips desplazables (tienda e inventario). */
+export function CategoryChips({ options, value, onChange, counts }: {
+  options: readonly string[];
+  value: string;
+  onChange: (v: string) => void;
+  counts?: Record<string, number>;
+}) {
+  return (
+    <div className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1" role="group" aria-label="Filtrar por categoría">
+      {options.map((g) => (
+        <button key={g} type="button" onClick={() => onChange(g)} aria-pressed={value === g}
+          className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold ring-1 transition-colors ${value === g ? "bg-slate-900 text-white ring-slate-900" : "bg-white text-slate-600 ring-slate-200 hover:bg-slate-100"}`}>
+          {g}{counts?.[g] !== undefined && <span className={`ml-1 tabular-nums ${value === g ? "text-white/70" : "text-slate-400"}`}>{counts[g]}</span>}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/** Buscador de texto (sin distinguir mayúsculas ni tildes). */
+export function SearchBox({ value, onChange, placeholder }: { value: string; onChange: (v: string) => void; placeholder: string }) {
+  return (
+    <input type="search" value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} aria-label={placeholder}
+      className="w-full rounded-xl bg-white px-3 py-2 text-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-sky-500 focus:outline-none" />
+  );
+}
+
+export const normalize = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+
 export function Empty({ children }: { children: ReactNode }) {
   return <p className="rounded-2xl bg-slate-50 p-4 text-center text-sm text-slate-500 ring-1 ring-slate-200">{children}</p>;
 }

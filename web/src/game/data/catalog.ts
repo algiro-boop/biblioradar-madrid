@@ -324,7 +324,33 @@ export const RARITY_LABEL: Record<Rarity, string> = {
   X: "Exclusivo",
 };
 
-/** Categorías de filtro de la tienda (agrupa las del documento). */
+/** Categorías de los filtros de tienda e inventario, por tipo real de objeto (solo interfaz). */
+export const ITEM_CATEGORIES = [
+  "Mesas", "Sillas", "Sofás y sillones", "Estanterías y libros", "Plantas", "Iluminación", "Tecnología",
+  "Pared y cuadros", "Alfombras", "Cultura y música", "Recepción", "Decoración",
+] as const;
+export type ItemCategory = (typeof ITEM_CATEGORIES)[number];
+
+const CATEGORY_BY_KIND: Record<string, ItemCategory> = {
+  table: "Mesas", roundtable: "Mesas", desk: "Mesas", coffeetable: "Mesas",
+  chair: "Sillas", officechair: "Sillas", stool: "Sillas", bench: "Sillas", throne: "Sillas", pouf: "Sillas",
+  sofa: "Sofás y sillones", armchair: "Sofás y sillones", cushions: "Sofás y sillones",
+  shelf: "Estanterías y libros", wallshelf: "Estanterías y libros", cornershelf: "Estanterías y libros", lowshelf: "Estanterías y libros", books: "Estanterías y libros", cart: "Estanterías y libros",
+  smallplant: "Plantas", plant: "Plantas", tree: "Plantas", planter: "Plantas", palm: "Plantas", hangplant: "Plantas", vgarden: "Plantas",
+  lamp: "Iluminación", floorlamp: "Iluminación", sconce: "Iluminación", garland: "Iluminación",
+  pc: "Tecnología", monitor: "Tecnología", printer: "Tecnología", terminal: "Tecnología", tvwall: "Tecnología", speakers: "Tecnología",
+  frame: "Pared y cuadros", poster: "Pared y cuadros", clock: "Pared y cuadros", window: "Pared y cuadros", curtain: "Pared y cuadros", board: "Pared y cuadros", plaque: "Pared y cuadros", calendar: "Pared y cuadros",
+  rug: "Alfombras",
+  piano: "Cultura y música", lightpiano: "Cultura y música", record: "Cultura y música", vinylbox: "Cultura y música", monument: "Cultura y música",
+  vitrine: "Cultura y música", statue: "Cultura y música", trophy: "Cultura y música", figurine: "Cultura y música", globe: "Cultura y música", hourglass: "Cultura y música",
+  counter: "Recepción", cabinet: "Recepción", coatrack: "Recepción", infopanel: "Recepción", locker: "Recepción", newstand: "Recepción", sign: "Recepción", folding: "Recepción",
+};
+
+export function itemCategory(item: CatalogItem): ItemCategory {
+  return CATEGORY_BY_KIND[item.kind] ?? (item.layer === "wall" ? "Pared y cuadros" : "Decoración");
+}
+
+/** Categorías de la tienda que cuentan para misiones y logros (agrupa las del documento). */
 export function shopGroup(item: CatalogItem): string {
   const c = item.category;
   if (c.startsWith("Mesas")) return "Mesas";

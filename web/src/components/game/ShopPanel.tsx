@@ -2,28 +2,30 @@
 
 import { Lock, Timer } from "lucide-react";
 import { useMemo, useState } from "react";
-import { findItem, PERMANENT_ITEMS, shopGroup, type CatalogItem } from "@/game/data/catalog";
+import { findItem, ITEM_CATEGORIES, itemCategory, PERMANENT_ITEMS, type CatalogItem } from "@/game/data/catalog";
 import { MAX_PURCHASE_QTY, type GameState } from "@/game/engine";
 import { reservationDeposit } from "@/game/engine/shop";
-import { sfx } from "@/game/sfx";
+import { sfx, type SfxKind } from "@/game/sfx";
 import { run } from "@/game/store";
 import { formatCountdown, madridDateKey, msUntilMadridMidnight } from "@/game/time";
-import { Button, Coin, Coins, Empty, Modal, RARITY_STYLE, Section, Thumb } from "./ui";
+import { Button, CategoryChips, Coin, Coins, Empty, Modal, normalize, RARITY_STYLE, SearchBox, Section, Thumb } from "./ui";
 
-const GROUPS = ["Todo", "Mesas", "Asientos", "Libros", "Plantas", "Luz y cuadros", "Tecnología", "Cultura y música", "Decoración"];
+const GROUPS = ["Todo", ...ITEM_CATEGORIES.filter((c) => PERMANENT_ITEMS.some((i) => itemCategory(i) === c))];
 
 export function ShopPanel({ state, now, notify }: { state: GameState; now: number; notify: (m: string, k?: "ok" | "error") => void }) {
   const [group, setGroup] = useState("Todo");
   const [affordable, setAffordable] = useState(false);
+  const [query, setQuery] = useState("");
   const [detail, setDetail] = useState<CatalogItem | null>(null);
   const today = madridDateKey(now);
   const specials = (state.rotations[today]?.ids ?? []).map((id) => findItem(id)!).filter(Boolean);
   const reservations = state.reservations.filter((r) => r.state === "active");
 
   const list = useMemo(
-    () => PERMANENT_ITEMS.filter((i) => (group === "Todo" || shopGroup(i) === group) && (!affordable || (i.price <= state.balance && i.minLevel <= state.level)))
+    () => PERMANENT_ITEMS.filter((i) => (group === "Todo" || itemCategory(i) === group) && (!affordable || (i.price <= state.balance && i.minLevel <= state.level))
+      && (!query || normalize(i.name).includes(normalize(query.trim()))))
       .sort((a, b) => a.minLevel - b.minLevel || a.price - b.price),
-    [group, affordable, state.balance, state.level],
+    [group, affordable, query, state.balance, state.level],
   );
 
   if (state.level < 1) return <Empty>La tienda abre en el nivel 1. Haz tu primer reporte válido para construir la primera sala.</Empty>;
@@ -62,14 +64,8 @@ export function ShopPanel({ state, now, notify }: { state: GameState; now: numbe
       )}
 
       <Section title="Catálogo permanente" aside={`${list.length} artículos`}>
-        <div className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1">
-          {GROUPS.map((g) => (
-            <button key={g} type="button" onClick={() => setGroup(g)} aria-pressed={group === g}
-              className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold ring-1 transition-colors ${group === g ? "bg-slate-900 text-white ring-slate-900" : "bg-white text-slate-600 ring-slate-200 hover:bg-slate-100"}`}>
-              {g}
-            </button>
-          ))}
-        </div>
+        <CategoryChips options={GROUPS} value={group} onChange={(g) => { setGroup(g); sfx("click"); }} />
+        <SearchBox value={query} onChange={setQuery} placeholder="Buscar en la tienda" />
         <label className="flex items-center gap-2 text-xs text-slate-600">
           <input type="checkbox" checked={affordable} onChange={(e) => setAffordable(e.target.checked)} className="accent-emerald-600" />
           Solo lo que puedo comprar ahora
@@ -139,7 +135,7 @@ function BuyDialog({ item, state, special, onClose, notify }: { item: CatalogIte
           </div>
           <Button className="mt-3 w-full" disabled={!canBuy} onClick={() => {
             const r = run({ type: "purchase", itemId: item.id, qty, requestId: `${item.id}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}` });
-            report(r, notify, "coin");
+            report(r, notify, "buy");
             if (r.ok) onClose();
           }}>
             Comprar por <Coin /> {total}
@@ -161,7 +157,7 @@ function BuyDialog({ item, state, special, onClose, notify }: { item: CatalogIte
   );
 }
 
-export function report(r: { ok: true; message?: string } | { ok: false; error: string }, notify: (m: string, k?: "ok" | "error") => void, sound?: "coin" | "place") {
+export function report(r: { ok: true; message?: string } | { ok: false; error: string }, notify: (m: string, k?: "ok" | "error") => void, sound?: SfxKind) {
   if (r.ok) {
     if (r.message) notify(r.message, "ok");
     if (sound) sfx(sound);
