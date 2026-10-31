@@ -168,7 +168,7 @@ export function AchievementIcon({ icon, locked = false, className = "size-9" }: 
   };
   return (
     <span
-      className={`grid shrink-0 place-items-center rounded-xl text-lg ${className} ${locked ? "bg-slate-200 grayscale opacity-40" : "bg-amber-100 ring-2 ring-amber-300"}`}
+      className={`grid shrink-0 place-items-center rounded-xl ${/\btext-/.test(className) ? "" : "text-lg"} ${className} ${locked ? "bg-slate-200 grayscale opacity-40" : "bg-amber-100 ring-2 ring-amber-300"}`}
       aria-hidden
     >
       {locked ? "?" : glyph[icon] ?? "⭐"}

@@ -117,7 +117,7 @@ const CATEGORIES: AchievementCategory[] = ["Contribución", "Constancia", "Decor
 const FRAME_LABEL: Record<string, string> = { madera: "Madera", oro: "Oro", estelar: "Estelar" };
 const BADGE_LABEL: Record<string, string> = { honorifico: "Insignia honorífica", "nivel-maximo": "Nivel máximo" };
 
-export function AchievementsPanel({ state, notify }: { state: GameState; notify: Notify }) {
+export function AchievementsPanel({ state, notify, onOpenShowcase }: { state: GameState; notify: Notify; onOpenShowcase: () => void }) {
   const cap = showcaseCapacity(state);
   const unlocked = ACHIEVEMENTS.filter((a) => state.achievements[a.id]).length;
   const toggle = (id: string) => {
@@ -136,6 +136,7 @@ export function AchievementsPanel({ state, notify }: { state: GameState; notify:
                 return <AchievementIcon key={id} icon={a.icon} />;
               }) : <span className="text-xs text-slate-500">Elige logros desbloqueados para exponerlos en tu biblioteca.</span>}
             </div>
+            <Button variant="secondary" className="w-full" onClick={onOpenShowcase}>Ver la vitrina en grande</Button>
             <div className="flex flex-wrap items-center gap-2 text-xs">
               <span className="font-semibold text-slate-600">Marco:</span>
               {state.frames.map((f) => (

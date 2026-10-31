@@ -21,6 +21,7 @@ import { madridDateKey } from "@/game/time";
 import { GAME_DEV_TOOLS } from "@/lib/gamification-flag";
 import { AchievementsPanel, InventoryPanel } from "./CollectionPanels";
 import { DevPanel } from "./DevPanel";
+import { ShowcaseViewer } from "./ShowcaseViewer";
 import { GameStage, type StageHandle, type StageTap } from "./GameStage";
 import { MissionsPanel, ProgressPanel } from "./ProgressPanels";
 import { report, ShopPanel } from "./ShopPanel";
@@ -100,6 +101,7 @@ export default function LibraryGame() {
   const [audible, setAudible] = useState(false);
   const [overview, setOverview] = useState(false);
   const [expandOpen, setExpandOpen] = useState(false);
+  const [showcaseOpen, setShowcaseOpen] = useState(false);
   const stageRef = useRef<StageHandle>(null);
   const activeTab = tab ?? (desktop ? "missions" : null);
 
@@ -248,7 +250,11 @@ export default function LibraryGame() {
       if (tap.hit === "cat") notify(`${state.catName} ronronea. 🐾`);
       else if (tap.hit) {
         const item = itemOf(tap.hit);
-        if (item) notify(`${item.name} · ${item.interaction}`);
+        // Tocar la vitrina de logros la abre en grande.
+        if (item?.tags.includes("showcase")) {
+          setShowcaseOpen(true);
+          sfx("select");
+        } else if (item) notify(`${item.name} · ${item.interaction}`);
       }
     },
     [visiting, editing, editor, targetFor, input, notify, state.catName, itemOf],
@@ -409,7 +415,7 @@ export default function LibraryGame() {
         }} />
       )}
       {activeTab === "missions" && <MissionsPanel state={state} now={now} notify={notify} />}
-      {activeTab === "achievements" && <AchievementsPanel state={state} notify={notify} />}
+      {activeTab === "achievements" && <AchievementsPanel state={state} notify={notify} onOpenShowcase={() => setShowcaseOpen(true)} />}
       {activeTab === "progress" && <ProgressPanel state={state} now={now} notify={notify} />}
       {activeTab === "visit" && <VisitPanel state={state} now={now} onVisit={visit} notify={notify} />}
       {activeTab === "settings" && <SettingsPanel key={`${state.name}|${state.catName}`} state={state} notify={notify} />}
@@ -575,6 +581,7 @@ export default function LibraryGame() {
         </>
       )}
 
+      {showcaseOpen && <ShowcaseViewer state={state} notify={notify} onClose={() => setShowcaseOpen(false)} />}
       {expandOpen && <ExpansionDialog state={state} room={room} notify={notify} onClose={() => setExpandOpen(false)} onBought={() => stageRef.current?.burst()} />}
       {stylesOpen && <StylesDialog state={state} roomId={room.id} styles={{ ...DEFAULT_STYLE, ...editor.styles[room.id] }} onPick={(kind, id) => editor.setStyle(room.id, kind, id)} onClose={() => setStylesOpen(false)} />}
       {celebration && revealed === celebration.id && <CelebrationCard c={celebration} state={state} more={state.celebrations.length - 1} onAck={() => ack()} onSkipAll={() => ack(true)} onGoRoom={(r) => { setRoomId(r); setVisiting(null); ack(); }} />}
