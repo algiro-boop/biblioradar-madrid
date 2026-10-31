@@ -4,46 +4,41 @@ Especificación: `ACTUALIZACION_BIBLIORADAR_PARA_CLAUDE.md` del usuario. Rama lo
 
 ## Hecho
 
-- **Salas amplias.** `data/levels.ts` define `RoomSpec`, con `sizes` por nivel y `expansions` (precios). `roomAt(id, nivel, compradas)` devuelve la sala efectiva y `roomMax` el máximo en L15.
-  - Las salas crecen solo hacia +x/+y.
-  - Las ventanas futuras reservan sus huecos.
-- **Motor.**
-  - Nuevos campos: `expansions`, comando `buy_expansion` y `migrateState` (esquema 2: sonido activado y `sfxVolume`).
-  - `fitPlacements` lleva al inventario lo que ya no cabe y avisa con la celebración `relocated`.
-  - Celebraciones `expansion` al crecer.
-  - Hay tests nuevos y pasan 42.
-- **Render a doble resolución.** En `pixel.ts`: `ZS=2`, TW=64/TH=32, z en unidades × ZS, `ball()`, `px()` y `outlineCanvas()`.
-- **Muebles nuevos.** En `furniture.ts`, con `oriented()` + `drawParts()`: sofás y sillones, sillas, silla de oficina, taburete, mesas, escritorios, estanterías con libros variados, lámparas, flexos y lámparas de pie.
-- **Personajes nuevos.** En `characters.ts`:
-  - Rostro, 7 peinados, 8 prendas y carreras.
-  - Bibliotecaria con rebeca, acreditación y libros.
-  - Gato con poses walk/sit/sleep/groom/stretch/jump.
-  - `drawDeskArms`.
-- **Material de estudio.** `study.ts` dibuja el material por carrera sobre la mesa.
+- **Salas amplias.** Crecen por nivel y con ampliaciones comprables (`roomAt`, `buy_expansion`, `fitPlacements`, migración a esquema 2). Hay tests.
+- **Render a doble resolución.**
+  - Muebles nuevos con contorno y sombra de contacto.
+  - Personajes, bibliotecaria y gato nuevos.
+  - Personas dibujadas a escala ×2 (`PERSON_SCALE` en `scene.ts`).
+- **Sala de estudio viva.**
+  - `sim.ts`: carreras, actividades desincronizadas y prellenado.
+  - `study.ts`: material por carrera sobre la mesa.
+- **Escena.**
+  - `scene.ts` con `RoomView` por sala y una vista general tipo casa de muñecas (botón «Todo»; tocar una sala la abre).
+  - Cámara con escala mínima legible en móvil.
+- **Editor.**
+  - Selección múltiple: «Agrupar» o «Seleccionar varios».
+  - Mover o girar un grupo, y guardar todo.
+  - Colocación continua desde el inventario, con «Quedan N».
+- **Ampliaciones.** Diálogo «Ampliar sala» en la barra del editor, con precio y tamaño máximo.
+- **Estudiantes repartidos por sala** en proporción a los asientos.
+- **Sonido.**
+  - Música y efectos activados por defecto; empiezan tras el primer gesto.
+  - Efectos variados (pestaña, seleccionar, comprar, colocar, girar, levantar, guardar, ampliar, nivel, sala nueva, misión, logro).
+  - Antirrepetición: los errores, como mucho 1 por segundo.
+  - Volumen de efectos propio en Ajustes.
+- **Biblioteca pública.**
+  - El alias y la publicación se movieron de Ajustes a «Visitar» → «Mi biblioteca pública».
+  - Es privada por defecto y publicarla pide confirmación explícita y alias (el motor lo exige).
 
-## Pendiente (en orden)
+## Pendiente
 
-1. Reescribir `render/sim.ts`:
-   - Carreras y kit por estudiante.
-   - Actividades con temporizadores desincronizados.
-   - `spot.desk`, `spot.at` y profundidad respecto al mueble.
-   - Prellenado de asientos y nuevos valores de `SEAT_Z`.
-2. Reescribir `render/scene.ts`:
-   - `RoomView` por sala y modo vista general (casa de muñecas).
-   - Escalas ×ZS en partículas, halos, selección y `pick`.
-   - Zoom mínimo en móvil.
-   - Contorno y sombra en `furnitureSprite` (`oy` ≈ 150).
-   - Selección múltiple y varios fantasmas.
-3. `GameStage`/`LibraryGame`:
-   - Botón de vista general, compra de ampliaciones y estudiantes por sala.
-   - Ajustar la API nueva de `drawPerson`/`drawCat`.
-4. Sonido: activado por defecto, desbloqueo en el primer gesto, efectos nuevos con antirrepetición y volumen de efectos.
-5. Inventario: filtros y búsqueda, colocación continua y selección y movimiento en grupo.
-6. Resto:
-   - Vitrina ampliada con zoom.
-   - Racha (llama) en el mapa, dentro de `MyLibraryButton`.
-   - Mover alias y publicación a «Visitar» → «Mi biblioteca pública».
-7. Verificación:
-   - `tsc`, tests y `next build` con y sin flag (0 chunks del juego).
-   - Navegador en niveles 1/5/10/15 y en móvil.
+1. Revisión visual fina en navegador.
+   - La escala ×2 de las personas recién aplicada sin revisar: sentados en sofá o mesa, brazos de escritorio, puerta quizá baja.
+   - El gato se dejó a ×1; decidir si se agranda.
+2. Inventario: chips de categorías más búsqueda, y unificar los grupos con la tienda.
+3. Vitrina ampliada con zoom.
+4. Racha con llama en el mapa (`MyLibraryButton`) y panel con racha, récord y protectores.
+5. Verificación:
+   - Comprobar que `next build`, con y sin flag, no deja chunks del juego.
+   - Probar en niveles 1/5/10/15 y en móvil.
    - Informe final.

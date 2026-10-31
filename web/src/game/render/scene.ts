@@ -76,6 +76,20 @@ const SLAB = 7 * ZS;
 /** Escala mínima (px CSS por px nativo) en la vista de sala: personas de ~26 px de alto en móvil. */
 const MIN_CSS_SCALE = 0.66;
 const OUTLINE: [number, number, number, number] = [42, 28, 20, 235];
+/**
+ * Escala entera de los personajes: con ×2 una persona mide ~80 px (≈1,7 m frente a paredes de
+ * 3 m y asientos a 45 cm) y se lee bien en móvil. El gato ya está dibujado a su tamaño.
+ */
+const PERSON_SCALE = 2;
+const CAT_SCALE = 1;
+
+function scaled(ctx: Ctx2D, x: number, y: number, k: number, draw: () => void) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(k, k);
+  draw();
+  ctx.restore();
+}
 
 interface Sprite {
   canvas: HTMLCanvasElement;
@@ -571,17 +585,18 @@ class RoomView {
         const [sx, sy] = project(this.iso, a.x, a.y, a.z + arc);
         const x = Math.round(sx);
         const y = Math.round(sy);
-        if (a.z === 0) ellipse(ctx, x, Math.round(sy), a.kind === "cat" ? 9 : 8, 2, "rgba(40,25,15,0.22)");
         if (a.kind === "cat") {
+          if (a.z === 0) ellipse(ctx, x, y, 9 * CAT_SCALE, 2 * CAT_SCALE, "rgba(40,25,15,0.22)");
           const pose = a.jump > 0 ? "jump" : a.catPose ?? (a.path.length ? "walk" : "sit");
-          drawCat(ctx, x, y, pose, t, a.flip);
-          hits.push({ id: "cat", x0: x - 16, y0: y - 26, x1: x + 16, y1: y + 2, depth });
+          scaled(ctx, x, y, CAT_SCALE, () => drawCat(ctx, 0, 0, pose, t, a.flip));
+          hits.push({ id: "cat", x0: x - 16 * CAT_SCALE, y0: y - 26 * CAT_SCALE, x1: x + 16 * CAT_SCALE, y1: y + 2, depth });
           return;
         }
-        drawPerson(ctx, x, y, a.look, {
+        if (a.z === 0) ellipse(ctx, x, y, 8 * PERSON_SCALE, 2 * PERSON_SCALE, "rgba(40,25,15,0.22)");
+        scaled(ctx, x, y, PERSON_SCALE, () => drawPerson(ctx, 0, 0, a.look, {
           act: a.act, t, back: a.back, flip: a.flip, seated, gaze: a.gaze,
           carry: a.kind === "librarian" && a.path.length > 0,
-        });
+        }));
       },
     });
     // Materiales sobre la mesa y manos (por delante del tablero)
@@ -596,7 +611,7 @@ class RoomView {
           drawDeskProps(new Painter(ctx, this.iso), desk, a.kit!, a.act, a.t);
           if (!a.back) {
             const [sx, sy] = project(this.iso, a.x, a.y, a.z);
-            drawDeskArms(ctx, Math.round(sx), Math.round(sy), a.look, a.act, reduced ? 0 : a.t, a.flip);
+            scaled(ctx, Math.round(sx), Math.round(sy), PERSON_SCALE, () => drawDeskArms(ctx, 0, 0, a.look, a.act, reduced ? 0 : a.t, a.flip));
           }
         },
       });
